@@ -1,6 +1,6 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Taken from :
  * ****** BARLab - Open Source ******
@@ -11,8 +11,8 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_ERROR_H_
-#define _FAITH_EMULATOR_ERROR_H_
+#ifndef _COPS_V7_EMULATOR_ERROR_H_
+#define _COPS_V7_EMULATOR_ERROR_H_
 
 #include "def.h"
 #include "types.h"
@@ -161,4 +161,4 @@ const err_t ERROR_UNKNOWN = 0x7FFFFFFF;
 
 #endif // DEBUG
 
-#endif // _FAITH_EMULATOR_ERROR_H_
+#endif // _COPS_V7_EMULATOR_ERROR_H_

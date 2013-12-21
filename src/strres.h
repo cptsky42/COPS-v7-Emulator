@@ -1,13 +1,13 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Please read the WARNING, DISCLAIMER and PATENTS
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_STRRES_H_
-#define _FAITH_EMULATOR_STRRES_H_
+#ifndef _COPS_V7_EMULATOR_STRRES_H_
+#define _COPS_V7_EMULATOR_STRRES_H_
 
 #include "common.h"
 #include <QtCore/QCoreApplication>
@@ -495,4 +495,4 @@
 #define STR_SYNWAR_ANNOUNCE         "%d-%d-%d 20:00:00 ¿ªÊ¼¹¥´ò°ïÅÉ %s¡£"
 #define STR_SYNWAR_ANNOUNCE2        "%d-%d-%d 20:00:00 %s °ïÅÉ¿ªÊ¼¹¥´ò±¾°ïÅÉ¡£"
 
-#endif // _FAITH_EMULATOR_STRRES_H_
+#endif // _COPS_V7_EMULATOR_STRRES_H_

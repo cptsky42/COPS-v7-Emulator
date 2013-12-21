@@ -1,6 +1,6 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Taken from :
  * ****** BARLab - Open Source ******
@@ -11,8 +11,8 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_BINARY_READER_H_
-#define _FAITH_EMULATOR_BINARY_READER_H_
+#ifndef _COPS_V7_EMULATOR_BINARY_READER_H_
+#define _COPS_V7_EMULATOR_BINARY_READER_H_
 
 #include "common.h"
 #include <string>
@@ -228,4 +228,4 @@ private:
     FILE* mStream; //!< the base stream of the reader
 };
 
-#endif /* _FAITH_EMULATOR_BINARY_READER_H_ */
+#endif /* _COPS_V7_EMULATOR_BINARY_READER_H_ */

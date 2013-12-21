@@ -1,6 +1,6 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Taken from :
  * ****** BARLab - Open Source ******
@@ -11,8 +11,8 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_TYPES_H_
-#define _FAITH_EMULATOR_TYPES_H_
+#ifndef _COPS_V7_EMULATOR_TYPES_H_
+#define _COPS_V7_EMULATOR_TYPES_H_
 
 #include "def.h"
 #include <stddef.h> // Define NULL, size_t
@@ -158,4 +158,4 @@ typedef unsigned long long int  uint64_t;
 
 #endif // !BL_HAS_STDINT_H
 
-#endif // _FAITH_EMULATOR_TYPES_H
+#endif // _COPS_V7_EMULATOR_TYPES_H

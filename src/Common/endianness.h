@@ -1,6 +1,6 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Taken from :
  * ****** BARLab - Open Source ******
@@ -11,8 +11,8 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_ENDIAN_H_
-#define _FAITH_EMULATOR_ENDIAN_H_
+#ifndef _COPS_V7_EMULATOR_ENDIAN_H_
+#define _COPS_V7_EMULATOR_ENDIAN_H_
 
 #include "types.h"
 #include "def.h"
@@ -241,4 +241,4 @@ inline bool isLittleEndian()
             ptr[2] == 0x22 && ptr[3] == 0x11;
 }
 
-#endif // _FAITH_EMULATOR_ENDIAN_H
+#endif // _COPS_V7_EMULATOR_ENDIAN_H

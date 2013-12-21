@@ -1,6 +1,6 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Taken from :
  * ****** BARLab - Open Source ******
@@ -12,8 +12,8 @@
  */
 
 
-#ifndef _FAITH_EMULATOR_FINDER_H_
-#define _FAITH_EMULATOR_FINDER_H_
+#ifndef _COPS_V7_EMULATOR_FINDER_H_
+#define _COPS_V7_EMULATOR_FINDER_H_
 
 #include "common.h"
 #include <stdio.h>
@@ -111,4 +111,4 @@ public:
     static FILE* getTempFile();
 };
 
-#endif /* _FAITH_EMULATOR_FINDER_H_ */
+#endif /* _COPS_V7_EMULATOR_FINDER_H_ */

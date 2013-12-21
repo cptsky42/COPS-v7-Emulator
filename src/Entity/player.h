@@ -1,13 +1,13 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Please read the WARNING, DISCLAIMER and PATENTS
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_PLAYER_H
-#define _FAITH_EMULATOR_PLAYER_H
+#ifndef _COPS_V7_EMULATOR_PLAYER_H
+#define _COPS_V7_EMULATOR_PLAYER_H
 
 #include "common.h"
 #include "advancedentity.h"
@@ -158,4 +158,4 @@ private:
     std::deque<int32_t> mServerTicks;
 };
 
-#endif // _FAITH_EMULATOR_PLAYER_H
+#endif // _COPS_V7_EMULATOR_PLAYER_H

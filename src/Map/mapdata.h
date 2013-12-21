@@ -1,13 +1,13 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Please read the WARNING, DISCLAIMER and PATENTS
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_MAP_DATA_H_
-#define _FAITH_EMULATOR_MAP_DATA_H_
+#ifndef _COPS_V7_EMULATOR_MAP_DATA_H_
+#define _COPS_V7_EMULATOR_MAP_DATA_H_
 
 #include "common.h"
 #include "mapbase.h"
@@ -108,4 +108,4 @@ private:
     size_t mPckLen; //!< the size of the packed data
 };
 
-#endif // _FAITH_EMULATOR_MAP_DATA_H_
+#endif // _COPS_V7_EMULATOR_MAP_DATA_H_

@@ -1,13 +1,13 @@
 /**
- * ****** Faith Emulator - Closed Source ******
- * Copyright (C) 2012 - 2013 Jean-Philippe Boivin
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
  * Please read the WARNING, DISCLAIMER and PATENTS
  * sections in the LICENSE file.
  */
 
-#ifndef _FAITH_EMULATOR_RC5_H
-#define _FAITH_EMULATOR_RC5_H
+#ifndef _COPS_V7_EMULATOR_RC5_H
+#define _COPS_V7_EMULATOR_RC5_H
 
 #include "common.h"
 
@@ -104,4 +104,4 @@ private:
     uint32_t mSub[RC5_SUB]; //!< the generated key used to encrypt/decrypt the data
 };
 
-#endif // _FAITH_EMULATOR_RC5_H
+#endif // _COPS_V7_EMULATOR_RC5_H

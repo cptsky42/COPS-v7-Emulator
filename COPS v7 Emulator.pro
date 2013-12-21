@@ -2,7 +2,7 @@ QT += core
 QT += network sql
 QT -= gui
 
-TARGET = "Faith Emulator"
+TARGET = "COPS v7 Emulator"
 TEMPLATE = app
 CONFIG   += console
 
