@@ -173,10 +173,8 @@ HEADERS += \
     src/Map/mapbase.h \
     src/Common/env.h \
     src/Common/log.h \
-    src/Common/unicode.h \
     src/Common/types.h \
     src/Common/err.h \
-    src/Common/def.h \
     src/Common/arch.h \
     src/Common/common.h \
     src/Common/endianness.h \

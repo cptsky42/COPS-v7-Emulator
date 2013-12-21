@@ -14,12 +14,10 @@
 #ifndef _COPS_V7_EMULATOR_COMMON_H_
 #define _COPS_V7_EMULATOR_COMMON_H_
 
-#include "def.h" // all defines by CMake
 #include "arch.h"
 #include "types.h"
 #include "endianness.h"
 #include "err.h"
-#include "unicode.h"
 #include "basefunc.h"
 #include "strres.h"
 

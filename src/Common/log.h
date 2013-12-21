@@ -9,7 +9,6 @@
 #ifndef _COPS_V7_EMULATOR_LOG_H_
 #define _COPS_V7_EMULATOR_LOG_H_
 
-#include "def.h"
 #include "env.h"
 #include <stdio.h>
 #include <time.h>

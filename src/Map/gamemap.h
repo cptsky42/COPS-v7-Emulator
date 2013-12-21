@@ -115,9 +115,9 @@ public:
     uint32_t getOwnerUID() const { return mInfo->OwnerUID; }
 
     /** Get the map's width in term of cells count. */
-    uint16_t getWidth() const { ASSERT(&mData != nullptr); return mData.getWidth(); }
+    uint16_t getWidth() const { return mData.getWidth(); }
     /** Get the map's height in term of cells count. */
-    uint16_t getHeight() const { ASSERT(&mData != nullptr); return mData.getHeight(); }
+    uint16_t getHeight() const { return mData.getHeight(); }
 
     /** Determine whether or not the cell is accessible. */
     bool getFloorAccess(uint16_t aPosX, uint16_t aPosY) const;

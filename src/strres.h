@@ -12,7 +12,7 @@
 #include "common.h"
 #include <QtCore/QCoreApplication>
 
-#define STR_CREATOR_INFO                    "Faith Emulator by CptSky..."
+#define STR_CREATOR_INFO                    "Faith Emulator by Jean-Philippe Boivin (alias CptSky)..."
 #define STR_BUILD_INFO                      "Build for " TARGET_SYSTEM " (" TARGET_ARCH "), using Qt " QT_VERSION_STR ", the " __TIMESTAMP__
 
 #define	STR_SYSTEM_NAME                     "SYSTEM"

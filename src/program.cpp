@@ -20,10 +20,10 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     #ifdef _WIN32
-    SetConsoleTitleA("Faith Emulator for " TARGET_SYSTEM " (" TARGET_ARCH ") by CptSky");
+    SetConsoleTitleA("COPS v7 Emulator for " TARGET_SYSTEM " (" TARGET_ARCH ") by Jean-Philippe Boivin (alias CptSky)");
     #endif
 
-    fprintf(stdout, "Faith Emulator by CptSky...\n");
+    fprintf(stdout, "COPS v7 Emulator by Jean-Philippe Boivin (alias CptSky)...\n");
     fprintf(stdout, "Build for %s (%s), using Qt %s, the %s...\n",
             TARGET_SYSTEM, TARGET_ARCH, QT_VERSION_STR, __TIMESTAMP__);
     fprintf(stdout, "\n");

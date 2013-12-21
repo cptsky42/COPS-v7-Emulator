@@ -14,7 +14,6 @@
 #ifndef _COPS_V7_EMULATOR_ERROR_H_
 #define _COPS_V7_EMULATOR_ERROR_H_
 
-#include "def.h"
 #include "types.h"
 #include <assert.h>
 #include <errno.h>
@@ -152,12 +151,12 @@ const err_t ERROR_UNKNOWN = 0x7FFFFFFF;
 // Assert an expression and return if false
 #define ASSERT(exp)                          \
     if (!(exp))                              \
-    return
+        abort()
 
 // Assert an expression and return the error if false
 #define ASSERT_ERR(exp, err)                 \
     if (!(exp))                              \
-    return err
+        return err
 
 #endif // DEBUG
 

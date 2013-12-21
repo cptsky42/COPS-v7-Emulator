@@ -15,7 +15,6 @@
 #define _COPS_V7_EMULATOR_ENDIAN_H_
 
 #include "types.h"
-#include "def.h"
 
 #ifdef HAVE_ENDIAN_H
 #include <endian.h>

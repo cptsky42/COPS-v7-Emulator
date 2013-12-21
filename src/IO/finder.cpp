@@ -41,16 +41,7 @@ Finder :: fileOpen(FILE** aOutFile,
     err_t err = ERROR_SUCCESS;
 
     #if defined(_WIN32)
-    wchar_t path[MAX_PATH];
-    wchar_t mode[MAX_PATH];
-    size_t len = 0;
-
-    len = sizeof(path);
-    DOIF(err, utf8ToWc(path, len, aPath));
-    len = sizeof(mode);
-    DOIF(err, utf8ToWc(mode, len, aMode));
-
-    *aOutFile = _wfopen(path, mode);
+    *aOutFile = fopen(aPath, aMode);
     if (*aOutFile == nullptr)
     {
         LOG(ERROR, "failed to open '%s' in '%s' : %s", aPath, aMode, strerror(errno));
@@ -209,7 +200,7 @@ Finder :: getTempFile()
     HANDLE hFile = INVALID_HANDLE_VALUE;
     if (GetTempPathW(MAX_PATH, path) != 0)
     {
-        if (GetTempFileNameW(path, L"BAR$", 0, name) != 0)
+        if (GetTempFileNameW(path, L"CPT$", 0, name) != 0)
         {
             hFile = CreateFileW(name,
                                 GENERIC_READ | GENERIC_WRITE,
