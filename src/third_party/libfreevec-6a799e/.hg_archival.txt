@@ -1,5 +1,0 @@
-repo: cf70b88fbc6d537a794172e20abba5a4f8ce878e
-node: 6a799e6588014ade52b8fbb9bd1375a9c085ce9c
-branch: freevec
-latesttag: null
-latesttagdistance: 141
