@@ -111,8 +111,10 @@
  */
 inline int16_t bswap16(int16_t x)
 {
-    #if ((__GNUC__ * 100) + __GNUC_MINOR__) >= 480
-    return __builtin_bswap16(x); // GCC 4.8+
+    // GCC 4.8+ or Clang
+    #if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 480)) || \
+        (defined(__clang__) && __has_builtin(__builtin_bswap16))
+    return __builtin_bswap16(x);
     #else
     return ((((uint16_t)(x) & 0xFF00) >> 8) | \
             (((uint16_t)(x) & 0x00FF) << 8));
@@ -142,8 +144,10 @@ inline uint16_t bswap16(uint16_t x)
  */
 inline int32_t bswap32(int32_t x)
 {
-    #if defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)
-    return __builtin_bswap32(x); // GCC 4.3+
+    // GCC 4.3+ or Clang
+    #if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) || \
+        (defined(__clang__) && __has_builtin(__builtin_bswap32))
+    return __builtin_bswap32(x);
     #else
     return ((((uint32_t)(x) & 0xFF000000) >> 24) |                 \
             (((uint32_t)(x) & 0x00FF0000) >> 8) |                  \
@@ -175,8 +179,10 @@ inline uint32_t bswap32(uint32_t x)
  */
 inline int64_t bswap64(int64_t x)
 {
-    #if defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)
-    return __builtin_bswap64(x); // GCC 4.3+
+    // GCC 4.3+ or Clang
+    #if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) || \
+        (defined(__clang__) && __has_builtin(__builtin_bswap64))
+    return __builtin_bswap64(x);
     #else
     return (((uint64_t)(x) << 56) |                         \
             (((uint64_t)(x) << 40) & 0xFF000000000000ULL) | \
