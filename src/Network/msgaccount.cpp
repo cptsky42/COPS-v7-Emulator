@@ -66,8 +66,6 @@ MsgAccount :: process(Client* aClient)
         {
             MsgConnect msg(MsgConnect::INVALID_UID, 0, MsgConnect::ERROR_INVALID_ACC);
             client.send(&msg);
-
-            // TODO: Bruteforce protection
         }
     }
     else

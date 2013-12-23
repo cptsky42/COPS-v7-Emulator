@@ -8,7 +8,6 @@ CONFIG   += console
 
 macx {
 CONFIG -= app_bundle
-#CONFIG += ppc ppc64 x86 x86_64
 }
 
 # Check Qt version
@@ -27,39 +26,57 @@ RCC_DIR = tmp
 UI_DIR = tmp
 
 SOURCES += \
-    src/server.cpp \
-    src/program.cpp \
+    src/basefunc.cpp \
     src/client.cpp \
-    src/Network/Sockets/tcpserver.cpp \
-    src/Network/Sockets/networkclient.cpp \
-    src/Security/Cryptography/blowfish.cpp \
-    src/Security/Cryptography/tqcipher.cpp \
-    src/Network/msg.cpp \
-    src/Network/msgaccount.cpp \
-    src/Network/msgconnect.cpp \
-    src/Network/msgtalk.cpp \
-    src/Network/stringpacker.cpp \
-    src/Network/msgaction.cpp \
-    src/Network/msguserinfo.cpp \
-    src/Network/msguserattrib.cpp \
-    src/Database/database.cpp \
-    src/Network/msgiteminfo.cpp \
-    src/Security/Cryptography/rc5.cpp \
-    src/Entity/entity.cpp \
-    src/Entity/player.cpp \
-    src/Network/msgwalk.cpp \
-    src/Map/mapmanager.cpp \
-    src/Map/gamemap.cpp \
-    src/IO/binaryreader.cpp \
-    src/IO/finder.cpp \
-    src/Network/msgplayer.cpp \
-    src/Network/msgnpcinfo.cpp \
-    src/Entity/npc.cpp \
-    src/Entity/advancedentity.cpp \
-    src/Entity/monster.cpp \
+    src/inifile.cpp \
+    src/item.cpp \
+    src/program.cpp \
+    src/server.cpp \
     src/world.cpp \
     src/Common/env.cpp \
-    src/item.cpp \
+    src/Common/log.cpp \
+    src/Database/database.cpp \
+    src/Entity/advancedentity.cpp \
+    src/Entity/entity.cpp \
+    src/Entity/monster.cpp \
+    src/Entity/npc.cpp \
+    src/Entity/player.cpp \
+    src/IO/binaryreader.cpp \
+    src/IO/finder.cpp \
+    src/Map/gamemap.cpp \
+    src/Map/mapdata.cpp \
+    src/Map/mapmanager.cpp \
+    src/Network/Sockets/networkclient.cpp \
+    src/Network/Sockets/tcpserver.cpp \
+    src/Network/msg.cpp \
+    src/Network/msgaccount.cpp \
+    src/Network/msgaction.cpp \
+    src/Network/msgallot.cpp \
+    src/Network/msgconnect.cpp \
+    src/Network/msgdialog.cpp \
+    src/Network/msgiteminfo.cpp \
+    src/Network/msgloginchallenges.cpp \
+    src/Network/msgloginproofa.cpp \
+    src/Network/msgmapinfo.cpp \
+    src/Network/msgnpc.cpp \
+    src/Network/msgnpcinfo.cpp \
+    src/Network/msgplayer.cpp \
+    src/Network/msgregister.cpp \
+    src/Network/msgtalk.cpp \
+    src/Network/msgtick.cpp \
+    src/Network/msguserattrib.cpp \
+    src/Network/msguserinfo.cpp \
+    src/Network/msgwalk.cpp \
+    src/Network/stringpacker.cpp \
+    src/Script/itemtask.cpp \
+    src/Script/npctask.cpp \
+    src/Script/script.cpp \
+    src/Security/Cryptography/blowfish.cpp \
+    src/Security/Cryptography/diffiehellman.cpp \
+    src/Security/Cryptography/rc5.cpp \
+    src/Security/Cryptography/tqcipher.cpp \
+    src/third_party/bigint/bigint_int.c \
+    src/third_party/bigint/bigint_ext.c \
     src/third_party/lua-5.2.2/src/lzio.c \
     src/third_party/lua-5.2.2/src/lvm.c \
     src/third_party/lua-5.2.2/src/lundump.c \
@@ -92,65 +109,68 @@ SOURCES += \
     src/third_party/lua-5.2.2/src/lbaselib.c \
     src/third_party/lua-5.2.2/src/lauxlib.c \
     src/third_party/lua-5.2.2/src/lapi.c \
-    src/Script/script.cpp \
-    src/Script/npctask.cpp \
-    src/Network/msgnpc.cpp \
-    src/Network/msgdialog.cpp \
-    src/Map/mapdata.cpp \
-    src/Common/log.cpp \
-    src/inifile.cpp \
-    src/Network/msgregister.cpp \
-    src/basefunc.cpp \
-    src/Script/itemtask.cpp \
-    src/Network/msgallot.cpp \
-    src/Network/msgtick.cpp \
-    src/third_party/minilzo-2.06/minilzo.c \
-    src/Network/msgmapinfo.cpp \
-    src/Security/Cryptography/diffiehellman.cpp \
-    src/third_party/bigint/bigint_int.c \
-    src/third_party/bigint/bigint_ext.c \
-    src/Network/msgloginproofa.cpp \
-    src/Network/msgloginchallenges.cpp
+    src/third_party/minilzo-2.06/minilzo.c
 
 HEADERS += \
-    src/server.h \
+    src/basefunc.h \
     src/client.h \
-    src/world.h \
+    src/inifile.h \
     src/item.h \
+    src/server.h \
     src/strres.h \
+    src/world.h \
+    src/Common/arch.h \
+    src/Common/common.h \
+    src/Common/endianness.h \
+    src/Common/env.h \
+    src/Common/err.h \
+    src/Common/log.h \
+    src/Common/types.h \
     src/Database/database.h \
-    src/Entity/entity.h \
-    src/Entity/player.h \
-    src/Entity/npc.h \
     src/Entity/advancedentity.h \
+    src/Entity/entity.h \
     src/Entity/monster.h \
+    src/Entity/npc.h \
+    src/Entity/player.h \
     src/IO/binaryreader.h \
     src/IO/finder.h \
-    src/Map/mapmanager.h \
     src/Map/gamemap.h \
-    src/Network/Sockets/tcpserver.h \
+    src/Map/mapbase.h \
+    src/Map/mapdata.h \
+    src/Map/mapmanager.h \
     src/Network/Sockets/networkclient.h \
+    src/Network/Sockets/tcpserver.h \
+    src/Network/allmsg.h \
     src/Network/msg.h \
     src/Network/msgaccount.h \
-    src/Network/networkdef.h \
-    src/Network/msgconnect.h \
-    src/Network/allmsg.h \
-    src/Network/msgtalk.h \
-    src/Network/stringpacker.h \
     src/Network/msgaction.h \
-    src/Network/msguserinfo.h \
-    src/Network/msguserattrib.h \
-    src/Network/msgiteminfo.h \
-    src/Network/msgwalk.h \
-    src/Network/msgplayer.h \
-    src/Network/msgnpcinfo.h \
-    src/Network/msgnpc.h \
+    src/Network/msgallot.h \
+    src/Network/msgconnect.h \
     src/Network/msgdialog.h \
-    src/Script/script.h \
+    src/Network/msgiteminfo.h \
+    src/Network/msgloginchallenges.h \
+    src/Network/msgloginproofa.h \
+    src/Network/msgmapinfo.h \
+    src/Network/msgnpc.h \
+    src/Network/msgnpcinfo.h \
+    src/Network/msgplayer.h \
+    src/Network/msgregister.h \
+    src/Network/msgtalk.h \
+    src/Network/msgtick.h \
+    src/Network/msguserattrib.h \
+    src/Network/msguserinfo.h \
+    src/Network/msgwalk.h \
+    src/Network/networkdef.h \
+    src/Network/stringpacker.h \
+    src/Script/itemtask.h \
     src/Script/npctask.h \
+    src/Script/script.h \
     src/Security/Cryptography/blowfish.h \
-    src/Security/Cryptography/tqcipher.h \
+    src/Security/Cryptography/diffiehellman.h \
+    src/Security/Cryptography/icipher.h \
     src/Security/Cryptography/rc5.h \
+    src/Security/Cryptography/tqcipher.h \
+    src/third_party/bigint/bigint.h \
     src/third_party/lua-5.2.2/src/lzio.h \
     src/third_party/lua-5.2.2/src/lvm.h \
     src/third_party/lua-5.2.2/src/lundump.h \
@@ -176,30 +196,9 @@ HEADERS += \
     src/third_party/lua-5.2.2/src/lcode.h \
     src/third_party/lua-5.2.2/src/lauxlib.h \
     src/third_party/lua-5.2.2/src/lapi.h \
-    src/Map/mapdata.h \
-    src/Map/mapbase.h \
-    src/Common/env.h \
-    src/Common/log.h \
-    src/Common/types.h \
-    src/Common/err.h \
-    src/Common/arch.h \
-    src/Common/common.h \
-    src/Common/endianness.h \
-    src/inifile.h \
-    src/Network/msgregister.h \
-    src/basefunc.h \
-    src/Script/itemtask.h \
-    src/Network/msgallot.h \
-    src/Network/msgtick.h \
     src/third_party/minilzo-2.06/minilzo.h \
     src/third_party/minilzo-2.06/lzodefs.h \
-    src/third_party/minilzo-2.06/lzoconf.h \
-    src/Network/msgmapinfo.h \
-    src/Security/Cryptography/diffiehellman.h \
-    src/third_party/bigint/bigint.h \
-    src/Security/Cryptography/icipher.h \
-    src/Network/msgloginproofa.h \
-    src/Network/msgloginchallenges.h
+    src/third_party/minilzo-2.06/lzoconf.h
 
 INCLUDEPATH += \
     src \

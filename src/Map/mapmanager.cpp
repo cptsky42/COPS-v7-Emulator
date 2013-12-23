@@ -106,7 +106,6 @@ MapManager :: loadData()
                                 LOG(INFO, "Loaded map data at '%s' for id=%u.",
                                     dataPath.c_str(), mapId);
 
-                                // TODO: parallel compression ?
                                 LOG(DBG, "Compressing map data of '%s'...",
                                     dataPath.c_str());
                                 err = data->pack();

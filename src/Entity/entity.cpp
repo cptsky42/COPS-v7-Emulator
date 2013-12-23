@@ -76,7 +76,7 @@ Entity :: addEntityToBCSet(const Entity& aEntity) const
 
         if (isPlayer())
         {
-            Player* player = (Player*)this; // TODO: safe cast ?
+            Player* player = (Player*)this;
             aEntity.sendShow(*player);
         }
     }
@@ -90,7 +90,7 @@ Entity :: removeEntityFromBCSet(const Entity& aEntity) const
 
     if (isPlayer())
     {
-        Player* player = (Player*)this; // TODO: safe cast ?
+        Player* player = (Player*)this;
 
         MsgAction msg(&aEntity, 0, MsgAction::actionDisappear);
         player->send(&msg);
@@ -112,7 +112,7 @@ Entity :: broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const
 
     if (aIncludeSelf && isPlayer())
     {
-        Player* player = (Player*)this; // TODO: safe cast ?
+        Player* player = (Player*)this;
         player->send(aMsg);
     }
 
@@ -124,7 +124,7 @@ Entity :: broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const
         const Entity& entity = *it->second;
         if (entity.isPlayer())
         {
-            const Player* player = (const Player*)&entity; // TODO: safe cast ?
+            const Player* player = (const Player*)&entity;
             player->send(aMsg);
         }
     }
@@ -137,7 +137,7 @@ Entity :: broadcastRoomMsg(uint8_t* aBuf, size_t aLen, bool aIncludeSelf) const
 
     if (aIncludeSelf && isPlayer())
     {
-        Player* player = (Player*)this; // TODO: safe cast ?
+        Player* player = (Player*)this;
         player->send(aBuf, aLen);
     }
 
@@ -149,7 +149,7 @@ Entity :: broadcastRoomMsg(uint8_t* aBuf, size_t aLen, bool aIncludeSelf) const
         const Entity& entity = *it->second;
         if (entity.isPlayer())
         {
-            const Player* player = (const Player*)&entity; // TODO: safe cast ?
+            const Player* player = (const Player*)&entity;
             player->send(aBuf, aLen);
         }
     }
