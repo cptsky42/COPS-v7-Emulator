@@ -44,19 +44,19 @@ Server :: Server()
     err_t err = ERROR_SUCCESS;
 
     // init the logger...
-    DOIF(err, Logger::init("./", "xyserv"));
+    DOIF(err, Logger::init("./", "zfserv"));
 
     // parse the config file...
     IniFile settings;
     DOIF(err, settings.open("./settings.cfg"));
 
-    string name = settings.readString("FAITH_EMULATOR/NAME", "COPS"); // TODO it
-    mServerIP = settings.readString("FAITH_EMULATOR/SERVER_IP", "127.0.0.1");
+    string name = settings.readString("COPS_EMULATOR/NAME", "COPS"); // TODO it
+    mServerIP = settings.readString("COPS_EMULATOR/SERVER_IP", "127.0.0.1");
 
-    string sql_host = settings.readString("FAITH_EMULATOR/SQL_HOST", "localhost");
-    string sql_db = settings.readString("FAITH_EMULATOR/SQL_DB", "xyserver");
-    string sql_user = settings.readString("FAITH_EMULATOR/SQL_USER", "root");
-    string sql_pwd = settings.readString("FAITH_EMULATOR/SQL_PWD", "");
+    string sql_host = settings.readString("COPS_EMULATOR/SQL_HOST", "localhost");
+    string sql_db = settings.readString("COPS_EMULATOR/SQL_DB", "zfserver");
+    string sql_user = settings.readString("COPS_EMULATOR/SQL_USER", "root");
+    string sql_pwd = settings.readString("COPS_EMULATOR/SQL_PWD", "");
 
     // try to connect to the database...
     Database& db = Database::getInstance();
