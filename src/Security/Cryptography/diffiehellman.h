@@ -25,7 +25,7 @@ public:
 
     std::string generateRequest();
     std::string generateResponse(char* aPubKey);
-    void handleResponse(char* aPubKey);
+    std::string handleResponse(char* aPubKey);
 
 private:
     bigint p;

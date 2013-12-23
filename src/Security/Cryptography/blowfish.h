@@ -11,6 +11,7 @@
 #define _COPS_V7_EMULATOR_BLOWFISH_CFB64_H_
 
 #include "common.h"
+#include "icipher.h"
 
 /**
  * Blowfish is a keyed, symmetric block cipher, designed in 1993 by
@@ -24,7 +25,7 @@
  * This implementation uses the Cipher Feedback 64 mode on stream.
  * This implementation requires 4 KiO of memory.
  */
-class Blowfish
+class Blowfish : public ICipher
 {
 public:
     /** The block size of the algorithm in bits (must be 64) */
@@ -39,7 +40,7 @@ public:
     Blowfish();
 
     /* destructor */
-    ~Blowfish();
+    virtual ~Blowfish();
 
     /**
      * Generates the mixed P-Array and S-Boxes based on the given seed.
@@ -48,7 +49,7 @@ public:
      * @param[in]     aSeed         the seed that will be used
      * @param[in]     aLen          the number of octets of the seed
      */
-    void generateKey(uint8_t* aSeed, size_t aLen);
+    void generateKey(const uint8_t* aSeed, size_t aLen);
 
     /**
      * Encrypts n octet(s) with the Blowfish algorithm and the CFB64 mode.
@@ -57,7 +58,7 @@ public:
      * @param[in,out] aBuf          the buffer that will be encrypted
      * @param[in]     aLen          the number of octets to encrypt
      */
-    void encrypt(uint8_t* aBuf, size_t aLen);
+    virtual void encrypt(uint8_t* aBuf, size_t aLen);
 
     /**
      * Encrypts n octet(s) with the Blowfish algorithm and the CFB64 mode.
@@ -66,7 +67,7 @@ public:
      * @param[in,out] aBuf          the buffer that will be encrypted
      * @param[in]     aLen          the number of octets to encrypt
      */
-    void decrypt(uint8_t* pBuf, size_t aLen);
+    virtual void decrypt(uint8_t* aBuf, size_t aLen);
 
     /**
      * Sets the encryption IV and/or the decryption IV with the given value.
@@ -75,8 +76,12 @@ public:
      * @param[in]     aEnvIV        the new encryption IV
      * @param[in]     aDecIV        the new decryption IV
      */
-    void setIVs(uint8_t aEncIV[Blowfish::BLOCK_SIZE],
-                uint8_t aDecIV[Blowfish::BLOCK_SIZE]);
+    void setIVs(const uint8_t aEncIV[Blowfish::BLOCK_SIZE],
+                const uint8_t aDecIV[Blowfish::BLOCK_SIZE]);
+
+public:
+    /** Get the algorithm used by the cipher. */
+    virtual ICipher::Algorithm getAlgorithm() const { return ICipher::BLOWFISH; }
 
 private:
     /**

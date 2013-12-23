@@ -8,26 +8,48 @@
 
 #include "client.h"
 #include "networkclient.h"
+#include "tqcipher.h"
+#include "blowfish.h"
+#include "diffiehellman.h"
 #include "msg.h"
 #include "player.h"
 #include "database.h"
 #include "world.h"
 #include <stdlib.h>
 
-Client :: Client(NetworkClient* aSocket)
+Client :: Client(NetworkClient* aSocket, ICipher::Algorithm aAlgorithm)
+    : mSocket(aSocket), mCipher(nullptr), mExchange(nullptr),
+      mAccountID(-1), mAccLvl(0), mFlags(0),
+      mPlayer(nullptr)
 {
     ASSERT(aSocket != nullptr);
 
-    mSocket = aSocket;
-    mCipher.generateIV(0x0705FD1F, 0x1B7A313F);
+    switch (aAlgorithm)
+    {
+        case ICipher::TQ_CIPHER:
+            {
+                TqCipher* cipher = new TqCipher();
+                cipher->generateIV(0x13FA0F9D, 0x6D5C7962);
+
+                mCipher = cipher;
+                break;
+            }
+        case ICipher::BLOWFISH:
+            {
+                static const char SEED[] = "DR654dt34trg4UI6";
+                static const size_t SEED_LEN = strlen(SEED);
+
+                Blowfish* cipher = new Blowfish();
+                cipher->generateKey((const uint8_t*)SEED, SEED_LEN);
+
+                mCipher = cipher;
+            }
+        default:
+            ASSERT(false); // unknown cipher
+            break;
+    }
 
     mStatus = Client::NOT_AUTHENTICATED;
-
-    mAccountID = -1;
-    mAccLvl = 0;
-    mFlags = 0;
-
-    mPlayer = nullptr;
 }
 
 Client :: ~Client()
@@ -41,6 +63,9 @@ Client :: ~Client()
 
         SAFE_DELETE(mPlayer);
     }
+
+    SAFE_DELETE(mCipher);
+    SAFE_DELETE(mExchange);
 }
 
 void
@@ -83,10 +108,15 @@ Client :: send(Msg* aMsg)
 {
     ASSERT(aMsg != nullptr);
 
-    uint8_t* data = new uint8_t[aMsg->getLength()];
-    memcpy(data, aMsg->getBuffer(), aMsg->getLength());
+    // TODO move me
+    static const char SEAL[] = "TQServer";
+    static const size_t SEAL_LEN = strlen(SEAL);
 
-    mCipher.encrypt(data, aMsg->getLength());
+    uint8_t* data = new uint8_t[aMsg->getLength() + SEAL_LEN];
+    memcpy(data, aMsg->getBuffer(), aMsg->getLength());
+    memcpy(data + aMsg->getLength(), SEAL, SEAL_LEN);
+
+    mCipher->encrypt(data, aMsg->getLength());
     mSocket->send(data, aMsg->getLength());
 
     SAFE_DELETE_ARRAY(data);
@@ -97,10 +127,15 @@ Client :: send(uint8_t* aBuf, size_t aLen)
 {
     ASSERT(aBuf != nullptr);
 
-    uint8_t* data = new uint8_t[aLen];
-    memcpy(data, aBuf, aLen);
+    // TODO move me
+    static const char SEAL[] = "TQServer";
+    static const size_t SEAL_LEN = strlen(SEAL);
 
-    mCipher.encrypt(data, aLen);
+    uint8_t* data = new uint8_t[aLen + SEAL_LEN];
+    memcpy(data, aBuf, aLen);
+    memcpy(data + aLen, SEAL, SEAL_LEN);
+
+    mCipher->encrypt(data, aLen);
     mSocket->send(data, aLen);
 
     SAFE_DELETE_ARRAY(data);

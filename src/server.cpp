@@ -116,8 +116,30 @@ Server :: connectionHandler(NetworkClient* aClient)
     {
         uint16_t port = ((TcpServer*)aClient->getServer())->getPort();
 
-        Client* client = new Client(aClient);
-        client->setStatus(port == MSGSERVER_PORT ? Client::NORMAL : Client::NOT_AUTHENTICATED);
+        Client* client = nullptr;
+        switch (port)
+        {
+            case ACCSERVER_PORT:
+                {
+                    client = new Client(aClient, ICipher::TQ_CIPHER);
+                    client->setStatus(Client::NOT_AUTHENTICATED);
+
+                    break;
+                }
+            case MSGSERVER_PORT:
+                {
+                    client = new Client(aClient, ICipher::BLOWFISH);
+                    client->setStatus(Client::KEY_EXCHANGE);
+
+                    // TODO
+                    //client->generateExchangeRequest();
+
+                    break;
+                }
+            default:
+                ASSERT(false); // received an unknown request
+                break;
+        }
 
         aClient->setOwner(client);
     }
@@ -139,47 +161,61 @@ Server :: receiveHandler(NetworkClient* aClient, uint8_t* aBuf, size_t aLen)
         Client* client = (Client*)aClient->getOwner();
         client->getCipher().decrypt(received, aLen);
 
-        size_t size = 0;
-        for (size_t i = 0; i < aLen; i += size)
+        switch (client->getStatus())
         {
-            #if BYTE_ORDER == BIG_ENDIAN
-            size = bswap16(((Msg::Header*)(received + i))->Length);
-            #else
-            size = ((Msg::Header*)(received + i))->Length;
-            #endif
+            case Client::KEY_EXCHANGE:
+                {
+                    // TODO
+                    //client->handleExchangeResponse(received, aLen);
+                    break;
+                }
+            default:
+                {
+                    size_t size = 0;
+                    for (size_t i = 0; i < aLen; i += size)
+                    {
+                        #if BYTE_ORDER == BIG_ENDIAN
+                        size = bswap16(((Msg::Header*)(received + i))->Length);
+                        #else
+                        size = ((Msg::Header*)(received + i))->Length;
+                        #endif
 
-            if (size < aLen)
-            {
-                uint8_t* packet = new uint8_t[size];
-                memcpy(packet, received + i, size);
+                        if (size < aLen)
+                        {
+                            uint8_t* packet = new uint8_t[size];
+                            memcpy(packet, received + i, size);
 
-                #if BYTE_ORDER == BIG_ENDIAN
-                Msg::Header* header = (Msg::Header*)packet;
-                header->Length = bswap16(header->Length);
-                header->Type = bswap16(header->Type);
-                #endif
+                            #if BYTE_ORDER == BIG_ENDIAN
+                            Msg::Header* header = (Msg::Header*)packet;
+                            header->Length = bswap16(header->Length);
+                            header->Type = bswap16(header->Type);
+                            #endif
 
-                Msg* msg = nullptr;
-                Msg::create(&msg, &packet, size);
-                msg->process(client);
+                            Msg* msg = nullptr;
+                            Msg::create(&msg, &packet, size);
+                            msg->process(client);
 
-                SAFE_DELETE(msg);
-                SAFE_DELETE_ARRAY(packet);
-            }
-            else
-            {
-                #if BYTE_ORDER == BIG_ENDIAN
-                Msg::Header* header = (Msg::Header*)received;
-                header->Length = bswap16(header->Length);
-                header->Type = bswap16(header->Type);
-                #endif
+                            SAFE_DELETE(msg);
+                            SAFE_DELETE_ARRAY(packet);
+                        }
+                        else
+                        {
+                            #if BYTE_ORDER == BIG_ENDIAN
+                            Msg::Header* header = (Msg::Header*)received;
+                            header->Length = bswap16(header->Length);
+                            header->Type = bswap16(header->Type);
+                            #endif
 
-                Msg* msg = nullptr;
-                Msg::create(&msg, &received, size);
-                msg->process(client);
+                            Msg* msg = nullptr;
+                            Msg::create(&msg, &received, size);
+                            msg->process(client);
 
-                SAFE_DELETE(msg);
-            }
+                            SAFE_DELETE(msg);
+                        }
+                    }
+
+                    break;
+                }
         }
 
         SAFE_DELETE_ARRAY(received);

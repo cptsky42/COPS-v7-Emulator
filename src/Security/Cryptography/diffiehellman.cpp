@@ -1,3 +1,11 @@
+/**
+ * ****** COPS v7 Emulator - Open Source ******
+ * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
+ *
+ * Please read the WARNING, DISCLAIMER and PATENTS
+ * sections in the LICENSE file.
+ */
+
 #include "diffiehellman.h"
 
 using namespace std;
@@ -47,11 +55,15 @@ DiffieHellman :: generateResponse(char* aPubKey)
     return response;
 }
 
-void
+string
 DiffieHellman :: handleResponse(char* aPubKey)
 {
     B = str_to_bi_base(aPubKey, 16);
     s = bi_mod_power(B, a, p);
+
+    string response;
+    bi_to_str_base(response, s, 16);
+    return response;
 }
 
 ///////////////////////////////////////////////////

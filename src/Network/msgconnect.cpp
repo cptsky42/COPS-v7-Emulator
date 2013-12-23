@@ -87,10 +87,6 @@ MsgConnect :: process(Client* aClient)
         case Client::NORMAL: // Sent to the MsgServer
         {
             // TODO: if online, disconnect
-
-            TqCipher& cipher = client.getCipher();
-            cipher.generateKey(mInfo->Data, mInfo->AccountUID);
-
             if (!IS_SUCCESS(db.getPlayerInfo(client)))
             {
                 client.disconnect();

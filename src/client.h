@@ -10,9 +10,10 @@
 #define _COPS_V7_EMULATOR_CLIENT_H_
 
 #include "common.h"
-#include "tqcipher.h"
+#include "icipher.h"
 #include <string>
 
+class DiffieHellman;
 class Database;
 class NetworkClient;
 class Msg;
@@ -31,6 +32,8 @@ public:
     {
         /** The client is still not authenticated */
         NOT_AUTHENTICATED,
+        /** The client is authenticated, but is doing the key exchange */
+        KEY_EXCHANGE,
         /** The client is banned */
         BANNED,
         /** The client use an invalid username */
@@ -46,7 +49,7 @@ public:
     };
 
 public:
-    Client(NetworkClient* aSocket);
+    Client(NetworkClient* aSocket, ICipher::Algorithm aAlgorithm);
     ~Client();
 
     void save();
@@ -58,7 +61,9 @@ public:
 
 public:
     /** Get a reference to the client cipher */
-    TqCipher& getCipher() { return mCipher; }
+    ICipher& getCipher() const { return *mCipher; }
+    /** Get a reference to the client exchange */
+    DiffieHellman& getExchange() const { return *mExchange; }
 
     /** Get the account name of the client. */
     const char* getAccount() const { return mAccount.c_str(); }
@@ -78,7 +83,8 @@ public:
 
 private:
     NetworkClient* mSocket; //!< the TCP/IP socket wrapper of the client
-    TqCipher mCipher; //!< the cipher of the client
+    ICipher* mCipher; //!< the cipher of the client
+    DiffieHellman* mExchange; //!< the key exchange of the client
 
     Status mStatus; //!< the status of the account
 

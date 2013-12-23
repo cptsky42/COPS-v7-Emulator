@@ -109,7 +109,9 @@ SOURCES += \
     src/Network/msgmapinfo.cpp \
     src/Security/Cryptography/diffiehellman.cpp \
     src/third_party/bigint/bigint_int.c \
-    src/third_party/bigint/bigint_ext.c
+    src/third_party/bigint/bigint_ext.c \
+    src/Network/msgloginproofa.cpp \
+    src/Network/msgloginchallenges.cpp
 
 HEADERS += \
     src/server.h \
@@ -196,7 +198,10 @@ HEADERS += \
     src/third_party/minilzo-2.06/lzoconf.h \
     src/Network/msgmapinfo.h \
     src/Security/Cryptography/diffiehellman.h \
-    src/third_party/bigint/bigint.h
+    src/third_party/bigint/bigint.h \
+    src/Security/Cryptography/icipher.h \
+    src/Network/msgloginproofa.h \
+    src/Network/msgloginchallenges.h
 
 INCLUDEPATH += \
     src \

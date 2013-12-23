@@ -262,8 +262,5 @@ private:
 //	void	SetSynID(OBJID idSyn, bool bWithAllNpc);				// true: set all syna npc syn id, yet.
 //	void	SetUserID(OBJID idUser, bool bWithAllNpc);				// true: set all syna npc syn id, yet.
 //	bool	EraseMap();
-//	void	SetResLev(int nData, bool bUpdate)			{ m_pData->SetInt(GAMEMAPDATA_RESOURCE_LEV, nData); if(bUpdate) m_pData->Update(); }
-//	void	SetPortal0X(int nData, bool bUpdate)		{ m_pData->SetInt(GAMEMAPDATA_PORTAL0_X, nData); if(bUpdate) m_pData->Update(); }
-//	void	SetPortal0Y(int nData, bool bUpdate)		{ m_pData->SetInt(GAMEMAPDATA_PORTAL0_Y, nData); if(bUpdate) m_pData->Update(); }
 //	bool	AddTerrainObj(OBJID idOwner, int x, int y, OBJID idTerrainObj);
 //	bool	DelTerrainObj(OBJID idOwner);

@@ -6,10 +6,11 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _COPS_V7_EMULATOR_RC5_H
-#define _COPS_V7_EMULATOR_RC5_H
+#ifndef _COPS_V7_EMULATOR_RC5_H_
+#define _COPS_V7_EMULATOR_RC5_H_
 
 #include "common.h"
+#include "icipher.h"
 
 /**
  * Rivest Cipher 5 (RC5) implementation for Era of Faith. The game uses the
@@ -27,7 +28,7 @@
  * The following implementation has a memory footprint of
  * (KEY_SIZE + (((ROUNDS * 2) + 2) * 4)) byte. (120 bytes by default)
  */
-class RC5
+class RC5 : public ICipher
 {
 public:
     /** The key size of the algorithm in bytes (0 - 255, 16 suggested) */
@@ -42,7 +43,7 @@ public:
     RC5();
 
     /* destructor */
-    ~RC5();
+    virtual ~RC5();
 
 public:
     /**
@@ -61,7 +62,7 @@ public:
      * @param[in,out] aBuf          the buffer that will be encrypted
      * @param[in]     aLen          the number of octets to encrypt
      */
-    void encrypt(uint8_t* aBuf, size_t aLen);
+    virtual void encrypt(uint8_t* aBuf, size_t aLen);
 
     /**
      * Decrypt n octet(s) with the cipher.
@@ -71,7 +72,11 @@ public:
      * @param[in,out] aBuf          the buffer that will be decrypted
      * @param[in]     aLen          the number of octets to decrypt
      */
-    void decrypt(uint8_t* aBuf, size_t aLen);
+    virtual void decrypt(uint8_t* aBuf, size_t aLen);
+
+public:
+    /** Get the algorithm used by the cipher. */
+    virtual ICipher::Algorithm getAlgorithm() const { return ICipher::RC5; }
 
 private:
     /* magic values */

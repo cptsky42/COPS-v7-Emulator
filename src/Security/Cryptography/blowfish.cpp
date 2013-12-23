@@ -207,7 +207,7 @@ Blowfish :: ~Blowfish()
 }
 
 void
-Blowfish :: generateKey(uint8_t* aSeed, size_t aLen)
+Blowfish :: generateKey(const uint8_t* aSeed, size_t aLen)
 {
     ASSERT(aSeed != nullptr);
     ASSERT(aLen > 0);
@@ -314,8 +314,8 @@ Blowfish :: decrypt(uint8_t* aBuf, size_t aLen)
 }
 
 void
-Blowfish :: setIVs(uint8_t aEncIV[Blowfish::BLOCK_SIZE],
-                     uint8_t aDecIV[Blowfish::BLOCK_SIZE])
+Blowfish :: setIVs(const uint8_t aEncIV[Blowfish::BLOCK_SIZE],
+                   const uint8_t aDecIV[Blowfish::BLOCK_SIZE])
 {
     if (aEncIV != nullptr)
     {
