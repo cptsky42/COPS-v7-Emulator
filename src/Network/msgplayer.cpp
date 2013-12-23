@@ -60,17 +60,17 @@ MsgPlayer :: create(const Player& aPlayer)
         mInfo->Status = 0; // TODO: Implement me
         mInfo->SynId_Rank = 0; // TODO: (aPlayer.getSynRank() << MASK_RANK_SHIFT) | (aPlayer.getSynId() & MASK_SYNID);
 
+        /*
         mInfo->WeaponRType = 0; // TODO: Implement me
         mInfo->WeaponLType = 0; // TODO: Implement me
         mInfo->MountType = 0; // TODO: Implement me
         mInfo->MantleType = 0; // TODO: Implement me
+        */
 
         mInfo->PosX = aPlayer.getPosX();
         mInfo->PosY = aPlayer.getPosY();
 
         mInfo->Hair = aPlayer.getHair();
-        mInfo->Length = 0; // Unused by EoF
-        mInfo->Fat = 0; // Unused by EoF
 
         mInfo->Direction = aPlayer.getDirection();
         mInfo->Pose = aPlayer.getPose();
@@ -102,10 +102,12 @@ MsgPlayer :: create(const Monster& aMonster)
         mInfo->Status = 0; // TODO: Implement me
         mInfo->OwnerUID = 0; // TODO: Pet
 
+        /* TODO
         mInfo->WeaponRType = 0;
         mInfo->WeaponLType = 0;
         mInfo->MountType = 0;
         mInfo->MantleType = 0;
+        */
 
         mInfo->Life = aMonster.getCurHP();
         mInfo->Level = aMonster.getLevel();
@@ -114,8 +116,6 @@ MsgPlayer :: create(const Monster& aMonster)
         mInfo->PosY = aMonster.getPosY();
 
         mInfo->Hair = 0;
-        mInfo->Length = 0; // Unused by EoF
-        mInfo->Fat = 0; // Unused by EoF
 
         mInfo->Direction = aMonster.getDirection();
         mInfo->Pose = aMonster.getPose();
@@ -143,10 +143,12 @@ MsgPlayer :: swap(uint8_t* aBuf) const
     info->Look = bswap32(info->Look);
     info->Status = bswap64(info->Status);
 
+    info->GarmentType = bswap32(info->GarmentType);
+    info->HeadType = bswap32(info->HeadType);
+    info->ArmorType = bswap32(info->ArmorType);
     info->WeaponRType = bswap32(info->WeaponRType);
     info->WeaponLType = bswap32(info->WeaponLType);
 
-    info->MantleType = bswap16(info->MantleType);
     info->PosX = bswap16(info->PosX);
     info->PosY = bswap16(info->PosY);
     info->Hair = bswap16(info->Hair);
@@ -154,7 +156,6 @@ MsgPlayer :: swap(uint8_t* aBuf) const
     if (Entity::isPlayer(uid))
     {
         info->SynId_Rank = bswap32(info->SynId_Rank);
-        info->MountType = bswap32(info->MountType);
     }
     else if (Entity::isMonster(uid))
     {

@@ -27,6 +27,18 @@ MsgTalk :: MsgTalk(const char* aSpeaker, const char* aHearer, const char* aWords
     create(aSpeaker, aHearer, "", aWords, aChannel, aColor); // HACK !
 }
 
+MsgTalk :: MsgTalk(const Player& aSpeaker, const Player& aHearer, const char* aWords,
+                   Channel aChannel, uint32_t aColor)
+    : Msg(sizeof(MsgInfo) +
+          (aSpeaker.getName() != nullptr ? strlen(aSpeaker.getName()) : 0)  + 1 +
+          (aHearer.getName() != nullptr ? strlen(aHearer.getName()) : 0)  + 1 +
+          /* (aEmotion != nullptr ? strlen(aEmotion) : 0) */ + 1 +
+          (aWords != nullptr ? strlen(aWords) : 0) + 1),
+      mInfo((MsgInfo*)mBuf)
+{
+    create(aSpeaker, aHearer, "", aWords, aChannel, aColor); // HACK !
+}
+
 MsgTalk :: MsgTalk(uint8_t** aBuf, size_t aLen)
     : Msg(aBuf, aLen), mInfo((MsgInfo*)mBuf)
 {
@@ -64,6 +76,8 @@ MsgTalk :: create(const char* aSpeaker, const char* aHearer, const char* aEmotio
         mInfo->Channel = (uint16_t)aChannel;
         mInfo->Style = (int16_t)STYLE_NORMAL;
         mInfo->Timestamp = timeGetTime();
+        mInfo->HearerLook = 0;
+        mInfo->SpeakerLook = 0;
 
         StringPacker packer(mInfo->Buf);
         packer.addString(aSpeaker);
@@ -75,6 +89,44 @@ MsgTalk :: create(const char* aSpeaker, const char* aHearer, const char* aEmotio
     {
         LOG(ERROR, "Invalid length: hearer=%zu, speaker=%zu, emotion=%zu, words=%zu",
             strlen(aHearer), strlen(aSpeaker), strlen(aEmotion), strlen(aWords));
+    }
+}
+
+void
+MsgTalk :: create(const Player& aSpeaker, const Player& aHearer, const char* aEmotion,
+                  const char* aWords, Channel aChannel, uint32_t aColor)
+{
+    ASSERT(&aSpeaker != nullptr && &aHearer != nullptr);
+    ASSERT(aSpeaker.getName() != nullptr && aSpeaker.getName()[0] != '\0');
+    ASSERT(aHearer.getName() != nullptr && aHearer.getName()[0] != '\0');
+    ASSERT(aEmotion != nullptr);
+    ASSERT(aWords != nullptr && aWords[0] != '\0');
+
+    if (strlen(aSpeaker.getName()) < MAX_NAMESIZE &&
+        strlen(aHearer.getName()) < MAX_NAMESIZE &&
+        strlen(aEmotion) < MAX_NAMESIZE &&
+        strlen(aWords) < MAX_WORDSSIZE)
+    {
+        mInfo->Header.Length = mLen;
+        mInfo->Header.Type = MSG_TALK;
+
+        mInfo->Color = aColor;
+        mInfo->Channel = (uint16_t)aChannel;
+        mInfo->Style = (int16_t)STYLE_NORMAL;
+        mInfo->Timestamp = timeGetTime();
+        mInfo->HearerLook = aHearer.getLook();
+        mInfo->SpeakerLook = aSpeaker.getLook();
+
+        StringPacker packer(mInfo->Buf);
+        packer.addString(aSpeaker.getName());
+        packer.addString(aHearer.getName());
+        packer.addString(aEmotion);
+        packer.addString(aWords);
+    }
+    else
+    {
+        LOG(ERROR, "Invalid length: hearer=%zu, speaker=%zu, emotion=%zu, words=%zu",
+            strlen(aHearer.getName()), strlen(aSpeaker.getName()), strlen(aEmotion), strlen(aWords));
     }
 }
 
@@ -183,4 +235,6 @@ MsgTalk :: swap(uint8_t* aBuf) const
     info->Channel = bswap16(info->Channel);
     info->Style = bswap16(info->Style);
     info->Timestamp = bswap32(info->Timestamp);
+    info->HearerLook = bswap32(info->HearerLook);
+    info->SpeakerLook = bswap32(info->SpeakerLook);
 }

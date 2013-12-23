@@ -34,9 +34,9 @@ err_t
 Finder :: fileOpen(FILE** aOutFile,
                    const char* aPath, const char* aMode)
 {
-    ASSERT_ERR(aOutFile != nullptr && *aOutFile == nullptr, ERROR_BAD_PARAMS);
-    ASSERT_ERR(aPath != nullptr && aPath[0] != '\0', ERROR_BAD_PARAMS);
-    ASSERT_ERR(aMode != nullptr && aMode[0] != '\0', ERROR_BAD_PARAMS);
+    ASSERT_ERR(aOutFile != nullptr && *aOutFile == nullptr, ERROR_INVALID_PARAMETER);
+    ASSERT_ERR(aPath != nullptr && aPath[0] != '\0', ERROR_INVALID_PARAMETER);
+    ASSERT_ERR(aMode != nullptr && aMode[0] != '\0', ERROR_INVALID_PARAMETER);
 
     err_t err = ERROR_SUCCESS;
 
@@ -70,7 +70,7 @@ Finder :: fileOpen(FILE** aOutFile,
 int
 Finder :: fileHandle(FILE* aFile)
 {
-    ASSERT_ERR(aFile != nullptr, ERROR_BAD_PARAMS);
+    ASSERT_ERR(aFile != nullptr, ERROR_INVALID_PARAMETER);
 
     int handle = 0;
 
@@ -87,7 +87,7 @@ Finder :: fileHandle(FILE* aFile)
 err_t
 Finder :: fileLock(FILE* aFile)
 {
-    ASSERT_ERR(aFile != nullptr, ERROR_BAD_PARAMS);
+    ASSERT_ERR(aFile != nullptr, ERROR_INVALID_PARAMETER);
 
     err_t err = ERROR_SUCCESS;
 
@@ -112,7 +112,7 @@ Finder :: fileLock(FILE* aFile)
 err_t
 Finder :: fileUnlock(FILE* aFile)
 {
-    ASSERT_ERR(aFile != nullptr, ERROR_BAD_PARAMS);
+    ASSERT_ERR(aFile != nullptr, ERROR_INVALID_PARAMETER);
 
     err_t err = ERROR_SUCCESS;
 
@@ -137,7 +137,7 @@ Finder :: fileUnlock(FILE* aFile)
 int64_t
 Finder :: fileTell(FILE* aFile)
 {
-    ASSERT_ERR(aFile != nullptr, ERROR_BAD_PARAMS);
+    ASSERT_ERR(aFile != nullptr, ERROR_INVALID_PARAMETER);
 
     int64_t offset = 0;
 
@@ -156,8 +156,8 @@ Finder :: fileTell(FILE* aFile)
 err_t
 Finder :: fileSeek(FILE* aFile, int64_t aOffset, int aWhence)
 {
-    ASSERT_ERR(aFile != nullptr, ERROR_BAD_PARAMS);
-    ASSERT_ERR(aWhence == SEEK_SET || aWhence == SEEK_CUR || aWhence == SEEK_END, ERROR_BAD_PARAMS);
+    ASSERT_ERR(aFile != nullptr, ERROR_INVALID_PARAMETER);
+    ASSERT_ERR(aWhence == SEEK_SET || aWhence == SEEK_CUR || aWhence == SEEK_END, ERROR_INVALID_PARAMETER);
 
     err_t err = ERROR_SUCCESS;
 
@@ -176,7 +176,7 @@ Finder :: fileSeek(FILE* aFile, int64_t aOffset, int aWhence)
 bool
 Finder :: fileExists(const char* aPath)
 {
-    ASSERT_ERR(aPath != nullptr && aPath[0] != '\0', ERROR_BAD_PARAMS);
+    ASSERT_ERR(aPath != nullptr && aPath[0] != '\0', ERROR_INVALID_PARAMETER);
 
     #if defined(_WIN32)
     struct _stat64 info;

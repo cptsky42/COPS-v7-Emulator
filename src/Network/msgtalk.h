@@ -12,6 +12,8 @@
 #include "common.h"
 #include "msg.h"
 
+class Player;
+
 class MsgTalk : public Msg
 {
 public:
@@ -91,12 +93,17 @@ public:
         int16_t Channel;
         int16_t Style;
         int32_t Timestamp;
+        uint32_t HearerLook;
+        uint32_t SpeakerLook;
         uint8_t Buf[1]; // Speaker, Hearer, Emotion, Words
     }MsgInfo;
     #pragma pack(pop)
 
 public:
     MsgTalk(const char* aSpeaker, const char* aHearer, const char* aWords,
+            Channel aChannel, uint32_t aColor = COLOR_WHITE);
+
+    MsgTalk(const Player& aSpeaker, const Player& aHearer, const char* aWords,
             Channel aChannel, uint32_t aColor = COLOR_WHITE);
 
     /**
@@ -127,6 +134,8 @@ public:
 private:
     /* internal filling of the packet */
     void create(const char* aSpeaker, const char* aHearer, const char* aEmotion,
+                const char* aWords, Channel aChannel, uint32_t aColor);
+    void create(const Player& aSpeaker, const Player& aHearer, const char* aEmotion,
                 const char* aWords, Channel aChannel, uint32_t aColor);
 
     /* internal swapping of the integers for neutral-endian support */

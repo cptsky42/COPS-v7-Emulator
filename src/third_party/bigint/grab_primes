@@ -1,0 +1,20 @@
+#!/bin/sh
+
+last=`scan last | columns 1 | tr -cd '[0-9]'`
+inc=100
+{
+    from=1
+    while true ; do
+	to=`expr "$from" + "$inc" - 1`
+	if [ "$to" -gt "$last" ] ; then
+	    break
+	fi
+	show "$from-$to"
+	from=`expr "$to" + 1`
+    done
+    if [ "$from" -le "$last" ] ; then
+	show "$from-$last"
+    fi
+} |
+  egrep -v '[a-zA-Z ]' |
+  egrep -v '^$'

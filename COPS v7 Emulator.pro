@@ -32,6 +32,8 @@ SOURCES += \
     src/client.cpp \
     src/Network/Sockets/tcpserver.cpp \
     src/Network/Sockets/networkclient.cpp \
+    src/Security/Cryptography/blowfish.cpp \
+    src/Security/Cryptography/fnv.cpp \
     src/Security/Cryptography/tqcipher.cpp \
     src/Network/msg.cpp \
     src/Network/msgaccount.cpp \
@@ -104,7 +106,10 @@ SOURCES += \
     src/Network/msgallot.cpp \
     src/Network/msgtick.cpp \
     src/third_party/minilzo-2.06/minilzo.c \
-    src/Network/msgmapinfo.cpp
+    src/Network/msgmapinfo.cpp \
+    src/Security/Cryptography/diffiehellman.cpp \
+    src/third_party/bigint/bigint_int.c \
+    src/third_party/bigint/bigint_ext.c
 
 HEADERS += \
     src/server.h \
@@ -142,6 +147,8 @@ HEADERS += \
     src/Network/msgdialog.h \
     src/Script/script.h \
     src/Script/npctask.h \
+    src/Security/Cryptography/blowfish.h \
+    src/Security/Cryptography/fnv.h \
     src/Security/Cryptography/tqcipher.h \
     src/Security/Cryptography/rc5.h \
     src/third_party/lua-5.2.2/src/lzio.h \
@@ -187,7 +194,9 @@ HEADERS += \
     src/third_party/minilzo-2.06/minilzo.h \
     src/third_party/minilzo-2.06/lzodefs.h \
     src/third_party/minilzo-2.06/lzoconf.h \
-    src/Network/msgmapinfo.h
+    src/Network/msgmapinfo.h \
+    src/Security/Cryptography/diffiehellman.h \
+    src/third_party/bigint/bigint.h
 
 INCLUDEPATH += \
     src \
@@ -200,6 +209,7 @@ INCLUDEPATH += \
     src/Network/Sockets \
     src/Script \
     src/Security/Cryptography \
+    src/third_party/bigint \
     src/third_party/lua-5.2.2/src \
     src/third_party/minilzo-2.06
 

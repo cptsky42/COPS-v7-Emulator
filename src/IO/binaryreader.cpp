@@ -63,7 +63,7 @@ BinaryReader :: close()
 err_t
 BinaryReader :: lock()
 {
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
 
     return Finder::fileLock(mStream);
 }
@@ -71,7 +71,7 @@ BinaryReader :: lock()
 err_t
 BinaryReader :: unlock()
 {
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
 
     return Finder::fileUnlock(mStream);
 }
@@ -126,10 +126,10 @@ template err_t BinaryReader :: read<int64_t>(int64_t& aOutVal);
 err_t
 BinaryReader :: read(void* aBuf, size_t aLen)
 {
-    ASSERT_ERR(aBuf != nullptr, ERROR_BAD_PARAMS);
-    ASSERT_ERR(aLen > 0, ERROR_BAD_PARAMS);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(aBuf != nullptr, ERROR_INVALID_PARAMETER);
+    ASSERT_ERR(aLen > 0, ERROR_INVALID_PARAMETER);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -145,8 +145,8 @@ err_t
 BinaryReader :: readBoolean(bool& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -161,8 +161,8 @@ err_t
 BinaryReader :: readInt8(int8_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -175,8 +175,8 @@ err_t
 BinaryReader :: readInt16(int16_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -192,8 +192,8 @@ err_t
 BinaryReader :: readInt32(int32_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -209,8 +209,8 @@ err_t
 BinaryReader :: readInt64(int64_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
 
     err_t err = ERROR_SUCCESS;
 

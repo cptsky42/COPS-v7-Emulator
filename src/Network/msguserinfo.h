@@ -31,22 +31,14 @@ public:
         uint32_t Look;
         /** The hair of the player */
         uint16_t Hair;
-        /** The length of the player (unused) */
-        int8_t Length;
-        /** The fat of the player (unused) */
-        int8_t Fat;
         /** The money of the player */
         int32_t Money;
+        /** The Conquer Points of the player */
+        int32_t ConquerPoints;
         /** The experience of the player */
-        uint32_t Exp;
+        uint64_t Exp;
         /** Unknown bytes (padding ?) */
-        uint8_t Padding1[10];
-        /** The mercenary exp of the player */
-        uint16_t MercenaryExp;
-        /** The mercenary level of the player */
-        uint16_t MercenaryLevel;
-        /** Unknown bytes (padding ?) */
-        uint8_t Padding2[14];
+        uint8_t Padding[18];
         /** The force of the player */
         uint16_t Force;
         /** The dexterity of the player */

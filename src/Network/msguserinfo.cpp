@@ -52,12 +52,9 @@ MsgUserInfo :: create(const Player& aPlayer)
         mInfo->UniqId = aPlayer.getUID();
         mInfo->Look = aPlayer.getLook();
         mInfo->Hair = aPlayer.getHair();
-        mInfo->Length = 0; // unused by EoF
-        mInfo->Fat = 0; // unused by EoF
         mInfo->Money = aPlayer.getMoney();
+        mInfo->ConquerPoints = 0; // TODO
         mInfo->Exp = aPlayer.getExp();
-        mInfo->MercenaryExp = aPlayer.getMercenaryExp();
-        mInfo->MercenaryLevel = aPlayer.getMercenaryLevel();
         mInfo->Force = aPlayer.getForce();
         mInfo->Health = aPlayer.getHealth();
         mInfo->Dexterity = aPlayer.getDexterity();
@@ -72,8 +69,7 @@ MsgUserInfo :: create(const Player& aPlayer)
         mInfo->Metempsychosis = aPlayer.getMetempsychosis();
         mInfo->ShowName = 1;
 
-        memset(mInfo->Padding1, 0, sizeof(mInfo->Padding1));
-        memset(mInfo->Padding2, 0, sizeof(mInfo->Padding2));
+        memset(mInfo->Padding, 0, sizeof(mInfo->Padding));
 
         StringPacker packer(mInfo->Buf);
         packer.addString(aPlayer.getName());
@@ -97,9 +93,8 @@ MsgUserInfo :: swap(uint8_t* aBuf) const
     info->Look = bswap32(info->Look);
     info->Hair = bswap16(info->Hair);
     info->Money = bswap32(info->Money);
-    info->Exp = bswap32(info->Exp);
-    info->MercenaryExp = bswap16(info->MercenaryExp);
-    info->MercenaryLevel = bswap16(info->MercenaryLevel);
+    info->ConquerPoints = bswap32(info->ConquerPoints);
+    info->Exp = bswap64(info->Exp);
     info->Force = bswap16(info->Force);
     info->Health = bswap16(info->Health);
     info->Dexterity = bswap16(info->Dexterity);

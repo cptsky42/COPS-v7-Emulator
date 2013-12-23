@@ -38,11 +38,16 @@ public:
         uint8_t Action;
         uint8_t Ident;
         uint8_t Position;
+        uint8_t Padding;
         uint8_t Gem1;
         uint8_t Gem2;
-        uint8_t Magic1; // Attr
-        uint8_t Magic2; // Unknown
+        uint8_t Magic1; //
+        uint8_t Magic2; //
         uint8_t Magic3; // Plus
+        uint8_t Bless;
+        uint8_t Enchant;
+        uint8_t Locked; // boolean
+        uint8_t Color;
     }MsgInfo;
     #pragma pack(pop)
 

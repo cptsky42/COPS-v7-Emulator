@@ -58,40 +58,43 @@ public:
             int32_t OwnerUID;
         };
 
+        // TODO names ?
+        int32_t GarmentType;
+        int32_t HeadType;
+        int32_t ArmorType;
+
         /** Right hand weapon Id. */
         int32_t WeaponRType;
         /** Left hand weapon Id. */
         int32_t WeaponLType;
 
-        union
-        {
-            /** Mount Id. */
-            int32_t MountType;
-            struct
-            {
-                /** Current life of the monster. */
-                uint16_t Life;
-                /** Level of the monstre. */
-                uint16_t Level;
-            };
-        };
+        int32_t Padding1;
 
-        /** Mantle Id. */
-        int16_t MantleType;
+        /** Current life of the monster. */
+        uint16_t Life;
+        /** Level of the monstre. */
+        uint16_t Level;
+
         /** The X coord of the entity. */
         uint16_t PosX;
         /** The Y coord of the entity. */
         uint16_t PosY;
         /** The hair of the player. */
         uint16_t Hair;
-        /** The length of the entity (unused) */
-        int8_t Length;
-        /** The fat of the entity (unused) */
-        int8_t Fat;
         /** The cardinal direction of the entity. */
         int8_t Direction;
         /**  The pose of the entity. */
         uint16_t Pose;
+
+        // TODO names ?
+        uint8_t Metempsychosis;
+        uint16_t Padding2;
+        uint8_t Nobility;
+        uint32_t NobilityRank;
+        uint16_t Padding3;
+        uint8_t HeadColor;
+        uint8_t ArmorColor;
+
         /** The name of the entity */
         uint8_t Buf[1];
     }MsgInfo;

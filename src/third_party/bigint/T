@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ $# -ne 2 ] ; then
+    echo "usage:  $0 bits certainty" >&2
+    exit 1
+fi
+
+bits="$1"
+certainty="$2"
+
+n=`select -M prime -from primes.M -where "bits=$bits" | randomize | head -1`
+
+if [ "$n" = '' ] ; then
+    echo "$0: no prime available with that number of bits" >&2
+    exit 1
+fi
+echo "n: $n"
+
+echo "modpow:"
+(
+    echo "n=$n"
+    j=0
+    while [ "$j" -lt "$certainty" ] ; do
+	echo "modpow(random(n),n-1,n)"
+	j=`expr "$j" + 1`
+    done
+) | time ./bic | sus
+echo "isprime_td:"
+echo "isprime_td($n)" | time ./bic
+for f in isprime_n isprime_f isprime_f2 isprime_f3 isprime_ss isprime_mr ; do
+    echo "$f:"
+    echo "$f($n,$certainty)" | time ./bic
+done

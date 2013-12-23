@@ -11,13 +11,17 @@
 #include "common.h"
 #include "server.h"
 
+extern "C" {
+#include "bigint.h"
+}
+
 #ifdef _WIN32
 #include <windows.h>
 #endif // _WIN32
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication app(argc, argv);
 
     #ifdef _WIN32
     SetConsoleTitleA("COPS v7 Emulator for " TARGET_SYSTEM " (" TARGET_ARCH ") by Jean-Philippe Boivin (alias CptSky)");
@@ -28,6 +32,15 @@ int main(int argc, char *argv[])
             TARGET_SYSTEM, TARGET_ARCH, QT_VERSION_STR, __TIMESTAMP__);
     fprintf(stdout, "\n");
 
+    // Initialize the BigInt package
+    bi_initialize();
+
     const Server& server = Server::getInstance();
-    return a.exec();
+    int result = app.exec();
+
+    // Terminate the BigInt package
+    bi_terminate();
+
+
+    return result;
 }
