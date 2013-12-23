@@ -50,7 +50,7 @@ Server :: Server()
     IniFile settings;
     DOIF(err, settings.open("./settings.cfg"));
 
-    string name = settings.readString("FAITH_EMULATOR/NAME", "Faith"); // TODO
+    string name = settings.readString("FAITH_EMULATOR/NAME", "COPS"); // TODO it
     mServerIP = settings.readString("FAITH_EMULATOR/SERVER_IP", "127.0.0.1");
 
     string sql_host = settings.readString("FAITH_EMULATOR/SQL_HOST", "localhost");

@@ -8,6 +8,7 @@
 
 #include <QtCore/QCoreApplication>
 
+#include "log.h"
 #include "common.h"
 #include "server.h"
 
@@ -33,14 +34,15 @@ int main(int argc, char *argv[])
     fprintf(stdout, "\n");
 
     // Initialize the BigInt package
+    LOG(INFO, "Initializing the BigInt package...");
     bi_initialize();
 
     const Server& server = Server::getInstance();
     int result = app.exec();
 
     // Terminate the BigInt package
+    LOG(INFO, "Destroying the BigInt package...");
     bi_terminate();
-
 
     return result;
 }

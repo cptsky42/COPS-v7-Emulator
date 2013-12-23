@@ -29,6 +29,7 @@
 #endif
 
 #else
+#include <unistd.h> // sysctl, sysconf
 #include <sys/time.h> // for timeGetTime()
 #endif
 
@@ -69,6 +70,54 @@
 // Quote strings in macro */
 #define STRINGIFY_(str) #str
 #define STRINGIFY(str) STRINGIFY_(str)
+
+/*
+ *****************************************************
+ * « TaskManager » functions
+ ****************************************************
+ */
+
+// Get the number of available CPU / cores...
+inline int getNumCPU()
+{
+    int numCPU = 1;
+
+    #if defined(TARGET_SYSTEM_WINDOWS)
+    // Windows... Can use Windows API...
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo(&sysinfo);
+
+    numCPU = sysinfo.dwNumberOfProcessors;
+    #elif defined(TARGET_SYSTEM_MACOS_X) || defined(TARGET_SYSTEM_GNU_LINUX) || \
+          defined(TARGET_SYSTEM_AIX) || defined(TARGET_SYSTEM_SOLARIS)
+    // Linux, Solaris, AIX & Mac OS X (Tiger onwards)
+    numCPU = sysconf(_SC_NPROCESSORS_ONLN);
+    #else
+    // Probably Unix-like (FreeBSD, NetBSD, etc)
+    int mib[4];
+    size_t len = sizeof(numCPU);
+
+    /* set the mib for hw.ncpu */
+    mib[0] = CTL_HW;
+    mib[1] = HW_AVAILCPU;  // alternatively, try HW_NCPU;
+
+    /* get the number of CPUs from the system */
+    sysctl(mib, 2, &numCPU, &len, NULL, 0);
+
+    if (numCPU < 1) // HW_AVAILCPU might be incorrect
+    {
+         mib[1] = HW_NCPU;
+         sysctl(mib, 2, &numCPU, &len, NULL, 0);
+    }
+    #endif
+
+    if (numCPU < 1)
+    {
+        numCPU = 1;
+    }
+
+    return numCPU;
+}
 
 /*
  *****************************************************

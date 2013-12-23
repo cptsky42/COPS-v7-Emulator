@@ -76,6 +76,9 @@ MapManager :: loadData()
         gamemap.getSections(sections);
 
         // TODO: Multi-threaded loading ?
+        int numCPU = getNumCPU();
+        LOG(INFO, "Detected %d core(s).", numCPU);
+
         for (vector<string>::const_iterator
                 it = sections.begin(), end = sections.end();
              ERROR_SUCCESS == err && it != end; ++it)
