@@ -44,7 +44,7 @@ Server :: Server()
     err_t err = ERROR_SUCCESS;
 
     // init the logger...
-    DOIF(err, Logger::init("./", "zfserv"));
+    DOIF(err, Logger::init("./", "zfserv.log"));
 
     // parse the config file...
     IniFile settings;
