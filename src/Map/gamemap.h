@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -216,8 +216,6 @@ private:
 
 #endif // _COPS_V7_EMULATOR_GAMEMAP_H_
 
-//class CGameMap : public CGameObj
-//{
 //	bool	QueryObjInPos(int nPosX, int nPosY, OBJID idObjType, void** ppObj);
 //	bool	QueryObj(int nCenterX, int nCenterY, OBJID idObjType, OBJID idObj, void** ppObj);
 //	IRole*	QueryRole(int nCenterX, int nCenterY, OBJID idObj);

@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -37,16 +37,33 @@ public:
     ~MapData();
 
 public:
+    /**
+     * Compress the map data in memory.
+     *
+     * @retval ERROR_SUCCESS on success
+     * @returns An error code otherwise
+     */
     err_t pack();
+
+    /**
+     * Decompress the map data in memory.
+     *
+     * @retval ERROR_SUCCESS on success
+     * @returns An error code otherwise
+     */
     err_t unpack();
 
 public:
+    /** Get the width of the map. */
     uint16_t getWidth() const { return mWidth; }
+    /** Get the height of the map. */
     uint16_t getHeight() const { return mHeight; }
 
+    /** Get the cell information of a specific position. */
     const Cell& getCell(uint16_t aPosX, uint16_t aPosY) const
     { return mCells[pos2idx(aPosX, aPosY)]; }
 
+    /** Get the passage ID of the given coords. */
     int getPassage(uint16_t aPosX, uint16_t aPosY) const;
 
 private:

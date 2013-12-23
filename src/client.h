@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -49,14 +49,35 @@ public:
     };
 
 public:
+    /* constructor */
     Client(NetworkClient* aSocket, ICipher::Algorithm aAlgorithm);
+
+    /* destructor */
     ~Client();
 
+    /**
+     * Save the player.
+     */
     void save();
 
+    /**
+     * Send a message to the client.
+     *
+     * @param[in]  aMsg     the message to send
+     */
     void send(Msg* aMsg);
+
+    /**
+     * Send a message to the client.
+     *
+     * @param[in]   aBuf    the message to send
+     * @param[in]   aLen    the length of the message
+     */
     void send(uint8_t* aBuf, size_t aLen);
 
+    /**
+     * Disconnect the client from the server.
+     */
     void disconnect();
 
 public:
@@ -75,10 +96,14 @@ public:
     /** Get the player object linked to this client */
     Player* getPlayer() const { return mPlayer; }
 
+    /** Set the account name of the client. */
     void setAccount(const std::string& aAccount) { mAccount = aAccount; }
+    /** Set the account ID of the client. */
     void setAccountID(int32_t aAccountID) { mAccountID = aAccountID; }
+    /** Set the client status. */
     void setStatus(Status aStatus) { mStatus = aStatus; }
 
+    /** Set the current Npc task. */
     void setCurTask(const NpcTask& aTask) { mCurTask = &aTask; }
 
 private:

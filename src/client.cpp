@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -97,7 +97,7 @@ Client :: save()
 
         if (!IS_SUCCESS(err))
         {
-            LOG(CRIT, "Failed to save player %s for %p.",
+            LOG(ERROR, "Failed to save player %s for %p.",
                 mPlayer->getName(), this);
         }
     }

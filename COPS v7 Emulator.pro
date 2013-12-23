@@ -33,7 +33,6 @@ SOURCES += \
     src/Network/Sockets/tcpserver.cpp \
     src/Network/Sockets/networkclient.cpp \
     src/Security/Cryptography/blowfish.cpp \
-    src/Security/Cryptography/fnv.cpp \
     src/Security/Cryptography/tqcipher.cpp \
     src/Network/msg.cpp \
     src/Network/msgaccount.cpp \
@@ -150,7 +149,6 @@ HEADERS += \
     src/Script/script.h \
     src/Script/npctask.h \
     src/Security/Cryptography/blowfish.h \
-    src/Security/Cryptography/fnv.h \
     src/Security/Cryptography/tqcipher.h \
     src/Security/Cryptography/rc5.h \
     src/third_party/lua-5.2.2/src/lzio.h \

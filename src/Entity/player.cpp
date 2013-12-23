@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -58,9 +58,6 @@ Player :: Player(Client& aClient, uint32_t aUID)
     mPrevMap = 0;
     mPrevX = 0;
     mPrevY = 0;
-
-    mMercenaryExp = 0;
-    mMercenaryLevel = 0;
 
 
     mMsgCount = 0;

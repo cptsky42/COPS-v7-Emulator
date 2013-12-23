@@ -1,4 +1,4 @@
-/**
+/*
  * ****** Faith Software ******
  * Copyright (C) 2013 Faith Software
  * Copyright (C) 2013 Jean-Philippe Boivin
