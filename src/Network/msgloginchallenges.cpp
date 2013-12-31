@@ -11,6 +11,7 @@
 #include "diffiehellman.h"
 #include "blowfish.h"
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -31,36 +32,42 @@ MsgLoginChallengeS :: ~MsgLoginChallengeS()
 }
 
 void
-MsgLoginChallengeS :: process(Client* aClient)
+MsgLoginChallengeS :: process(Client* aClient,
+                              const uint8_t* aEncryptIV, const uint8_t* aDecryptIV)
 {
     ASSERT(aClient != nullptr);
 
     Client& client = *aClient;
 
     uint8_t* ptr = mBuf;
-    MsgInfo info; // HACK for member size...
 
-    mBuf += sizeof(info.Padding); // Padding
-    mBuf += sizeof(int32_t); // Size
-    mBuf += *((int32_t*)(ptr)) + sizeof(int32_t); // JunkSize + Junk
+    ptr += MsgLoginChallengeS::PADDING_LEN; // Padding
+    ptr += sizeof(int32_t); // Size
+    ptr += *((int32_t*)(ptr)) + sizeof(int32_t); // JunkSize + Junk
 
     int32_t b_len = *((int32_t*)(ptr));
-    mBuf += sizeof(int32_t);
+    ptr += sizeof(int32_t);
 
-    char* b_key = new char[b_len];
-    for (int32_t i = 0; i < b_len; ++i)
+    char* b_key = new char[b_len + 1];
+    int32_t i = 0;
+    for (i = 0; i < b_len; ++i)
     {
-        b_key[i] = (char)(mBuf[i]);
+        b_key[i] = (char)(ptr[i]);
     }
+    b_key[i] = '\0';
 
     DiffieHellman& exchange = client.getExchange();
     string s_key = exchange.handleResponse(b_key);
     SAFE_DELETE_ARRAY(b_key);
 
+    uint8_t seed[256]; // would mean a 2048 bits integer...
+    size_t seed_len(0);
+    hex2bin(s_key.c_str(), seed, seed_len);
+
     ASSERT(client.getCipher().getAlgorithm() == ICipher::BLOWFISH);
     Blowfish* cipher = (Blowfish*)&client.getCipher();
-    cipher->generateKey((const uint8_t*)s_key.c_str(), s_key.length());
-    //TODO: cipher->setIVs(); with the previously given IVs
+    cipher->generateKey(seed, seed_len);
+    cipher->setIVs(aEncryptIV, aDecryptIV);
 
     client.setStatus(Client::NORMAL);
 }

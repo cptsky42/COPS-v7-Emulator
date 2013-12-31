@@ -201,9 +201,9 @@ MsgAction :: swap(uint8_t* aBuf) const
 
     info->Timestamp = bswap32(info->Timestamp);
     info->UniqId = bswap32(info->UniqId);
+    info->Data = bswap32(info->Data);
     info->PosX = bswap16(info->PosX);
     info->PosY = bswap16(info->PosY);
-    info->Direction = bswap32(info->Direction);
-    info->Data = bswap32(info->Data);
-    info->Action = bswap32(info->Action);
+    info->Direction = bswap16(info->Direction);
+    info->Action = bswap16(info->Action);
 }

@@ -11,6 +11,7 @@
 #include "client.h"
 #include "networkclient.h"
 #include "msg.h"
+#include "msgloginchallenges.h"
 #include "mapmanager.h"
 #include "database.h"
 #include "script.h"
@@ -131,9 +132,7 @@ Server :: connectionHandler(NetworkClient* aClient)
                     client = new Client(aClient, ICipher::BLOWFISH);
                     client->setStatus(Client::KEY_EXCHANGE);
 
-                    // TODO
-                    //client->generateExchangeRequest();
-
+                    client->generateExchangeRequest();
                     break;
                 }
             default:
@@ -159,18 +158,43 @@ Server :: receiveHandler(NetworkClient* aClient, uint8_t* aBuf, size_t aLen)
 
         // TODO? clean this line and add some checks
         Client* client = (Client*)aClient->getOwner();
-        client->getCipher().decrypt(received, aLen);
-
         switch (client->getStatus())
         {
             case Client::KEY_EXCHANGE:
                 {
-                    // TODO
-                    //client->handleExchangeResponse(received, aLen);
-                    break;
+                    // Decrypt the padding and the size of the MsgLoginChallengeS
+                    // than, decrypt the rest of the MsgLoginChallengeS based on the read size
+                    // than, handle the exchange response
+                    // than, update the received buffer with the remaining data to be decrypted with
+                    // the updated cipher...
+                    ICipher& cipher = client->getCipher();
+
+                    uint8_t* ptr = received;
+                    size_t size = 0;
+
+                    cipher.decrypt(ptr, MsgLoginChallengeS::PADDING_LEN + sizeof(int32_t));
+                    ptr += MsgLoginChallengeS::PADDING_LEN; // Padding
+                    size = *((int32_t*)ptr);
+                    cipher.decrypt(ptr + sizeof(int32_t), size - sizeof(int32_t)); // skip the Size, but decrypt the whole msg
+
+                    size_t len = MsgLoginChallengeS::PADDING_LEN + size;
+                    uint8_t* tmp = new uint8_t[len];
+                    memcpy(tmp, received, len);
+
+                    client->handleExchangeResponse(&tmp, len);
+                    SAFE_DELETE_ARRAY(tmp);
+
+                    ptr += size; // all the MsgLoginChallengeS data
+                    aLen -= len;
+                    memcpy(received, ptr, aLen);
                 }
             default:
                 {
+                    if (aLen < sizeof(Msg::Header))
+                        return;
+
+                    client->getCipher().decrypt(received, aLen);
+
                     size_t size = 0;
                     for (size_t i = 0; i < aLen; i += size)
                     {
@@ -180,6 +204,14 @@ Server :: receiveHandler(NetworkClient* aClient, uint8_t* aBuf, size_t aLen)
                         size = ((Msg::Header*)(received + i))->Length;
                         #endif
 
+                        if (size == 20820) // TQ seal...
+                        {
+                            // FIXME: HACK ! Should be changed...
+                            size = 8;
+                            continue;
+                        }
+
+                        ASSERT(size <= 1024); // invalid msg size...
                         if (size < aLen)
                         {
                             uint8_t* packet = new uint8_t[size];

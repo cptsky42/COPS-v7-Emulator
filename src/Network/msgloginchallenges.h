@@ -19,11 +19,15 @@
 class MsgLoginChallengeS : public Msg
 {
 public:
+    /** The number of bytes of the padding. */
+    static const size_t PADDING_LEN = 7;
+
+public:
     /* Unused internally ! */
     #pragma pack(push, 1)
     typedef struct
     {
-        uint8_t Padding[7];
+        uint8_t Padding[MsgLoginChallengeS::PADDING_LEN];
         int32_t Size;
         int32_t JunkSize;
         uint8_t Junk[1];
@@ -55,8 +59,11 @@ public:
      *
      * @param[in]     aClient      a pointer to the client which
      *                             has sent the message
+     * @param[in]   aEncryptIV      the encryption IV
+     * @param[in]   aDecryptIV      the decryption IV
      */
-    virtual void process(Client* aClient);
+    void process(Client* aClient,
+                 const uint8_t* aEncryptIV, const uint8_t* aDecryptIV);
 
 private:
     /* internal swapping of the integers for neutral-endian support */

@@ -45,13 +45,13 @@ const uint16_t MSG_ALLOT            = MSG_GENERAL + 24;
 const uint16_t MSG_WEAPONSKILL      = MSG_GENERAL + 25;
 const uint16_t MSG_TEAMMEMBER       = MSG_GENERAL + 26;
 const uint16_t MSG_GEMEMBED         = MSG_GENERAL + 27;
+const uint16_t MSG_DATE             = MSG_GENERAL + 33;
 
+const uint16_t MSG_ACCOUNT          = MSG_GENERAL + 51;
 const uint16_t MSG_CONNECT          = MSG_GENERAL + 52;
 const uint16_t MSG_CONNECTEX        = MSG_GENERAL + 55;
 const uint16_t MSG_TRADE            = MSG_GENERAL + 56;
 const uint16_t MSG_BATTLESYSTEM     = MSG_GENERAL + 57;
-
-const uint16_t MSG_ACCOUNT          = MSG_GENERAL + 86;
 
 const uint16_t MSG_MAPITEM          = MSG_GENERAL + 101;
 const uint16_t MSG_PACKAGE          = MSG_GENERAL + 102;

@@ -16,6 +16,7 @@
 #include "msguserattrib.h"
 #include "msgiteminfo.h"
 #include "msgtick.h"
+#include "msgdate.h"
 
 /* static */
 const char MsgConnect::ERROR_SERVER_DOWN[] = "\xB7\xFE\xCE\xF1\xC6\xF7\xCE\xB4\xC6\xF4\xB6\xAF";
@@ -26,6 +27,12 @@ MsgConnect :: MsgConnect(int32_t aAccUID, int32_t aData, const char* aInfo)
     : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
 {
     create(aAccUID, aData, aInfo);
+}
+
+MsgConnect :: MsgConnect(const char* aInfo)
+    : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
+{
+    create(MsgConnect::INVALID_UID, 0, aInfo);
 }
 
 MsgConnect :: MsgConnect(uint8_t** aBuf, size_t aLen)
@@ -120,6 +127,10 @@ MsgConnect :: process(Client* aClient)
                 SAFE_DELETE(msg);
 
                 msg = new MsgUserInfo(player);
+                client.send(msg);
+                SAFE_DELETE(msg);
+
+                msg = new MsgDate();
                 client.send(msg);
                 SAFE_DELETE(msg);
 

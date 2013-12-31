@@ -8,7 +8,7 @@
  * sections in the LICENSE file.
  */
 
-#include "Blowfish.h"
+#include "blowfish.h"
 #include <string.h>
 
 // Blowfish P-Array
@@ -212,10 +212,11 @@ Blowfish :: generateKey(const uint8_t* aSeed, size_t aLen)
     ASSERT(aSeed != nullptr);
     ASSERT(aLen > 0);
 
+    if (aLen > Blowfish::KEY_SIZE) // 448-bits
+        aLen = Blowfish::KEY_SIZE;
+
     memcpy(mP, P, sizeof(P));
     memcpy(mS, S, sizeof(S));
-    mEnNum = 0;
-    mDeNum = 0;
 
     uint32_t x = 0;
     for (int32_t i = 0, max = Blowfish::ROUNDS + 2; i < max; ++i)
@@ -247,7 +248,7 @@ Blowfish :: generateKey(const uint8_t* aSeed, size_t aLen)
     }
 }
 
-inline void swap_iv(uint8_t aIV[Blowfish::BLOCK_SIZE])
+inline void swap_block(uint8_t aIV[Blowfish::BLOCK_SIZE])
 {
     #if BYTE_ORDER == LITTLE_ENDIAN
     for (size_t i = 0, max = (Blowfish::BLOCK_SIZE / sizeof(uint32_t));
@@ -266,13 +267,13 @@ Blowfish :: encrypt(uint8_t* aBuf, size_t aLen)
     ASSERT(aBuf != nullptr);
     ASSERT(aLen > 0);
 
-    while (aLen-- > 0)
+    for (size_t i = 0; i < aLen; ++i)
     {
         if (0 == mEnNum)
         {
-            swap_iv(mEnIV);
+            swap_block(mEnIV);
             encipher(mEnIV);
-            swap_iv(mEnIV);
+            swap_block(mEnIV);
         }
 
         uint8_t* ptr = &mEnIV[mEnNum];
@@ -293,13 +294,13 @@ Blowfish :: decrypt(uint8_t* aBuf, size_t aLen)
     ASSERT(aBuf != nullptr);
     ASSERT(aLen > 0);
 
-    while (aLen-- > 0)
+    for (size_t i = 0; i < aLen; ++i)
     {
         if (0 == mDeNum)
         {
-            swap_iv(mDeIV);
+            swap_block(mDeIV);
             encipher(mDeIV);
-            swap_iv(mDeIV);
+            swap_block(mDeIV);
         }
 
         uint8_t* ptr = &mDeIV[mDeNum];
@@ -320,11 +321,13 @@ Blowfish :: setIVs(const uint8_t aEncIV[Blowfish::BLOCK_SIZE],
     if (aEncIV != nullptr)
     {
         memcpy(mEnIV, aEncIV, Blowfish::BLOCK_SIZE);
+        mEnNum = 0;
     }
 
     if (aDecIV != nullptr)
     {
         memcpy(mDeIV, aDecIV, Blowfish::BLOCK_SIZE);
+        mDeNum = 0;
     }
 }
 
@@ -367,11 +370,155 @@ Blowfish :: decipher(uint8_t aBlock[Blowfish::BLOCK_SIZE])
 
         uint32_t tmp = lv;
         lv = rv;
-        lv = tmp;
+        rv = tmp;
     }
     lv ^= mP[1];
     rv ^= mP[0];
 
     ((uint32_t*)aBlock)[0] = rv;
     ((uint32_t*)aBlock)[1] = lv;
+}
+
+bool
+test_blowfish()
+{
+    bool success = true;
+    Blowfish bf;
+
+    /*
+     * All the reference vectors are from Schneier :
+     * http://www.schneier.com/code/vectors.txt
+     */
+
+
+    // Normal tests
+    const int TEST_NUMBER = 4;
+    uint8_t keys[TEST_NUMBER][8] = {
+        { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+        { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+        { 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 } };
+    uint8_t clear[TEST_NUMBER][Blowfish::BLOCK_SIZE] = {
+        { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+        { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 },
+        { 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 } };
+    uint8_t cipher[TEST_NUMBER][Blowfish::BLOCK_SIZE] = {
+        { 0x4E, 0xF9, 0x97, 0x45, 0x61, 0x98, 0xDD, 0x78 },
+        { 0x51, 0x86, 0x6F, 0xD5, 0xB8, 0x5E, 0xCB, 0x8A },
+        { 0x7D, 0x85, 0x6F, 0x9A, 0x61, 0x30, 0x63, 0xF2 },
+        { 0x24, 0x66, 0xDD, 0x87, 0x8B, 0x96, 0x3C, 0x9D } };
+
+    //    0123456789ABCDEF        1111111111111111        61F9C3802281B096
+    //    1111111111111111        0123456789ABCDEF        7D0CC630AFDA1EC7
+    //    0000000000000000        0000000000000000        4EF997456198DD78
+    //    FEDCBA9876543210        0123456789ABCDEF        0ACEAB0FC6A0A28D
+    //    7CA110454A1A6E57        01A1D6D039776742        59C68245EB05282B
+    //    0131D9619DC1376E        5CD54CA83DEF57DA        B1B8CC0B250F09A0
+    //    07A1133E4A0B2686        0248D43806F67172        1730E5778BEA1DA4
+    //    3849674C2602319E        51454B582DDF440A        A25E7856CF2651EB
+    //    04B915BA43FEB5B6        42FD443059577FA2        353882B109CE8F1A
+    //    0113B970FD34F2CE        059B5E0851CF143A        48F4D0884C379918
+    //    0170F175468FB5E6        0756D8E0774761D2        432193B78951FC98
+    //    43297FAD38E373FE        762514B829BF486A        13F04154D69D1AE5
+    //    07A7137045DA2A16        3BDD119049372802        2EEDDA93FFD39C79
+    //    04689104C2FD3B2F        26955F6835AF609A        D887E0393C2DA6E3
+    //    37D06BB516CB7546        164D5E404F275232        5F99D04F5B163969
+    //    1F08260D1AC2465E        6B056E18759F5CCA        4A057A3B24D3977B
+    //    584023641ABA6176        004BD6EF09176062        452031C1E4FADA8E
+    //    025816164629B007        480D39006EE762F2        7555AE39F59B87BD
+    //    49793EBC79B3258F        437540C8698F3CFA        53C55F9CB49FC019
+    //    4FB05E1515AB73A7        072D43A077075292        7A8E7BFA937E89A3
+    //    49E95D6D4CA229BF        02FE55778117F12A        CF9C5D7A4986ADB5
+    //    018310DC409B26D6        1D9D5C5018F728C2        D1ABB290658BC778
+    //    1C587F1C13924FEF        305532286D6F295A        55CB3774D13EF201
+    //    0101010101010101        0123456789ABCDEF        FA34EC4847B268B2
+    //    1F1F1F1F0E0E0E0E        0123456789ABCDEF        A790795108EA3CAE
+    //    E0FEE0FEF1FEF1FE        0123456789ABCDEF        C39E072D9FAC631D
+    //    0000000000000000        FFFFFFFFFFFFFFFF        014933E0CDAFF6E4
+    //    FFFFFFFFFFFFFFFF        0000000000000000        F21E9A77B71C49BC
+    //    0123456789ABCDEF        0000000000000000        245946885754369A
+    //    FEDCBA9876543210        FFFFFFFFFFFFFFFF        6B5C5A9C5D9E0A5A
+
+    for (int i = 0; success && i < TEST_NUMBER; ++i)
+    {
+        bf.generateKey(keys[i], sizeof(keys[i]));
+
+        uint8_t tmp[Blowfish::BLOCK_SIZE];
+        memcpy(tmp, clear[i], Blowfish::BLOCK_SIZE);
+
+        swap_block(tmp);
+        bf.encipher(tmp);
+        swap_block(tmp);
+        for (size_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
+        {
+            success = (cipher[i][x] == tmp[x]);
+
+            if (!success)
+                fprintf(stderr, "Failed to encrypt. (%d)\n", i);
+        }
+
+        swap_block(tmp);
+        bf.decipher(tmp);
+        swap_block(tmp);
+        for (size_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
+        {
+            success = (clear[i][x] == tmp[x]);
+
+            if (!success)
+                fprintf(stderr, "Failed to decrypt. (%d)\n", i);
+        }
+
+        success = true;
+    }
+
+
+    // CFB64 test
+    uint8_t key[] =
+    { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
+      0xF0, 0xE1, 0xD2, 0xC3, 0xB4, 0xA5, 0x96, 0x87
+    };
+
+    uint8_t iv[] =
+    { 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
+
+    uint8_t data[] =
+    { 0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x20,
+      0x4E, 0x6F, 0x77, 0x20, 0x69, 0x73, 0x20, 0x74,
+      0x68, 0x65, 0x20, 0x74, 0x69, 0x6D, 0x65, 0x20,
+      0x66, 0x6F, 0x72, 0x20, 0x00
+    };
+
+    uint8_t cfb64[] =
+    { 0xE7, 0x32, 0x14, 0xA2, 0x82, 0x21, 0x39, 0xCA,
+      0xF2, 0x6E, 0xCF, 0x6D, 0x2E, 0xB9, 0xE7, 0x6E,
+      0x3D, 0xA3, 0xDE, 0x04, 0xD1, 0x51, 0x72, 0x00,
+      0x51, 0x9D, 0x57, 0xA6, 0xC3
+    };
+
+    bf.generateKey(key, sizeof(key));
+    bf.setIVs(iv, iv);
+
+    uint8_t buf[sizeof(data)];
+    memcpy(buf, data, sizeof(buf));
+
+    bf.encrypt(buf, sizeof(buf));
+    for (size_t i = 0, len = sizeof(buf); success && i < len; ++i)
+    {
+        success = (cfb64[i] == buf[i]);
+
+        if (!success)
+            fprintf(stderr, "Failed to encrypt.\n");
+    }
+
+    bf.decrypt(buf, sizeof(buf));
+    for (size_t i = 0, len = sizeof(buf); success && i < len; ++i)
+    {
+        success = (data[i] == buf[i]);
+
+        if (!success)
+            fprintf(stderr, "Failed to decrypt.\n");
+    }
+
+    return success;
 }

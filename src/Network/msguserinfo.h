@@ -38,7 +38,7 @@ public:
         /** The experience of the player */
         uint64_t Exp;
         /** Unknown bytes (padding ?) */
-        uint8_t Padding[18];
+        uint8_t Padding[20];
         /** The force of the player */
         uint16_t Force;
         /** The dexterity of the player */

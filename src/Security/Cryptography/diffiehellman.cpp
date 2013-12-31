@@ -7,62 +7,83 @@
  */
 
 #include "diffiehellman.h"
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 using namespace std;
 
+static char* format_bi_str(const char* str);
 static void bi_to_str_base(string& str, bigint bi, int base);
 static void bi_to_str_pos(string& str, bigint bi, int base);
 static char digit_to_char(int d);
 
-DiffieHellman :: DiffieHellman(char* aP, char* aG)
+DiffieHellman :: DiffieHellman(const char* aP, const char* aG)
     : p(nullptr), g(nullptr),
       a(nullptr), b(nullptr),
       s(nullptr), A(nullptr), B(nullptr)
 {
-    p = str_to_bi_base(aP, 16);
-    g = str_to_bi_base(aG, 16);
+    p = str_to_bi_base(format_bi_str(aP), 16);
+    g = str_to_bi_base(format_bi_str(aG), 16);
 }
 
 DiffieHellman :: ~DiffieHellman()
 {
-    bi_free(p); bi_free(g);
-    bi_free(a); bi_free(b);
-    bi_free(s); bi_free(A); bi_free(B);
+    if (p != nullptr)
+        bi_free(p);
+
+    if (g != nullptr)
+        bi_free(g);
+
+    if (a != nullptr)
+        bi_free(a);
+
+    if (b != nullptr)
+        bi_free(b);
+
+    if (s != nullptr)
+        bi_free(s);
+
+    if (A != nullptr)
+        bi_free(A);
+
+    if (B != nullptr)
+        bi_free(B);
 }
 
 string
 DiffieHellman :: generateRequest()
 {
     a = bi_generate_prime(256, 30);
-    A = bi_mod_power(g, a, p);
+    A = bi_mod_power(bi_copy(g), bi_copy(a), bi_copy(p));
 
     string request;
-    bi_to_str_base(request, A, 16);
+    bi_to_str_base(request, bi_copy(A), 16);
     return request;
 }
 
 string
-DiffieHellman :: generateResponse(char* aPubKey)
+DiffieHellman :: generateResponse(const char* aPubKey)
 {
     b = bi_generate_prime(256, 30);
-    B = bi_mod_power(g, b, p);
+    B = bi_mod_power(bi_copy(g), bi_copy(b), bi_copy(p));
 
-    A = str_to_bi_base(aPubKey, 16);
-    s = bi_mod_power(A, b, p);
+    A = str_to_bi_base(format_bi_str(aPubKey), 16);
+    s = bi_mod_power(bi_copy(A), bi_copy(b), bi_copy(p));
 
     string response;
-    bi_to_str_base(response, B, 16);
+    bi_to_str_base(response, bi_copy(B), 16);
     return response;
 }
 
 string
-DiffieHellman :: handleResponse(char* aPubKey)
+DiffieHellman :: handleResponse(const char* aPubKey)
 {
-    B = str_to_bi_base(aPubKey, 16);
-    s = bi_mod_power(B, a, p);
+    B = str_to_bi_base(format_bi_str(aPubKey), 16);
+    s = bi_mod_power(bi_copy(B), bi_copy(a), bi_copy(p));
 
     string response;
-    bi_to_str_base(response, s, 16);
+    bi_to_str_base(response, bi_copy(s), 16);
     return response;
 }
 
@@ -70,9 +91,28 @@ DiffieHellman :: handleResponse(char* aPubKey)
 //// BigInt extension
 ///////////////////////////////////////////////////
 
+static char* format_bi_str(const char* str)
+{
+    static char* buf = (char*)malloc(sizeof(int));
+
+    size_t len = strlen(str);
+    buf = (char*)realloc(buf, len + 1);
+
+    size_t i = 0;
+    for ( ; i < len; ++i)
+    {
+        buf[i] = tolower(str[i]);
+    }
+    buf[i] = '\0';
+
+    return buf;
+}
+
 static void
 bi_to_str_base(string& str, bigint bi, int base)
 {
+    str.clear();
+
     if (bi_is_negative(bi_copy(bi)))
     {
         str += '-';

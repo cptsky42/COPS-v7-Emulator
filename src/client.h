@@ -60,6 +60,9 @@ public:
      */
     void save();
 
+    void generateExchangeRequest();
+    void handleExchangeResponse(uint8_t** aBuf, size_t aLen);
+
     /**
      * Send a message to the client.
      *
@@ -109,7 +112,10 @@ public:
 private:
     NetworkClient* mSocket; //!< the TCP/IP socket wrapper of the client
     ICipher* mCipher; //!< the cipher of the client
+
     DiffieHellman* mExchange; //!< the key exchange of the client
+    uint8_t* mEncryptIV; //!< the new encryption IV (in the exchange)
+    uint8_t* mDecryptIV;  //!< the new decryption IV (in the exchange)
 
     Status mStatus; //!< the status of the account
 

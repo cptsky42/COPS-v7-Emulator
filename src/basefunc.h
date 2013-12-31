@@ -9,6 +9,11 @@
 #ifndef _COPS_V7_EMULATOR_BASEFUNC_H_
 #define _COPS_V7_EMULATOR_BASEFUNC_H_
 
+#include "common.h"
+
+uint8_t char2int(char aInput);
+bool hex2bin(const char* aHexStr, uint8_t* aOutBytes, size_t& aOutLen);
+
 int random(int aMax, bool aReset = false);
 double randomRate(double aRange);
 

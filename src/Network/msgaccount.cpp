@@ -10,7 +10,7 @@
 #include "client.h"
 #include "server.h"
 #include "database.h"
-#include "msgconnect.h"
+#include "msgconnectex.h"
 #include <string>
 #include <string.h>
 #include "rc5.h"
@@ -59,12 +59,13 @@ MsgAccount :: process(Client* aClient)
 
             int32_t token = random(INT32_MAX);
 
-            MsgConnect msg(client.getAccountID(), token, Server::getServerIP());
+            MsgConnectEx msg(client.getAccountID(), token,
+                             Server::getServerIP(), Server::MSGSERVER_PORT);
             client.send(&msg);
         }
         else
         {
-            MsgConnect msg(MsgConnect::INVALID_UID, 0, MsgConnect::ERROR_INVALID_ACC);
+            MsgConnectEx msg(MsgConnectEx::ERROR_INVALID_ACC);
             client.send(&msg);
         }
     }

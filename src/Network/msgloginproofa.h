@@ -12,6 +12,7 @@
 #include "common.h"
 #include "msg.h"
 #include "blowfish.h"
+#include <string>
 
 /**
  * Diffie-Hellman request exposing the public keys P & G and the other computed
@@ -20,14 +21,20 @@
 class MsgLoginProofA : public Msg
 {
 public:
+    /** The number of bytes of the padding. */
+    static const size_t PADDING_LEN = 11;
+    /** The number of bytes of the junk. */
+    static const size_t JUNK_LEN = 12;
+
+public:
     /* Unused internally ! */
     #pragma pack(push, 1)
     typedef struct
     {
-        uint8_t Padding[11];
+        uint8_t Padding[MsgLoginProofA::PADDING_LEN];
         int32_t Size;
         int32_t JunkSize;
-        uint8_t Junk[12];
+        uint8_t Junk[MsgLoginProofA::JUNK_LEN];
         int32_t DeIVSize;
         uint8_t DeIV[Blowfish::BLOCK_SIZE];
         int32_t EnIVSize;
@@ -45,9 +52,14 @@ public:
     /**
      * Create a new MsgLoginProofA packet for the specified client.
      *
-     * @param[in]   aClient     the client
+     * @param[in]   aEncryptIV      the encryption IV
+     * @param[in]   aDecryptIV      the decryption IV
+     * @param[in]   aP              the P key
+     * @param[in]   aG              the G key
+     * @param[in]   aA              the A key
      */
-    MsgLoginProofA(const Client& aClient);
+    MsgLoginProofA(const uint8_t* aEncryptIV, const uint8_t* aDecryptIV,
+                   const std::string& aP, const std::string& aG, const std::string& aA);
 
     /* destructor */
     virtual ~MsgLoginProofA();

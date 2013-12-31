@@ -79,22 +79,7 @@ Player :: ~Player()
 int32_t
 Player :: getMinAtk()
 {
-    double atk = 0.5;
-    switch (mProfession)
-    {
-        case PROFESSION_MAGE:
-            atk += mForce * 0.5;
-            break;
-        case PROFESSION_WARRIOR:
-            atk += mForce * 1.0;
-            break;
-        case PROFESSION_ARCHER:
-            atk += mDexterity * 0.5;
-            break;
-        default:
-            ASSERT(false);
-            break;
-    }
+    double atk = mForce;
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -108,22 +93,7 @@ Player :: getMinAtk()
 int32_t
 Player :: getMaxAtk()
 {
-    double atk = 0.5;
-    switch (mProfession)
-    {
-        case PROFESSION_MAGE:
-            atk += mForce * 0.5;
-            break;
-        case PROFESSION_WARRIOR:
-            atk += mForce * 1.0;
-            break;
-        case PROFESSION_ARCHER:
-            atk += mDexterity * 0.5;
-            break;
-        default:
-            ASSERT(false);
-            break;
-    }
+    double atk = mForce;
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -137,8 +107,7 @@ Player :: getMaxAtk()
 int32_t
 Player :: getDefense()
 {
-    double def = 0.5;
-    def += mHealth * 0.5;
+    double def = 0.0;
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -152,11 +121,7 @@ Player :: getDefense()
 int32_t
 Player :: getMAtk()
 {
-    double atk = 0.5;
-    if (PROFESSION_MAGE == mProfession)
-    {
-        atk += mSoul * 0.5;
-    }
+    double atk = 0.0;
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -170,20 +135,7 @@ Player :: getMAtk()
 int32_t
 Player :: getMDef()
 {
-    double def = 0.5;
-    switch (mProfession)
-    {
-        case PROFESSION_WARRIOR:
-            def += mHealth * 0.5;
-            break;
-        case PROFESSION_ARCHER:
-        case PROFESSION_MAGE:
-            def += mSoul * 0.5;
-            break;
-        default:
-            ASSERT(false);
-            break;
-    }
+    double def = 0.0;
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -313,20 +265,24 @@ Player :: getDext()
 uint16_t
 Player :: getMaxLife()
 {
-    int32_t life = 30 + ((mLevel - 1) * 3);
+    int32_t life = (mForce * 3) + (mDexterity * 3) + (mHealth * 24) + (mSoul * 3);
+
     switch (mProfession)
     {
-        case PROFESSION_MAGE:
-            life += mHealth * 6;
+        case 11:
+            life = (int32_t)(life * 1.05);
             break;
-        case PROFESSION_WARRIOR:
-            life += mHealth * 5;
+        case 12:
+            life = (int32_t)(life * 1.08);
             break;
-        case PROFESSION_ARCHER:
-            life += mHealth * 7;
+        case 13:
+            life = (int32_t)(life * 1.10);
             break;
-        default:
-            ASSERT(false);
+        case 14:
+            life = (int32_t)(life * 1.12);
+            break;
+        case 15:
+            life = (int32_t)(life * 1.15);
             break;
     }
 
@@ -342,7 +298,10 @@ Player :: getMaxLife()
 uint16_t
 Player :: getMaxMana()
 {
-    int32_t mana = (mSoul * 5) + ((mLevel - 1) * 3);
+    int32_t mana = (mSoul * 5);
+
+    if (mProfession > 100 && mProfession < 200)
+        mana += (int32_t)(mana * (mProfession % 10));
 
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
     {
@@ -363,21 +322,7 @@ uint8_t
 Player :: getMaxEnergy()
 {
     int32_t energy = 100;
-    switch (mProfession)
-    {
-        case PROFESSION_MAGE:
-            energy += ((mLevel - 1) * 2);
-            break;
-        case PROFESSION_WARRIOR:
-            energy += (mLevel / 10);
-            break;
-        case PROFESSION_ARCHER:
-            energy += ((mLevel / 10) * 2);
-            break;
-        default:
-            ASSERT(false);
-            break;
-    }
+    // TODO blessing
 
     return energy;
 }
@@ -386,19 +331,6 @@ uint16_t
 Player :: getMaxWeight()
 {
     int32_t weight = 0;
-    switch (mProfession)
-    {
-        case PROFESSION_WARRIOR:
-            weight += 30 + ((mLevel - 1) * 3);
-            break;
-        case PROFESSION_MAGE:
-        case PROFESSION_ARCHER:
-            weight += 20 + ((mLevel - 1) * 3);
-            break;
-        default:
-            ASSERT(false);
-            break;
-    }
 
     return weight;
 }

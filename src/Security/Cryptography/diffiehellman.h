@@ -28,7 +28,7 @@ public:
      * @param[in]   aP     the p key as a base 16 string
      * @param[in]   aG     the g key as a base 16 string
      */
-    DiffieHellman(char* aP, char* aG);
+    DiffieHellman(const char* aP, const char* aG);
 
     /* destructor */
     ~DiffieHellman();
@@ -47,7 +47,7 @@ public:
      *
      * @returns the B key as a base 16 string
      */
-    std::string generateResponse(char* aPubKey);
+    std::string generateResponse(const char* aPubKey);
 
     /**
      * Handle the response (B key) to generate the final key (s key).
@@ -56,9 +56,9 @@ public:
      *
      * @returns the s key as a base 16 string
      */
-    std::string handleResponse(char* aPubKey);
+    std::string handleResponse(const char* aPubKey);
 
-private:
+public:
     bigint p; //!< public p key
     bigint g; //!< public g key
     bigint a; //!< private a key (request)

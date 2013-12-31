@@ -33,7 +33,7 @@ public:
     /** The number of round of the algorithm (must be 16) */
     static const int32_t ROUNDS = INT32_C(16);
     /** The key size of the algorithm in bits (1 to 448) */
-    static const int32_t KEY_SIZE = INT32_C(56);
+    static const int32_t KEY_SIZE = INT32_C(72); // HACK ! TQ uses libeay which uses 576 bits keys
 
 public:
     /* constructor */
@@ -83,6 +83,11 @@ public:
     /** Get the algorithm used by the cipher. */
     virtual ICipher::Algorithm getAlgorithm() const { return ICipher::BLOWFISH; }
 
+    /** Get the encryption IV. */
+    const uint8_t* getEncryptIV() { return mEnIV; }
+    /** Get the decryption IV. */
+    const uint8_t* getDecryptIV() { return mDeIV; }
+
 private:
     /**
      * F is a Blowfish function which returns 32-bit unsigned integer generated from
@@ -111,6 +116,10 @@ private:
      * @param[in,out] aBlock        the block to be decrypted
      */
     void decipher(uint8_t aBlock[Blowfish::BLOCK_SIZE]);
+
+private:
+    /* Unit tests for Blowfish. */
+    friend bool test_blowfish();
 
 private:
     static const uint32_t P[Blowfish::ROUNDS + 2]; //!< Blowfish P-Array

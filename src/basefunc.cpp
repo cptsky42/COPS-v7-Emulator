@@ -8,7 +8,38 @@
 
 #include "common.h"
 #include "basefunc.h"
+#include <ctype.h>
 #include <math.h>
+
+uint8_t char2int(char aInput)
+{
+    if (aInput >= '0' && aInput <= '9') return aInput - '0';
+    else if (aInput >= 'A' && aInput <= 'F') return aInput - 'A' + 0x0A;
+    else if (aInput >= 'a' && aInput <= 'f') return aInput - 'a' + 0x0A;
+    else return 0x00;
+}
+
+bool hex2bin(const char* aHexStr, uint8_t* aOutBytes, size_t& aOutLen)
+{
+    bool success = true;
+    size_t len = strlen(aHexStr);
+
+    aOutLen = (len / 2) + (len % 2);
+    for (int64_t i = len - 1, j = aOutLen - 1; i >= 0; i -= 2, --j)
+    {
+        if (isxdigit(aHexStr[i]) == 0 ||
+            (i > 0 && isxdigit(aHexStr[i - 1]) == 0))
+            success = false;
+
+        if (success)
+        {
+            uint8_t result = i != 0 ? char2int(aHexStr[i]) + (char2int(aHexStr[i - 1]) * 0x10) : char2int(aHexStr[i]);
+            aOutBytes[j] = result;
+        }
+    }
+
+    return success;
+}
 
 int random(int aMax, bool aReset)
 {
