@@ -19,9 +19,28 @@ class MsgConnectEx : public Msg
 {
 public:
     static const int32_t INVALID_UID = 0;
+
+    static const int32_t ERROR_ID_SERVER_DOWN = 11;
+    static const int32_t ERROR_ID_INVALID_ACC = 1;
+    static const int32_t ERROR_ID_BANNED = 12;
+    static const int32_t ERROR_ID_NOT_ENOUGH_CREDITS = 6;
+    static const int32_t ERROR_ID_NOT_ENOUGH_GAMETIME = 7;
+    static const int32_t ERROR_ID_UNKNOWN_SERVER = 10;
+    static const int32_t ERROR_ID_INVALID_PWD = 13;
+    static const int32_t ERROR_ID_SERVER_BUSY = 20;
+    static const int32_t ERROR_ID_SERVER_FULL = 21;
+    static const int32_t ERROR_ID_DEFAULT = 999;
+
     static const char ERROR_SERVER_DOWN[];
     static const char ERROR_INVALID_ACC[];
-    static const char ERROR_TRY_LATER[];
+    static const char ERROR_BANNED[];
+    static const char ERROR_NOT_ENOUGH_CREDITS[];
+    static const char ERROR_NOT_ENOUGH_GAMETIME[];
+    static const char ERROR_UNKNOWN_SERVER[];
+    static const char ERROR_INVALID_PWD[];
+    static const char ERROR_SERVER_BUSY[];
+    static const char ERROR_SERVER_FULL[];
+    static const char ERROR_DEFAULT[];
 
 public:
     #pragma pack(push, 1)
@@ -54,9 +73,10 @@ public:
     /**
      * Create a new MsgConnect for the specified account.
      *
+     * @param aData[in]     the error ID
      * @param aInfo[in]     the error string
      */
-    MsgConnectEx(const char* aInfo);
+    MsgConnectEx(int32_t aData, const char* aInfo);
 
     /* destructor */
     ~MsgConnectEx();

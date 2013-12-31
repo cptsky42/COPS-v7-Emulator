@@ -142,8 +142,8 @@ MapData :: loadMapData(BinaryReader& aReader)
     }
 
     DOIF(err, loadPassageData(aReader));
-    if (version == 1003)
-        DOIF(err, loadRegionData(aReader));
+//    if (version == 1003)
+//        DOIF(err, loadRegionData(aReader));
     DOIF(err, loadLayerData(aReader));
 
     //The rest are LAYER_SCENE, but useless for a server. I'll not implement the rest as it would only
@@ -216,8 +216,7 @@ MapData :: loadRegionData(BinaryReader& aReader)
 
     if (IS_SUCCESS(err))
     {
-        LOG(ERROR, "Regions are not supported yet.");
-        err = ERROR_INVALID_FUNCTION;
+        LOG(WARN, "Regions are not supported yet.");
     }
 
     return err;
@@ -261,10 +260,19 @@ MapData :: loadLayerData(BinaryReader& aReader)
                 DOIF(err, aReader.readUInt32(startX));
                 DOIF(err, aReader.readUInt32(startY));
 
+                #ifndef _WIN32 // convert path separator...
+                if (IS_SUCCESS(err))
+                {
+                    for (size_t x = 0, len = strlen(fileName); x < len; ++x)
+                    {
+                        if (fileName[x] == '\\')
+                            fileName[x] = '/';
+                    }
+                }
+                #endif // _WIN32
+
                 LOG(VRB, "Found a 2D map terrain object at (%u, %u). Loading scene file '%s'",
                     startX, startY, fileName);
-
-                // TODO: Normalize path to / instead of Windows...
 
                 if (Finder::fileExists(fileName))
                 {
@@ -442,7 +450,7 @@ MapData :: unpack()
             {
                 Cell& cell = mCells[pos2idx(x, y)];
                 cell.Accessible = *(ptr++) != FALSE;
-                cell.Altitude = (int16_t)(*(ptr++) | (*(ptr++) << 8));
+                cell.Altitude = (int16_t)((*(ptr++) << 8) | *(ptr++));
             }
         }
 

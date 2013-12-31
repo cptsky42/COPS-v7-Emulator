@@ -111,7 +111,8 @@ SOURCES += \
     src/third_party/lua-5.2.2/src/lapi.c \
     src/third_party/minilzo-2.06/minilzo.c \
     src/Network/msgconnectex.cpp \
-    src/Network/msgdate.cpp
+    src/Network/msgdate.cpp \
+    src/Network/msgitem.cpp
 
 HEADERS += \
     src/basefunc.h \
@@ -202,7 +203,8 @@ HEADERS += \
     src/third_party/minilzo-2.06/lzodefs.h \
     src/third_party/minilzo-2.06/lzoconf.h \
     src/Network/msgconnectex.h \
-    src/Network/msgdate.h
+    src/Network/msgdate.h \
+    src/Network/msgitem.h
 
 INCLUDEPATH += \
     src \

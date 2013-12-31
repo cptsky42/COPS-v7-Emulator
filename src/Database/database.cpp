@@ -155,33 +155,14 @@ Database :: createPlayer(Client& aClient, const char* aName,
     query.prepare(cmd);
     query.bindValue(":account_id", aClient.getAccountID());
     query.bindValue(":name", aName);
+
+    // TODO
+//    Byte Face = 67;
+//    if (pMsg->Look / 1000 == 2)
+//        Face = 201;
     query.bindValue(":lookface", (Player::FACE_INTERN * 10000) + aLook);
 
     uint16_t force = 0, dexterity = 0, health = 0, soul = 0;
-    switch (aLook) // skip profession, useless...
-    {
-    case Player::LOOK_HUMAN_MALE:
-    case Player::LOOK_HUMAN_FEMALE:
-        {
-            query.bindValue(":profession", Player::PROFESSION_WARRIOR);
-            break;
-        }
-    case Player::LOOK_ELF_MALE:
-    case Player::LOOK_ELF_FEMALE:
-        {
-            query.bindValue(":profession", Player::PROFESSION_ARCHER);
-            break;
-        }
-    case Player::LOOK_DARKELF_MALE:
-    case Player::LOOK_DARKELF_FEMALE:
-        {
-            query.bindValue(":profession", Player::PROFESSION_MAGE);
-            break;
-        }
-    default:
-        ASSERT(false);
-        break;
-    }
 
     query.bindValue(":force", force);
     query.bindValue(":dexterity", dexterity);

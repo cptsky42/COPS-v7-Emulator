@@ -65,7 +65,7 @@ MsgAccount :: process(Client* aClient)
         }
         else
         {
-            MsgConnectEx msg(MsgConnectEx::ERROR_INVALID_ACC);
+            MsgConnectEx msg(MsgConnectEx::ERROR_ID_INVALID_ACC, MsgConnectEx::ERROR_INVALID_ACC);
             client.send(&msg);
         }
     }

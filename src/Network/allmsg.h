@@ -16,6 +16,7 @@
 #include "msgconnectex.h"
 #include "msgdate.h"
 #include "msgdialog.h"
+#include "msgitem.h"
 #include "msgiteminfo.h"
 #include "msgloginchallenges.h"
 #include "msgloginproofa.h"

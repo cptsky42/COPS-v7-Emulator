@@ -61,6 +61,9 @@ Msg :: create(Msg** aOutMsg, uint8_t** aBuf, size_t aLen)
         case MSG_ALLOT:
             msg = new MsgAllot(aBuf, aLen);
             break;
+        case MSG_ITEM:
+            msg = new MsgItem(aBuf, aLen);
+            break;
         default:
             msg = new Msg(aBuf, aLen);
             break;

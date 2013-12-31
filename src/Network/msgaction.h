@@ -24,8 +24,6 @@ class Entity;
 class MsgAction : public Msg
 {
 public:
-//    LoginCompleted = 130,
-
     enum Action
     {
         /** No action specified. (Invalid) */

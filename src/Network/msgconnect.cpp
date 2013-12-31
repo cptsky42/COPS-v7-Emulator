@@ -93,7 +93,6 @@ MsgConnect :: process(Client* aClient)
         }
         case Client::NORMAL: // Sent to the MsgServer
         {
-            // TODO: if online, disconnect
             if (!IS_SUCCESS(db.getPlayerInfo(client)))
             {
                 client.disconnect();
@@ -131,11 +130,6 @@ MsgConnect :: process(Client* aClient)
                 SAFE_DELETE(msg);
 
                 msg = new MsgDate();
-                client.send(msg);
-                SAFE_DELETE(msg);
-
-                // HACK !
-                msg = new MsgUserAttrib(&player, player.getMaxEnergy(), MsgUserAttrib::USER_ATTRIB_ENERGY);
                 client.send(msg);
                 SAFE_DELETE(msg);
 

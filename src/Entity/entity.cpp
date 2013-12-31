@@ -92,7 +92,7 @@ Entity :: removeEntityFromBCSet(const Entity& aEntity) const
     {
         Player* player = (Player*)this;
 
-        MsgAction msg(&aEntity, 0, MsgAction::actionDisappear);
+        MsgAction msg(&aEntity, 0, MsgAction::ACTION_LEAVE_MAP);
         player->send(&msg);
     }
 

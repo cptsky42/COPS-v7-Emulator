@@ -32,14 +32,6 @@ public:
         uint16_t Profession;
         /** The account UID */
         int32_t AccountUID;
-        /** The player's force */
-        uint8_t Force;
-        /** The player's health */
-        uint8_t Health;
-        /** The player's speed */
-        uint8_t Speed;
-        /** The player's soul */
-        uint8_t Soul;
     }MsgInfo;
     #pragma pack(pop)
 
