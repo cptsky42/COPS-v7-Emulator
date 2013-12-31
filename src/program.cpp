@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     // Initialize the BigInt package
     LOG(INFO, "Initializing the BigInt package...");
     bi_initialize();
-    srandom(time(NULL)); // for generatePrime() call
+    srand(time(NULL)); // for generatePrime() call
 
     const Server& server = Server::getInstance();
     int result = app.exec();

@@ -29,8 +29,12 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <stdint.h>
 #include <time.h>
+
+#ifndef _WIN32
+#include <unistd.h>
+#endif // _WIN32
 
 #include "bigint.h"
 
@@ -176,27 +180,27 @@ bi_terminate( void )
     bi_depermanent( bi_minint ); bi_free( bi_minint );
 
     if ( active_count != 0 )
-	(void) fprintf(
-	    stderr, "bi_terminate: there were %d un-freed bigints\n",
-	    active_count );
+    (void) fprintf(
+        stderr, "bi_terminate: there were %d un-freed bigints\n",
+        active_count );
     if ( check_level >= 2 )
-	double_check();
+    double_check();
     if ( check_level >= 3 )
-	{
-	triple_check();
-	for ( p = active_list; p != (bigint) 0; p = pn )
-	    {
-	    pn = p->next;
-	    free( p->comps );
-	    free( p );
-	    }
-	}
+    {
+    triple_check();
+    for ( p = active_list; p != (bigint) 0; p = pn )
+        {
+        pn = p->next;
+        free( p->comps );
+        free( p );
+        }
+    }
     for ( p = free_list; p != (bigint) 0; p = pn )
-	{
-	pn = p->next;
-	free( p->comps );
-	free( p );
-	}
+    {
+    pn = p->next;
+    free( p->comps );
+    free( p );
+    }
     }
 
 
@@ -214,7 +218,7 @@ bi_copy( bigint obi )
 
     check( bi );
     if ( bi->refs != PERMANENT )
-	++bi->refs;
+    ++bi->refs;
     return bi;
     }
 
@@ -226,10 +230,15 @@ bi_permanent( bigint obi )
 
     check( bi );
     if ( check_level >= 1 && bi->refs != 1 )
-	{
-	(void) fprintf( stderr, "bi_permanent: refs was not 1\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr, "bi_permanent: refs was not 1\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     bi->refs = PERMANENT;
     }
 
@@ -241,10 +250,15 @@ bi_depermanent( bigint obi )
 
     check( bi );
     if ( check_level >= 1 && bi->refs != PERMANENT )
-	{
-	(void) fprintf( stderr, "bi_depermanent: bigint was not permanent\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr, "bi_depermanent: bigint was not permanent\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     bi->refs = 1;
     }
 
@@ -256,31 +270,36 @@ bi_free( bigint obi )
 
     check( bi );
     if ( bi->refs == PERMANENT )
-	return;
+    return;
     --bi->refs;
     if ( bi->refs > 0 )
-	return;
+    return;
     if ( check_level >= 3 )
-	{
-	/* The active list only gets maintained at check levels 3 or higher. */
-	real_bigint* nextP;
-	for ( nextP = &active_list; *nextP != (real_bigint) 0; nextP = &((*nextP)->next) )
-	    if ( *nextP == bi )
-		{
-		*nextP = bi->next;
-		break;
-		}
-	}
+    {
+    /* The active list only gets maintained at check levels 3 or higher. */
+    real_bigint* nextP;
+    for ( nextP = &active_list; *nextP != (real_bigint) 0; nextP = &((*nextP)->next) )
+        if ( *nextP == bi )
+        {
+        *nextP = bi->next;
+        break;
+        }
+    }
     --active_count;
     bi->next = free_list;
     free_list = bi;
     ++free_count;
     if ( check_level >= 1 && active_count < 0 )
-	{
-	(void) fprintf( stderr,
-	    "bi_free: active_count went negative - double-freed bigint?\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr,
+        "bi_free: active_count went negative - double-freed bigint?\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     }
 
 
@@ -296,34 +315,34 @@ bi_compare( bigint obia, bigint obib )
 
     /* First check for pointer equality. */
     if ( bia == bib )
-	r = 0;
+    r = 0;
     else
-	{
-	/* Compare signs. */
-	if ( bia->sign > bib->sign )
-	    r = 1;
-	else if ( bia->sign < bib->sign )
-	    r = -1;
-	/* Signs are the same.  Check the number of components. */
-	else if ( bia->num_comps > bib->num_comps )
-	    r = bia->sign;
-	else if ( bia->num_comps < bib->num_comps )
-	    r = -bia->sign;
-	else
-	    {
-	    /* Same number of components.  Compare starting from the high end
-	    ** and working down.
-	    */
-	    r = 0;	/* if we complete the loop, the numbers are equal */
-	    for ( c = bia->num_comps - 1; c >= 0; --c )
-		{
-		if ( bia->comps[c] > bib->comps[c] )
-		    { r = bia->sign; break; }
-		else if ( bia->comps[c] < bib->comps[c] )
-		    { r = -bia->sign; break; }
-		}
-	    }
-	}
+    {
+    /* Compare signs. */
+    if ( bia->sign > bib->sign )
+        r = 1;
+    else if ( bia->sign < bib->sign )
+        r = -1;
+    /* Signs are the same.  Check the number of components. */
+    else if ( bia->num_comps > bib->num_comps )
+        r = bia->sign;
+    else if ( bia->num_comps < bib->num_comps )
+        r = -bia->sign;
+    else
+        {
+        /* Same number of components.  Compare starting from the high end
+        ** and working down.
+        */
+        r = 0;	/* if we complete the loop, the numbers are equal */
+        for ( c = bia->num_comps - 1; c >= 0; --c )
+        {
+        if ( bia->comps[c] > bib->comps[c] )
+            { r = bia->sign; break; }
+        else if ( bia->comps[c] < bib->comps[c] )
+            { r = -bia->sign; break; }
+        }
+        }
+    }
 
     bi_free( bia );
     bi_free( bib );
@@ -354,18 +373,23 @@ bi_to_int( bigint obi )
 
     check( bi );
     if ( bi_compare( bi_copy( bi ), bi_maxint ) > 0 ||
-	 bi_compare( bi_copy( bi ), bi_minint ) < 0 )
-	{
-	(void) fprintf( stderr, "bi_to_int: overflow\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+     bi_compare( bi_copy( bi ), bi_minint ) < 0 )
+    {
+    (void) fprintf( stderr, "bi_to_int: overflow\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     v = 0;
     m = 1;
     for ( c = 0; c < bi->num_comps; ++c )
-	{
-	v += bi->comps[c] * m;
-	m *= bi_radix;
-	}
+    {
+    v += bi->comps[c] * m;
+    m *= bi_radix;
+    }
     r = (int) ( bi->sign * v );
     bi_free( bi );
     return r;
@@ -381,9 +405,9 @@ bi_int_add( bigint obi, int i )
     check( bi );
     biR = clone( bi );
     if ( biR->sign == 1 )
-	biR->comps[0] += i;
+    biR->comps[0] += i;
     else
-	biR->comps[0] -= i;
+    biR->comps[0] -= i;
     normalize( biR );
     check( biR );
     return biR;
@@ -399,9 +423,9 @@ bi_int_subtract( bigint obi, int i )
     check( bi );
     biR = clone( bi );
     if ( biR->sign == 1 )
-	biR->comps[0] -= i;
+    biR->comps[0] -= i;
     else
-	biR->comps[0] += i;
+    biR->comps[0] += i;
     normalize( biR );
     check( biR );
     return biR;
@@ -418,12 +442,12 @@ bi_int_multiply( bigint obi, int i )
     check( bi );
     biR = clone( bi );
     if ( i < 0 )
-	{
-	i = -i;
-	biR->sign = -biR->sign;
-	}
+    {
+    i = -i;
+    biR->sign = -biR->sign;
+    }
     for ( c = 0; c < biR->num_comps; ++c )
-	biR->comps[c] *= i;
+    biR->comps[c] *= i;
     normalize( biR );
     check( biR );
     return biR;
@@ -440,23 +464,28 @@ bi_int_divide( bigint obinumer, int denom )
 
     check( binumer );
     if ( denom == 0 )
-	{
-	(void) fprintf( stderr, "bi_int_divide: divide by zero\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr, "bi_int_divide: divide by zero\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     biR = clone( binumer );
     if ( denom < 0 )
-	{
-	denom = -denom;
-	biR->sign = -biR->sign;
-	}
+    {
+    denom = -denom;
+    biR->sign = -biR->sign;
+    }
     r = 0;
     for ( c = biR->num_comps - 1; c >= 0; --c )
-	{
-	r = r * bi_radix + biR->comps[c];
-	biR->comps[c] = r / denom;
-	r = r % denom;
-	}
+    {
+    r = r * bi_radix + biR->comps[c];
+    biR->comps[c] = r / denom;
+    r = r % denom;
+    }
     normalize( biR );
     check( biR );
     return biR;
@@ -472,21 +501,26 @@ bi_int_rem( bigint obi, int m )
 
     check( bi );
     if ( m == 0 )
-	{
-	(void) fprintf( stderr, "bi_int_rem: divide by zero\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr, "bi_int_rem: divide by zero\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     if ( m < 0 )
-	m = -m;
+    m = -m;
     rad_r = 1;
     r = 0;
     for ( c = 0; c < bi->num_comps; ++c )
-	{
-	r = ( r + bi->comps[c] * rad_r ) % m;
-	rad_r = ( rad_r * bi_radix ) % m;
-	}
+    {
+    r = ( r + bi->comps[c] * rad_r ) % m;
+    rad_r = ( rad_r * bi_radix ) % m;
+    }
     if ( bi->sign < 1 )
-	r = -r;
+    r = -r;
     bi_free( bi );
     return (int) r;
     }
@@ -505,10 +539,10 @@ bi_add( bigint obia, bigint obib )
     biR = clone( bia );
     more_comps( biR, max( biR->num_comps, bib->num_comps ) );
     for ( c = 0; c < bib->num_comps; ++c )
-	if ( biR->sign == bib->sign )
-	    biR->comps[c] += bib->comps[c];
-	else
-	    biR->comps[c] -= bib->comps[c];
+    if ( biR->sign == bib->sign )
+        biR->comps[c] += bib->comps[c];
+    else
+        biR->comps[c] -= bib->comps[c];
     bi_free( bib );
     normalize( biR );
     check( biR );
@@ -529,10 +563,10 @@ bi_subtract( bigint obia, bigint obib )
     biR = clone( bia );
     more_comps( biR, max( biR->num_comps, bib->num_comps ) );
     for ( c = 0; c < bib->num_comps; ++c )
-	if ( biR->sign == bib->sign )
-	    biR->comps[c] -= bib->comps[c];
-	else
-	    biR->comps[c] += bib->comps[c];
+    if ( biR->sign == bib->sign )
+        biR->comps[c] -= bib->comps[c];
+    else
+        biR->comps[c] += bib->comps[c];
     bi_free( bib );
     normalize( biR );
     check( biR );
@@ -557,9 +591,9 @@ bi_multiply( bigint obia, bigint obib )
     check( bia );
     check( bib );
     if ( min( bia->num_comps, bib->num_comps ) < KARATSUBA_MULT_THRESH )
-	return regular_multiply( bia, bib );
+    return regular_multiply( bia, bib );
     else
-	return karatsuba_multiply( bia, bib );
+    return karatsuba_multiply( bia, bib );
     }
 
 
@@ -574,19 +608,19 @@ regular_multiply( real_bigint bia, real_bigint bib )
     new_comps = bia->num_comps + bib->num_comps;
     more_comps( biR, new_comps );
     for ( c1 = 0; c1 < bia->num_comps; ++c1 )
-	{
-	for ( c2 = 0; c2 < bib->num_comps; ++c2 )
-	    biR->comps[c1 + c2] += bia->comps[c1] * bib->comps[c2];
-	/* Normalize after each inner loop to avoid overflowing any
-	** components.  But be sure to reset biR's components count,
-	** in case a previous normalization lowered it.
-	*/
-	biR->num_comps = new_comps;
-	normalize( biR );
-	}
+    {
+    for ( c2 = 0; c2 < bib->num_comps; ++c2 )
+        biR->comps[c1 + c2] += bia->comps[c1] * bib->comps[c2];
+    /* Normalize after each inner loop to avoid overflowing any
+    ** components.  But be sure to reset biR's components count,
+    ** in case a previous normalization lowered it.
+    */
+    biR->num_comps = new_comps;
+    normalize( biR );
+    }
     check( biR );
     if ( ! bi_is_zero( bi_copy( biR ) ) )
-	biR->sign = bia->sign * bib->sign;
+    biR->sign = bia->sign * bib->sign;
     bi_free( bia );
     bi_free( bib );
     return biR;
@@ -621,24 +655,24 @@ karatsuba_multiply( real_bigint bia, real_bigint bib )
     bi_k = alloc( n );
     bi_l = alloc( n );
     for ( c = 0; c < n; ++c )
-	{
-	if ( c + n < bia->num_comps )
-	    bi_i->comps[c] = bia->comps[c + n];
-	else
-	    bi_i->comps[c] = 0;
-	if ( c < bia->num_comps )
-	    bi_j->comps[c] = bia->comps[c];
-	else
-	    bi_j->comps[c] = 0;
-	if ( c + n < bib->num_comps )
-	    bi_k->comps[c] = bib->comps[c + n];
-	else
-	    bi_k->comps[c] = 0;
-	if ( c < bib->num_comps )
-	    bi_l->comps[c] = bib->comps[c];
-	else
-	    bi_l->comps[c] = 0;
-	}
+    {
+    if ( c + n < bia->num_comps )
+        bi_i->comps[c] = bia->comps[c + n];
+    else
+        bi_i->comps[c] = 0;
+    if ( c < bia->num_comps )
+        bi_j->comps[c] = bia->comps[c];
+    else
+        bi_j->comps[c] = 0;
+    if ( c + n < bib->num_comps )
+        bi_k->comps[c] = bib->comps[c + n];
+    else
+        bi_k->comps[c] = 0;
+    if ( c < bib->num_comps )
+        bi_l->comps[c] = bib->comps[c];
+    else
+        bi_l->comps[c] = 0;
+    }
     bi_i->sign = bi_j->sign = bi_k->sign = bi_l->sign = 1;
     normalize( bi_i );
     normalize( bi_j );
@@ -647,16 +681,16 @@ karatsuba_multiply( real_bigint bia, real_bigint bib )
     bi_ik = bi_multiply( bi_copy( bi_i ), bi_copy( bi_k ) );
     bi_jl = bi_multiply( bi_copy( bi_j ), bi_copy( bi_l ) );
     bi_mid = bi_subtract(
-	bi_subtract(
-	    bi_multiply( bi_add( bi_i, bi_j ), bi_add( bi_k, bi_l ) ),
-	    bi_copy( bi_ik ) ),
-	bi_copy( bi_jl ) );
+    bi_subtract(
+        bi_multiply( bi_add( bi_i, bi_j ), bi_add( bi_k, bi_l ) ),
+        bi_copy( bi_ik ) ),
+    bi_copy( bi_jl ) );
     more_comps(
-	bi_jl, max( bi_mid->num_comps + n, bi_ik->num_comps + n * 2 ) );
+    bi_jl, max( bi_mid->num_comps + n, bi_ik->num_comps + n * 2 ) );
     for ( c = 0; c < bi_mid->num_comps; ++c )
-	bi_jl->comps[c + n] += bi_mid->comps[c];
+    bi_jl->comps[c + n] += bi_mid->comps[c];
     for ( c = 0; c < bi_ik->num_comps; ++c )
-	bi_jl->comps[c + n * 2] += bi_ik->comps[c];
+    bi_jl->comps[c + n * 2] += bi_ik->comps[c];
     bi_free( bi_ik );
     bi_free( bi_mid );
     bi_jl->sign = bia->sign * bib->sign;
@@ -680,9 +714,9 @@ bi_square( bigint obi )
 
     check( bi );
     if ( bi->num_comps < KARATSUBA_SQUARE_THRESH )
-	return regular_square( bi );
+    return regular_square( bi );
     else
-	return karatsuba_square( bi );
+    return karatsuba_square( bi );
     }
 
 
@@ -697,17 +731,17 @@ regular_square( real_bigint bi )
     new_comps = bi->num_comps * 2;
     more_comps( biR, new_comps );
     for ( c1 = 0; c1 < bi->num_comps; ++c1 )
-	{
-	for ( c2 = 0; c2 < c1; ++c2 )
-	    biR->comps[c1 + c2] += 2 * bi->comps[c1] * bi->comps[c2];
-	biR->comps[c1*2] += bi->comps[c1] * bi->comps[c1];
-	/* Normalize after each inner loop to avoid overflowing any
-	** components.  But be sure to reset biR's components count,
-	** in case a previous normalization lowered it.
-	*/
-	biR->num_comps = new_comps;
-	normalize( biR );
-	}
+    {
+    for ( c2 = 0; c2 < c1; ++c2 )
+        biR->comps[c1 + c2] += 2 * bi->comps[c1] * bi->comps[c2];
+    biR->comps[c1*2] += bi->comps[c1] * bi->comps[c1];
+    /* Normalize after each inner loop to avoid overflowing any
+    ** components.  But be sure to reset biR's components count,
+    ** in case a previous normalization lowered it.
+    */
+    biR->num_comps = new_comps;
+    normalize( biR );
+    }
     check( biR );
     bi_free( bi );
     return biR;
@@ -725,30 +759,30 @@ karatsuba_square( real_bigint bi )
     bi_i = alloc( n );
     bi_j = alloc( n );
     for ( c = 0; c < n; ++c )
-	{
-	if ( c + n < bi->num_comps )
-	    bi_i->comps[c] = bi->comps[c + n];
-	else
-	    bi_i->comps[c] = 0;
-	if ( c < bi->num_comps )
-	    bi_j->comps[c] = bi->comps[c];
-	else
-	    bi_j->comps[c] = 0;
-	}
+    {
+    if ( c + n < bi->num_comps )
+        bi_i->comps[c] = bi->comps[c + n];
+    else
+        bi_i->comps[c] = 0;
+    if ( c < bi->num_comps )
+        bi_j->comps[c] = bi->comps[c];
+    else
+        bi_j->comps[c] = 0;
+    }
     bi_i->sign = bi_j->sign = 1;
     normalize( bi_i );
     normalize( bi_j );
     bi_ii = bi_square( bi_copy( bi_i ) );
     bi_jj = bi_square( bi_copy( bi_j ) );
     bi_mid = bi_subtract(
-	bi_subtract( bi_square( bi_add( bi_i, bi_j ) ), bi_copy( bi_ii ) ),
-	bi_copy( bi_jj ) );
+    bi_subtract( bi_square( bi_add( bi_i, bi_j ) ), bi_copy( bi_ii ) ),
+    bi_copy( bi_jj ) );
     more_comps(
-	bi_jj, max( bi_mid->num_comps + n, bi_ii->num_comps + n * 2 ) );
+    bi_jj, max( bi_mid->num_comps + n, bi_ii->num_comps + n * 2 ) );
     for ( c = 0; c < bi_mid->num_comps; ++c )
-	bi_jj->comps[c + n] += bi_mid->comps[c];
+    bi_jj->comps[c + n] += bi_mid->comps[c];
     for ( c = 0; c < bi_ii->num_comps; ++c )
-	bi_jj->comps[c + n * 2] += bi_ii->comps[c];
+    bi_jj->comps[c + n * 2] += bi_ii->comps[c];
     bi_free( bi_ii );
     bi_free( bi_mid );
     bi_free( bi );
@@ -765,11 +799,11 @@ bi_mod_multiply( bigint bia, bigint bib, bigint bim )
     {
     /* Take a mod before doing the multiply. */
     if ( bi_is_negative( bi_copy( bia ) ) ||
-	 bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
-	bia = bi_mod( bia, bi_copy( bim ) );
+     bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
+    bia = bi_mod( bia, bi_copy( bim ) );
     if ( bi_is_negative( bi_copy( bib ) ) ||
-	 bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
-	bib = bi_mod( bib, bi_copy( bim ) );
+     bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
+    bib = bi_mod( bib, bi_copy( bim ) );
 
     return bi_mod( bi_multiply( bia, bib ), bim );
     }
@@ -786,28 +820,28 @@ bi_mod_multiply( bigint bia, bigint bib, bigint bim )
 
     /* Take a mod before doing the multiply. */
     if ( bi_is_negative( bi_copy( bia ) ) ||
-	 bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
-	bia = bi_mod( bia, bi_copy( bim ) );
+     bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
+    bia = bi_mod( bia, bi_copy( bim ) );
     if ( bi_is_negative( bi_copy( bib ) ) ||
-	 bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
-	bib = bi_mod( bib, bi_copy( bim ) );
+     bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
+    bib = bi_mod( bib, bi_copy( bim ) );
 
     if ( bi_compare( bi_copy( bia ), bi_copy( bib ) ) < 0 )
-	return bi_mod_multiply( bib, bia, bim );
+    return bi_mod_multiply( bib, bia, bim );
 
     if ( bi_bit( bi_copy( bib ), 0 ) )
-	biR = bi_copy( bia );
+    biR = bi_copy( bia );
     else
-	biR = bi_0;
+    biR = bi_0;
     bits = bi_bits( bi_copy( bib ) );
     for ( bitnum = 1; bitnum < bits; ++bitnum )
-	{
-	bia = bi_double( bia );
-	if ( bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
-	    bia = bi_subtract( bia, bi_copy( bim ) );
-	if ( bi_bit( bi_copy( bib ), bitnum ) )
-	    biR = bi_mod_add( biR, bi_copy( bia ), bi_copy( bim ) );
-	}
+    {
+    bia = bi_double( bia );
+    if ( bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
+        bia = bi_subtract( bia, bi_copy( bim ) );
+    if ( bi_bit( bi_copy( bib ), bitnum ) )
+        biR = bi_mod_add( biR, bi_copy( bia ), bi_copy( bim ) );
+    }
     bi_free( bia );
     bi_free( bib );
     bi_free( bim );
@@ -828,35 +862,35 @@ bi_mod_multiply( bigint obia, bigint obib, bigint bim )
 
     /* Take a mod before doing the multiply. */
     if ( bi_is_negative( bi_copy( bia ) ) ||
-	 bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
-	bia = bi_mod( bia, bi_copy( bim ) );
+     bi_compare( bi_copy( bia ), bi_copy( bim ) ) >= 0 )
+    bia = bi_mod( bia, bi_copy( bim ) );
     if ( bi_is_negative( bi_copy( bib ) ) ||
-	 bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
-	bib = bi_mod( bib, bi_copy( bim ) );
+     bi_compare( bi_copy( bib ), bi_copy( bim ) ) >= 0 )
+    bib = bi_mod( bib, bi_copy( bim ) );
 
     biR = clone( bi_0 );
     new_comps = bia->num_comps + bib->num_comps;	/* maximum possible */
     more_comps( biR, new_comps );
     for ( c1 = 0; c1 < bia->num_comps; ++c1 )
-	{
-	for ( c2 = 0; c2 < bib->num_comps; ++c2 )
-	    biR->comps[c1 + c2] += bia->comps[c1] * bib->comps[c2];
-	/* Normalize after each inner loop to avoid overflowing any
-	** components.  But be sure to reset biR's components count,
-	** in case a previous normalization lowered it.
-	*/
-	biR->num_comps = new_comps;
-	normalize( biR );
-	/* Avoid doing a mod here, since biR can't be larger by very much. */
-	while ( bi_compare( bi_copy( biR ), bi_copy( bim ) ) >= 0 )
-	    biR = bi_subtract( biR, bi_copy( bim ) );
-	}
+    {
+    for ( c2 = 0; c2 < bib->num_comps; ++c2 )
+        biR->comps[c1 + c2] += bia->comps[c1] * bib->comps[c2];
+    /* Normalize after each inner loop to avoid overflowing any
+    ** components.  But be sure to reset biR's components count,
+    ** in case a previous normalization lowered it.
+    */
+    biR->num_comps = new_comps;
+    normalize( biR );
+    /* Avoid doing a mod here, since biR can't be larger by very much. */
+    while ( bi_compare( bi_copy( biR ), bi_copy( bim ) ) >= 0 )
+        biR = bi_subtract( biR, bi_copy( bim ) );
+    }
     check( biR );
     if ( ! bi_is_zero( bi_copy( biR ) ) && bia->sign * bib->sign == -1 )
-	{
-	biR->sign = -1;
-	biR = bi_add( biR, bi_copy( bim ) );
-	}
+    {
+    biR->sign = -1;
+    biR = bi_add( biR, bi_copy( bim ) );
+    }
     bi_free( bia );
     bi_free( bib );
     bi_free( bim );
@@ -867,9 +901,9 @@ bi_mod_multiply( bigint obia, bigint obib, bigint bim )
 
 #ifndef notdef
 /* Trivial mod-square.  Slow. */
-bigint 
+bigint
 bi_mod_square( bigint bi, bigint bim )
-    {   
+    {
     bigint biR;
 
     biR = bi_mod_multiply( bi_copy( bi ), bi_copy( bi ), bim );
@@ -892,27 +926,27 @@ bi_mod_square( bigint obi, bigint bim )
 
     /* Take a mod before doing the square. */
     if ( bi_is_negative( bi_copy( bi ) ) ||
-	 bi_compare( bi_copy( bi ), bi_copy( bim ) ) >= 0 )
-	bi = bi_mod( bi, bi_copy( bim ) );
+     bi_compare( bi_copy( bi ), bi_copy( bim ) ) >= 0 )
+    bi = bi_mod( bi, bi_copy( bim ) );
 
     biR = clone( bi_0 );
     new_comps = 2 * bi->num_comps;	/* maximum possible */
     more_comps( biR, new_comps );
     for ( c1 = 0; c1 < bi->num_comps; ++c1 )
-	{
-	for ( c2 = 0; c2 < c1; ++c2 )
-	    biR->comps[c1 + c2] += 2 * bi->comps[c1] * bi->comps[c2];
-	biR->comps[2*c1] += bi->comps[c1] * bi->comps[c1];
-	/* Normalize after each inner loop to avoid overflowing any
-	** components.  But be sure to reset biR's components count,
-	** in case a previous normalization lowered it.
-	*/
-	biR->num_comps = new_comps;
-	normalize( biR );
-	/* Avoid doing a mod here, since biR can't be larger by very much. */
-	while ( bi_compare( bi_copy( biR ), bi_copy( bim ) ) >= 0 )
-	    biR = bi_subtract( biR, bi_copy( bim ) );
-	}
+    {
+    for ( c2 = 0; c2 < c1; ++c2 )
+        biR->comps[c1 + c2] += 2 * bi->comps[c1] * bi->comps[c2];
+    biR->comps[2*c1] += bi->comps[c1] * bi->comps[c1];
+    /* Normalize after each inner loop to avoid overflowing any
+    ** components.  But be sure to reset biR's components count,
+    ** in case a previous normalization lowered it.
+    */
+    biR->num_comps = new_comps;
+    normalize( biR );
+    /* Avoid doing a mod here, since biR can't be larger by very much. */
+    while ( bi_compare( bi_copy( biR ), bi_copy( bim ) ) >= 0 )
+        biR = bi_subtract( biR, bi_copy( bim ) );
+    }
     check( biR );
     bi_free( bi );
     bi_free( bim );
@@ -945,56 +979,61 @@ bi_divide( bigint binumer, bigint obidenom )
     /* Check signs and trivial cases. */
     sign = 1;
     switch ( bi_compare( bi_copy( bidenom ), bi_0 ) )
-	{
-	case 0:
-	(void) fprintf( stderr, "bi_divide: divide by zero\n" );
-	(void) kill( getpid(), SIGFPE );
-	case -1:
-	sign *= -1;
-	bidenom = bi_negate( bidenom );
-	break;
-	}
+    {
+    case 0:
+    (void) fprintf( stderr, "bi_divide: divide by zero\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    case -1:
+    sign *= -1;
+    bidenom = bi_negate( bidenom );
+    break;
+    }
     switch ( bi_compare( bi_copy( binumer ), bi_0 ) )
-	{
-	case 0:
-	bi_free( binumer );
-	bi_free( bidenom );
-	return bi_0;
-	case -1:
-	sign *= -1;
-	binumer = bi_negate( binumer );
-	break;
-	}
+    {
+    case 0:
+    bi_free( binumer );
+    bi_free( bidenom );
+    return bi_0;
+    case -1:
+    sign *= -1;
+    binumer = bi_negate( binumer );
+    break;
+    }
     switch ( bi_compare( bi_copy( binumer ), bi_copy( bidenom ) ) )
-	{
-	case -1:
-	bi_free( binumer );
-	bi_free( bidenom );
-	return bi_0;
-	case 0:
-	bi_free( binumer );
-	bi_free( bidenom );
-	if ( sign == 1 )
-	    return bi_1;
-	else
-	    return bi_m1;
-	}
+    {
+    case -1:
+    bi_free( binumer );
+    bi_free( bidenom );
+    return bi_0;
+    case 0:
+    bi_free( binumer );
+    bi_free( bidenom );
+    if ( sign == 1 )
+        return bi_1;
+    else
+        return bi_m1;
+    }
 
     /* Is the denominator small enough to do an int divide? */
     if ( bidenom->num_comps == 1 )
-	{
-	/* Win! */
-	biquotient = bi_int_divide( binumer, bidenom->comps[0] );
-	bi_free( bidenom );
-	}
+    {
+    /* Win! */
+    biquotient = bi_int_divide( binumer, bidenom->comps[0] );
+    bi_free( bidenom );
+    }
     else
-	{
-	/* No, we have to do a full multi-by-multi divide. */
-	biquotient = multi_divide( binumer, bidenom );
-	}
+    {
+    /* No, we have to do a full multi-by-multi divide. */
+    biquotient = multi_divide( binumer, bidenom );
+    }
 
     if ( sign == -1 )
-	biquotient = bi_negate( biquotient );
+    biquotient = bi_negate( biquotient );
     return biquotient;
     }
 
@@ -1014,17 +1053,17 @@ multi_divide( bigint binumer, real_bigint bidenom )
     ** is too small, increase it!
     */
     if ( bidenom->comps[bidenom->num_comps-1] < bi_radix_sqrt )
-	{
-	/* We use the square root of the radix as the threshhold here
-	** because that's the largest value guaranteed to not make the
-	** high-order component overflow and become too small again.
-	**
-	** We increase binumer along with bidenom to keep the end result
-	** the same.
-	*/
-	binumer = bi_int_multiply( binumer, bi_radix_sqrt );
-	bidenom = bi_int_multiply( bidenom, bi_radix_sqrt );
-	}
+    {
+    /* We use the square root of the radix as the threshhold here
+    ** because that's the largest value guaranteed to not make the
+    ** high-order component overflow and become too small again.
+    **
+    ** We increase binumer along with bidenom to keep the end result
+    ** the same.
+    */
+    binumer = bi_int_multiply( binumer, bi_radix_sqrt );
+    bidenom = bi_int_multiply( bidenom, bi_radix_sqrt );
+    }
 
     /* Now start the recursion. */
     return multi_divide2( binumer, bidenom );
@@ -1048,47 +1087,47 @@ multi_divide2( bigint binumer, real_bigint bidenom )
     biapprox = bi_int_divide( bi_copy( binumer ), bidenom->comps[o] );
     /* And downshift the result to get the approximate quotient. */
     for ( c = o; c < biapprox->num_comps; ++c )
-	biapprox->comps[c - o] = biapprox->comps[c];
+    biapprox->comps[c - o] = biapprox->comps[c];
     biapprox->num_comps -= o;
 
     /* Find the remainder from the approximate quotient. */
     birem = bi_subtract(
-	bi_multiply( bi_copy( biapprox ), bi_copy( bidenom ) ), binumer );
+    bi_multiply( bi_copy( biapprox ), bi_copy( bidenom ) ), binumer );
 
     if ( bi_is_negative( bi_copy( birem ) ) || bi_is_zero( bi_copy( birem ) ) )
-	{
-	/* If the remainder is negative or zero, then we have the correct
-	** quotient and we're done.
-	*/
-	biquotient = biapprox;
-	bi_free( birem );
-	bi_free( bidenom );
-	}
+    {
+    /* If the remainder is negative or zero, then we have the correct
+    ** quotient and we're done.
+    */
+    biquotient = biapprox;
+    bi_free( birem );
+    bi_free( bidenom );
+    }
     else if ( bi_compare( bi_copy( birem ), bi_copy( bidenom ) ) < 0 )
-	{
-	/* If the remainder is less than bidenom, then the approximation is
-	** off by one from the correct answer - fix it and we're done.
-	*/
-	biquotient = bi_int_subtract( biapprox, 1 );
-	bi_free( birem );
-	bi_free( bidenom );
-	}
+    {
+    /* If the remainder is less than bidenom, then the approximation is
+    ** off by one from the correct answer - fix it and we're done.
+    */
+    biquotient = bi_int_subtract( biapprox, 1 );
+    bi_free( birem );
+    bi_free( bidenom );
+    }
     else
-	{
-	/* The real quotient is now biapprox - birem / bidenom.  We still
-	** have to do a divide.  However, birem is smaller than binumer,
-	** so the next divide will go faster.  We do the divide by
-	** recursion.  Since this is tail-recursion or close to it, we
-	** could probably re-arrange things and make it a non-recursive
-	** loop, but the overhead of recursion is small and the bookkeeping
-	** is simpler this way.
-	**
-	** Note that since the sub-divide uses the same denominator, it
-	** doesn't have to adjust the values again - the high-order component
-	** will still be good.
-	*/
-	biquotient = bi_subtract( biapprox, multi_divide2( birem, bidenom ) );
-	}
+    {
+    /* The real quotient is now biapprox - birem / bidenom.  We still
+    ** have to do a divide.  However, birem is smaller than binumer,
+    ** so the next divide will go faster.  We do the divide by
+    ** recursion.  Since this is tail-recursion or close to it, we
+    ** could probably re-arrange things and make it a non-recursive
+    ** loop, but the overhead of recursion is small and the bookkeeping
+    ** is simpler this way.
+    **
+    ** Note that since the sub-divide uses the same denominator, it
+    ** doesn't have to adjust the values again - the high-order component
+    ** will still be good.
+    */
+    biquotient = bi_subtract( biapprox, multi_divide2( birem, bidenom ) );
+    }
 
     return biquotient;
     }
@@ -1105,73 +1144,78 @@ bi_binary_divide( bigint binumer, bigint obidenom )
     /* Check signs and trivial cases. */
     sign = 1;
     switch ( bi_compare( bi_copy( bidenom ), bi_0 ) )
-	{
-	case 0:
-	(void) fprintf( stderr, "bi_divide: divide by zero\n" );
-	(void) kill( getpid(), SIGFPE );
-	case -1:
-	sign *= -1;
-	bidenom = bi_negate( bidenom );
-	break;
-	}
+    {
+    case 0:
+    (void) fprintf( stderr, "bi_divide: divide by zero\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    case -1:
+    sign *= -1;
+    bidenom = bi_negate( bidenom );
+    break;
+    }
     switch ( bi_compare( bi_copy( binumer ), bi_0 ) )
-	{
-	case 0:
-	bi_free( binumer );
-	bi_free( bidenom );
-	return bi_0;
-	case -1:
-	sign *= -1;
-	binumer = bi_negate( binumer );
-	break;
-	}
+    {
+    case 0:
+    bi_free( binumer );
+    bi_free( bidenom );
+    return bi_0;
+    case -1:
+    sign *= -1;
+    binumer = bi_negate( binumer );
+    break;
+    }
     switch ( bi_compare( bi_copy( binumer ), bi_copy( bidenom ) ) )
-	{
-	case -1:
-	bi_free( binumer );
-	bi_free( bidenom );
-	return bi_0;
-	case 0:
-	bi_free( binumer );
-	bi_free( bidenom );
-	if ( sign == 1 )
-	    return bi_1;
-	else
-	    return bi_m1;
-	}
+    {
+    case -1:
+    bi_free( binumer );
+    bi_free( bidenom );
+    return bi_0;
+    case 0:
+    bi_free( binumer );
+    bi_free( bidenom );
+    if ( sign == 1 )
+        return bi_1;
+    else
+        return bi_m1;
+    }
 
     /* Is the denominator small enough to do an int divide? */
     if ( bidenom->num_comps == 1 )
-	{
-	/* Win! */
-	biquotient = bi_int_divide( binumer, bidenom->comps[0] );
-	bi_free( bidenom );
-	}
+    {
+    /* Win! */
+    biquotient = bi_int_divide( binumer, bidenom->comps[0] );
+    bi_free( bidenom );
+    }
     else
-	{
-	/* No, we have to do a full multi-by-multi divide. */
-	int num_bits, den_bits, i;
+    {
+    /* No, we have to do a full multi-by-multi divide. */
+    int num_bits, den_bits, i;
 
-	num_bits = bi_bits( bi_copy( binumer ) );
-	den_bits = bi_bits( bi_copy( bidenom ) );
-	bidenom = bi_multiply( bidenom, bi_power( bi_2, int_to_bi( num_bits - den_bits ) ) );
-	biquotient = bi_0;
-	for ( i = den_bits; i <= num_bits; ++i )
-	    {
-	    biquotient = bi_double( biquotient );
-	    if ( bi_compare( bi_copy( binumer ), bi_copy( bidenom ) ) >= 0 )
-		{
-		biquotient = bi_int_add( biquotient, 1 );
-		binumer = bi_subtract( binumer, bi_copy( bidenom ) );
-		}
-	    bidenom = bi_half( bidenom );
-	    }
-	bi_free( binumer );
-	bi_free( bidenom );
-	}
+    num_bits = bi_bits( bi_copy( binumer ) );
+    den_bits = bi_bits( bi_copy( bidenom ) );
+    bidenom = bi_multiply( bidenom, bi_power( bi_2, int_to_bi( num_bits - den_bits ) ) );
+    biquotient = bi_0;
+    for ( i = den_bits; i <= num_bits; ++i )
+        {
+        biquotient = bi_double( biquotient );
+        if ( bi_compare( bi_copy( binumer ), bi_copy( bidenom ) ) >= 0 )
+        {
+        biquotient = bi_int_add( biquotient, 1 );
+        binumer = bi_subtract( binumer, bi_copy( bidenom ) );
+        }
+        bidenom = bi_half( bidenom );
+        }
+    bi_free( binumer );
+    bi_free( bidenom );
+    }
 
     if ( sign == -1 )
-	biquotient = bi_negate( biquotient );
+    biquotient = bi_negate( biquotient );
     return biquotient;
     }
 
@@ -1215,15 +1259,15 @@ bi_half( bigint obi )
     /* This depends on the radix being even. */
     biR = clone( bi );
     for ( c = 0; c < biR->num_comps; ++c )
-	{
-	if ( biR->comps[c] & 1 )
-	    if ( c > 0 )
-		biR->comps[c - 1] += bi_radix_o2;
-	biR->comps[c] = biR->comps[c] >> 1;
-	}
+    {
+    if ( biR->comps[c] & 1 )
+        if ( c > 0 )
+        biR->comps[c - 1] += bi_radix_o2;
+    biR->comps[c] = biR->comps[c] >> 1;
+    }
     /* Avoid normalization. */
     if ( biR->num_comps > 1 && biR->comps[biR->num_comps-1] == 0 )
-	--biR->num_comps;
+    --biR->num_comps;
     check( biR );
     return biR;
     }
@@ -1239,16 +1283,16 @@ bi_double( bigint obi )
     check( bi );
     biR = clone( bi );
     for ( c = biR->num_comps - 1; c >= 0; --c )
-	{
-	biR->comps[c] = biR->comps[c] << 1;
-	if ( biR->comps[c] >= bi_radix )
-	    {
-	    if ( c + 1 >= biR->num_comps )
-		more_comps( biR, biR->num_comps + 1 );
-	    biR->comps[c] -= bi_radix;
-	    biR->comps[c + 1] += 1;
-	    }
-	}
+    {
+    biR->comps[c] = biR->comps[c] << 1;
+    if ( biR->comps[c] >= bi_radix )
+        {
+        if ( c + 1 >= biR->num_comps )
+        more_comps( biR, biR->num_comps + 1 );
+        biR->comps[c] -= bi_radix;
+        biR->comps[c + 1] += 1;
+        }
+    }
     check( biR );
     return biR;
     }
@@ -1262,15 +1306,20 @@ bi_sqrt( bigint obi )
     bigint biR, biR2, bidiff;
 
     switch ( bi_compare( bi_copy( bi ), bi_0 ) )
-	{
-	case -1:
-	(void) fprintf( stderr, "bi_sqrt: imaginary result\n" );
-	(void) kill( getpid(), SIGFPE );
-	case 0:
-	return bi;
-	}
+    {
+    case -1:
+    (void) fprintf( stderr, "bi_sqrt: imaginary result\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    case 0:
+    return bi;
+    }
     if ( bi_is_one( bi_copy( bi ) ) )
-	return bi;
+    return bi;
 
     /* Newton's method converges reasonably fast, but it helps to have
     ** a good initial guess.  We can make a *very* good initial guess
@@ -1278,32 +1327,32 @@ bi_sqrt( bigint obi )
     ** root of the radix part.  Both of those are easy to compute.
     */
     biR = bi_int_multiply(
-	bi_power( int_to_bi( bi_radix_sqrt ), int_to_bi( bi->num_comps - 1 ) ),
-	csqrt( bi->comps[bi->num_comps - 1] ) );
+    bi_power( int_to_bi( bi_radix_sqrt ), int_to_bi( bi->num_comps - 1 ) ),
+    csqrt( bi->comps[bi->num_comps - 1] ) );
 
     /* Now do the Newton loop until we have the answer. */
     for (;;)
-	{
-	biR2 = bi_divide( bi_copy( bi ), bi_copy( biR ) );
-	bidiff = bi_subtract( bi_copy( biR ), bi_copy( biR2 ) );
-	if ( bi_is_zero( bi_copy( bidiff ) ) ||
-	     bi_compare( bi_copy( bidiff ), bi_m1 ) == 0 )
-	    {
-	    bi_free( bi );
-	    bi_free( bidiff );
-	    bi_free( biR2 );
-	    return biR;
-	    }
-	if ( bi_is_one( bi_copy( bidiff ) ) )
-	    {
-	    bi_free( bi );
-	    bi_free( bidiff );
-	    bi_free( biR );
-	    return biR2;
-	    }
-	bi_free( bidiff );
-	biR = bi_half( bi_add( biR, biR2 ) );
-	}
+    {
+    biR2 = bi_divide( bi_copy( bi ), bi_copy( biR ) );
+    bidiff = bi_subtract( bi_copy( biR ), bi_copy( biR2 ) );
+    if ( bi_is_zero( bi_copy( bidiff ) ) ||
+         bi_compare( bi_copy( bidiff ), bi_m1 ) == 0 )
+        {
+        bi_free( bi );
+        bi_free( bidiff );
+        bi_free( biR2 );
+        return biR;
+        }
+    if ( bi_is_one( bi_copy( bidiff ) ) )
+        {
+        bi_free( bi );
+        bi_free( bidiff );
+        bi_free( biR );
+        return biR2;
+        }
+    bi_free( bidiff );
+    biR = bi_half( bi_add( biR, biR2 ) );
+    }
     }
 
 
@@ -1329,9 +1378,9 @@ bi_bit( bigint obi, int bitnum )
     check( bi );
     ci = bitnum / bi_comp_bits;
     if ( ci >= bi->num_comps )
-	bit = 0;
+    bit = 0;
     else
-	bit = cbit( bi->comps[ci], bitnum - ci * bi_comp_bits );
+    bit = cbit( bi->comps[ci], bitnum - ci * bi_comp_bits );
     bi_free( bi );
     return bit;
     }
@@ -1386,7 +1435,7 @@ bi_random( bigint obi )
     biR = clone( bi_0 );
     more_comps( biR, bi->num_comps * 5 / 4 );
     for ( c = 0; c < biR->num_comps; ++c )
-	biR->comps[c] = random();
+    biR->comps[c] = rand();
     normalize( biR );
     biR = bi_mod( biR, bi );
     return biR;
@@ -1400,8 +1449,8 @@ bi_bits( bigint obi )
     int bits;
 
     bits =
-	bi_comp_bits * ( bi->num_comps - 1 ) +
-	cbits( bi->comps[bi->num_comps - 1] );
+    bi_comp_bits * ( bi->num_comps - 1 ) +
+    cbits( bi->comps[bi->num_comps - 1] );
     bi_free( bi );
     return bits;
     }
@@ -1424,18 +1473,18 @@ static void
 more_comps( real_bigint bi, int n )
     {
     if ( n > bi->max_comps )
-	{
-	bi->max_comps = max( bi->max_comps * 2, n );
-	bi->comps = (comp*) realloc(
-	    (void*) bi->comps, bi->max_comps * sizeof(comp) );
-	if ( bi->comps == (comp*) 0 )
-	    {
-	    (void) fprintf( stderr, "out of memory\n" );
-	    exit( 1 );
-	    }
-	}
+    {
+    bi->max_comps = max( bi->max_comps * 2, n );
+    bi->comps = (comp*) realloc(
+        (void*) bi->comps, bi->max_comps * sizeof(comp) );
+    if ( bi->comps == (comp*) 0 )
+        {
+        (void) fprintf( stderr, "out of memory\n" );
+        exit( 1 );
+        }
+    }
     for ( ; bi->num_comps < n; ++bi->num_comps )
-	bi->comps[bi->num_comps] = 0;
+    bi->comps[bi->num_comps] = 0;
     }
 
 
@@ -1449,44 +1498,49 @@ alloc( int num_comps )
 
     /* Can we recycle an old bigint? */
     if ( free_list != (real_bigint) 0 )
-	{
-	biR = free_list;
-	free_list = biR->next;
-	--free_count;
-	if ( check_level >= 1 && biR->refs != 0 )
-	    {
-	    (void) fprintf( stderr, "alloc: refs was not 0\n" );
-	    (void) kill( getpid(), SIGFPE );
-	    }
-	more_comps( biR, num_comps );
-	}
+    {
+    biR = free_list;
+    free_list = biR->next;
+    --free_count;
+    if ( check_level >= 1 && biR->refs != 0 )
+        {
+        (void) fprintf( stderr, "alloc: refs was not 0\n" );
+
+        #ifndef _WIN32
+        (void) kill( getpid(), SIGFPE );
+        #else
+        (void) abort();
+        #endif // _WIN32
+        }
+    more_comps( biR, num_comps );
+    }
     else
-	{
-	/* No free bigints available - create a new one. */
-	biR = (real_bigint) malloc( sizeof(struct _real_bigint) );
-	if ( biR == (real_bigint) 0 )
-	    {
-	    (void) fprintf( stderr, "out of memory\n" );
-	    exit( 1 );
-	    }
-	biR->comps = (comp*) malloc( num_comps * sizeof(comp) );
-	if ( biR->comps == (comp*) 0 )
-	    {
-	    (void) fprintf( stderr, "out of memory\n" );
-	    exit( 1 );
-	    }
-	biR->max_comps = num_comps;
-	}
+    {
+    /* No free bigints available - create a new one. */
+    biR = (real_bigint) malloc( sizeof(struct _real_bigint) );
+    if ( biR == (real_bigint) 0 )
+        {
+        (void) fprintf( stderr, "out of memory\n" );
+        exit( 1 );
+        }
+    biR->comps = (comp*) malloc( num_comps * sizeof(comp) );
+    if ( biR->comps == (comp*) 0 )
+        {
+        (void) fprintf( stderr, "out of memory\n" );
+        exit( 1 );
+        }
+    biR->max_comps = num_comps;
+    }
     biR->num_comps = num_comps;
     biR->refs = 1;
     if ( check_level >= 3 )
-	{
-	/* The active list only gets maintained at check levels 3 or higher. */
-	biR->next = active_list;
-	active_list = biR;
-	}
+    {
+    /* The active list only gets maintained at check levels 3 or higher. */
+    biR->next = active_list;
+    active_list = biR;
+    }
     else
-	biR->next = (real_bigint) 0;
+    biR->next = (real_bigint) 0;
     ++active_count;
     return biR;
     }
@@ -1501,12 +1555,12 @@ clone( real_bigint bi )
 
     /* Very clever optimization. */
     if ( bi->refs != PERMANENT && bi->refs == 1 )
-	return bi;
+    return bi;
 
     biR = alloc( bi->num_comps );
     biR->sign = bi->sign;
     for ( c = 0; c < bi->num_comps; ++c )
-	biR->comps[c] = bi->comps[c];
+    biR->comps[c] = bi->comps[c];
     bi_free( bi );
     return biR;
     }
@@ -1531,45 +1585,45 @@ normalize( real_bigint bi )
     **   -11 / 10 == -1  -11 % 10 == -1
     */
     for ( c = 0; c < bi->num_comps - 1; ++c )
-	if ( bi->comps[c] < 0 )
-	    {
-	    bi->comps[c+1] += bi->comps[c] / bi_radix - 1;
-	    bi->comps[c] = bi->comps[c] % bi_radix;
-	    if ( bi->comps[c] != 0 )
-		bi->comps[c] += bi_radix;
-	    else
-		bi->comps[c+1] += 1;
-	    }
+    if ( bi->comps[c] < 0 )
+        {
+        bi->comps[c+1] += bi->comps[c] / bi_radix - 1;
+        bi->comps[c] = bi->comps[c] % bi_radix;
+        if ( bi->comps[c] != 0 )
+        bi->comps[c] += bi_radix;
+        else
+        bi->comps[c+1] += 1;
+        }
     /* Is the top component negative? */
     if ( bi->comps[bi->num_comps - 1] < 0 )
-	{
-	/* Switch the sign of the number, and fix up the components. */
-	bi->sign = -bi->sign;
-	for ( c = 0; c < bi->num_comps - 1; ++c )
-	    {
-	    bi->comps[c] =  bi_radix - bi->comps[c];
-	    bi->comps[c + 1] += 1;
-	    }
-	bi->comps[bi->num_comps - 1] = -bi->comps[bi->num_comps - 1];
-	}
+    {
+    /* Switch the sign of the number, and fix up the components. */
+    bi->sign = -bi->sign;
+    for ( c = 0; c < bi->num_comps - 1; ++c )
+        {
+        bi->comps[c] =  bi_radix - bi->comps[c];
+        bi->comps[c + 1] += 1;
+        }
+    bi->comps[bi->num_comps - 1] = -bi->comps[bi->num_comps - 1];
+    }
 
     /* Carry for components larger than the radix. */
     for ( c = 0; c < bi->num_comps; ++c )
-	if ( bi->comps[c] >= bi_radix )
-	    {
-	    if ( c + 1 >= bi->num_comps )
-		more_comps( bi, bi->num_comps + 1 );
-	    bi->comps[c+1] += bi->comps[c] / bi_radix;
-	    bi->comps[c] = bi->comps[c] % bi_radix;
-	    }
+    if ( bi->comps[c] >= bi_radix )
+        {
+        if ( c + 1 >= bi->num_comps )
+        more_comps( bi, bi->num_comps + 1 );
+        bi->comps[c+1] += bi->comps[c] / bi_radix;
+        bi->comps[c] = bi->comps[c] % bi_radix;
+        }
 
     /* Trim off any leading zero components. */
     for ( ; bi->num_comps > 1 && bi->comps[bi->num_comps-1] == 0; --bi->num_comps )
-	;
+    ;
 
     /* Check for -0. */
     if ( bi->num_comps == 1 && bi->comps[0] == 0 && bi->sign == -1 )
-	bi->sign = 1;
+    bi->sign = 1;
     }
 
 
@@ -1577,48 +1631,68 @@ static void
 check( real_bigint bi )
     {
     if ( check_level == 0 )
-	return;
+    return;
     if ( bi->refs == 0 )
-	{
-	(void) fprintf( stderr, "check: zero refs in bigint\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
-    if ( bi->refs < 0 )
-	{
-	(void) fprintf( stderr, "check: negative refs in bigint\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
-    if ( check_level < 3 )
-	{
-	/* At check levels less than 3, active bigints have a zero next. */
-	if ( bi->next != (real_bigint) 0 )
-	    {
-	    (void) fprintf(
-		stderr, "check: attempt to use a bigint from the free list\n" );
-	    (void) kill( getpid(), SIGFPE );
-	    }
-	}
-    else
-	{
-	/* At check levels 3 or higher, active bigints must be on the active
-	** list.
-	*/
-	real_bigint p;
+    {
+    (void) fprintf( stderr, "check: zero refs in bigint\n" );
 
-	for ( p = active_list; p != (real_bigint) 0; p = p->next )
-	    if ( p == bi )
-		break;
-	if ( p == (real_bigint) 0 )
-	    {
-	    (void) fprintf( stderr,
-		"check: attempt to use a bigint not on the active list\n" );
-	    (void) kill( getpid(), SIGFPE );
-	    }
-	}
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
+    if ( bi->refs < 0 )
+    {
+    (void) fprintf( stderr, "check: negative refs in bigint\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
+    if ( check_level < 3 )
+    {
+    /* At check levels less than 3, active bigints have a zero next. */
+    if ( bi->next != (real_bigint) 0 )
+        {
+        (void) fprintf(
+        stderr, "check: attempt to use a bigint from the free list\n" );
+
+        #ifndef _WIN32
+        (void) kill( getpid(), SIGFPE );
+        #else
+        (void) abort();
+        #endif // _WIN32
+        }
+    }
+    else
+    {
+    /* At check levels 3 or higher, active bigints must be on the active
+    ** list.
+    */
+    real_bigint p;
+
+    for ( p = active_list; p != (real_bigint) 0; p = p->next )
+        if ( p == bi )
+        break;
+    if ( p == (real_bigint) 0 )
+        {
+        (void) fprintf( stderr,
+        "check: attempt to use a bigint not on the active list\n" );
+
+        #ifndef _WIN32
+        (void) kill( getpid(), SIGFPE );
+        #else
+        (void) abort();
+        #endif // _WIN32
+        }
+    }
     if ( check_level >= 2 )
-	double_check();
+    double_check();
     if ( check_level >= 3 )
-	triple_check();
+    triple_check();
     }
 
 
@@ -1629,19 +1703,29 @@ double_check( void )
     int c;
 
     for ( p = free_list, c = 0; p != (real_bigint) 0; p = p->next, ++c )
-	if ( p->refs != 0 )
-	    {
-	    (void) fprintf( stderr,
-		"double_check: found a non-zero ref on the free list\n" );
-	    (void) kill( getpid(), SIGFPE );
-	    }
+    if ( p->refs != 0 )
+        {
+        (void) fprintf( stderr,
+        "double_check: found a non-zero ref on the free list\n" );
+
+        #ifndef _WIN32
+        (void) kill( getpid(), SIGFPE );
+        #else
+        (void) abort();
+        #endif // _WIN32
+        }
     if ( c != free_count )
-	{
-	(void) fprintf( stderr,
-	    "double_check: free_count is %d but the free list has %d items\n",
-	    free_count, c );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr,
+        "double_check: free_count is %d but the free list has %d items\n",
+        free_count, c );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     }
 
 
@@ -1652,19 +1736,29 @@ triple_check( void )
     int c;
 
     for ( p = active_list, c = 0; p != (real_bigint) 0; p = p->next, ++c )
-	if ( p->refs == 0 )
-	    {
-	    (void) fprintf( stderr,
-		"triple_check: found a zero ref on the active list\n" );
-	    (void) kill( getpid(), SIGFPE );
-	    }
+    if ( p->refs == 0 )
+        {
+        (void) fprintf( stderr,
+        "triple_check: found a zero ref on the active list\n" );
+
+        #ifndef _WIN32
+        (void) kill( getpid(), SIGFPE );
+        #else
+        (void) abort();
+        #endif // _WIN32
+        }
     if ( c != active_count )
-	{
-	(void) fprintf( stderr,
-	    "triple_check: active_count is %d but active_list has %d items\n",
-	    free_count, c );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr,
+        "triple_check: active_count is %d but active_list has %d items\n",
+        free_count, c );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
     }
 
 
@@ -1683,7 +1777,7 @@ dump( char* str, bigint obi )
     (void) fprintf( stdout, "  max_comps: %d\n", bi->max_comps );
     (void) fprintf( stdout, "  sign: %d\n", bi->sign );
     for ( c = bi->num_comps - 1; c >= 0; --c )
-	(void) fprintf( stdout, "    comps[%d]: %11lld (0x%016llx)\n", c, (long long) bi->comps[c], (long long) bi->comps[c] );
+    (void) fprintf( stdout, "    comps[%d]: %11lld (0x%016llx)\n", c, (long long) bi->comps[c], (long long) bi->comps[c] );
     (void) fprintf( stdout, "  print: " );
     bi_print( stdout, bi_copy( bi ) );
     (void) fprintf( stdout, "\n" );
@@ -1698,22 +1792,27 @@ csqrt( comp c )
     comp r, r2, diff;
 
     if ( c < 0 )
-	{
-	(void) fprintf( stderr, "csqrt: imaginary result\n" );
-	(void) kill( getpid(), SIGFPE );
-	}
+    {
+    (void) fprintf( stderr, "csqrt: imaginary result\n" );
+
+    #ifndef _WIN32
+    (void) kill( getpid(), SIGFPE );
+    #else
+    (void) abort();
+    #endif // _WIN32
+    }
 
     r = c / 2;
     for (;;)
-	{
-	r2 = c / r;
-	diff = r - r2;
-	if ( diff == 0 || diff == -1 )
-	    return (int) r;
-	if ( diff == 1 )
-	    return (int) r2;
-	r = ( r + r2 ) / 2;
-	}
+    {
+    r2 = c / r;
+    diff = r - r2;
+    if ( diff == 0 || diff == -1 )
+        return (int) r;
+    if ( diff == 1 )
+        return (int) r2;
+    r = ( r + r2 ) / 2;
+    }
     }
 
 
@@ -1724,7 +1823,7 @@ cbits( comp c )
     int b;
 
     for ( b = 0; c != 0; ++b )
-	c >>= 1;
+    c >>= 1;
     return b;
     }
 

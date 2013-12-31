@@ -22,6 +22,7 @@
 #include "strres.h"
 
 #ifdef _WIN32
+#define NOMINMAX // want std::min() & std::max() defined...
 #include <windows.h>
 
 #ifdef _MSC_VER // Visual Studio will complain for linking...
