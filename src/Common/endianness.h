@@ -20,6 +20,11 @@
 #include <endian.h>
 #endif // HAVE_ENDIAN_H
 
+// Clang defines __has_builtin
+#ifndef __has_builtin
+#define __has_builtin
+#endif // __has_builtin
+
 /*
  *****************************************************
  * Determine endian at compilation
