@@ -91,10 +91,6 @@ Client :: save()
     if (mPlayer != nullptr)
     {
         Database& db = Database::getInstance();
-        World& world = World::getInstance();
-
-        world.removePlayer(*mPlayer);
-        mPlayer->leaveMap();
 
         do
         {

@@ -8,15 +8,22 @@
 
 #include "log.h"
 #include "server.h"
+
 #include "client.h"
+#include "player.h"
+
 #include "networkclient.h"
 #include "msg.h"
 #include "msgloginchallenges.h"
+
 #include "mapmanager.h"
 #include "database.h"
+#include "world.h"
+
 #include "script.h"
 #include "npctask.h"
 #include "itemtask.h"
+
 #include "inifile.h"
 
 using namespace std;
@@ -268,6 +275,15 @@ Server :: disconnectionHandler(NetworkClient* aClient)
         // TODO? clean this line and add some checks
         Client* client = (Client*)aClient->getOwner();
         client->save();
+
+        Player* player = client->getPlayer();
+        if (player != nullptr)
+        {
+            World& world = World::getInstance();
+
+            world.removePlayer(*player);
+            player->leaveMap();
+        }
 
         SAFE_DELETE(client);
     }
