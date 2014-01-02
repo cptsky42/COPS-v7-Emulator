@@ -60,11 +60,22 @@ public:
      */
     void save();
 
+    /**
+     * Generate the exchange request and send it to the client.
+     */
     void generateExchangeRequest();
+
+    /**
+     * Handle the client response to the exchange request.
+     *
+     * @param[in]   aBuf    the MsgLoginChallengeS buffer
+     * @param[in]   aLen    the length in bytes of the buffer
+     */
     void handleExchangeResponse(uint8_t** aBuf, size_t aLen);
 
     /**
      * Send a message to the client.
+     * The TQ seal will be appended at the end.
      *
      * @param[in]  aMsg     the message to send
      */
@@ -72,6 +83,7 @@ public:
 
     /**
      * Send a message to the client.
+     * The TQ seal will be appended at the end.
      *
      * @param[in]   aBuf    the message to send
      * @param[in]   aLen    the length of the message

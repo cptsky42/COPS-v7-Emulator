@@ -43,25 +43,28 @@ bool hex2bin(const char* aHexStr, uint8_t* aOutBytes, size_t& aOutLen)
 
 int random(int aMax, bool aReset)
 {
+    // in the original source, the seed is initialized to 3721 instead of random...
     static unsigned long seed = timeGetTime();
 
     if (aReset)
-    {
         seed = timeGetTime();
-    }
 
-    unsigned long x = UINT_MAX;
+    const unsigned long x = UINT_MAX;
     double i;
-    unsigned long final;
 
     seed *= 134775813;
     seed += 1;
     seed = seed % x;
 
     i = ((double)seed) / (double)x;
-    final = (unsigned long)(aMax * i);
 
-    return (int)final;
+    return (int)(aMax * i);
+}
+
+int random(int aMin, int aMax, bool aReset)
+{
+    aMax += 1; // include aMax in the range...
+    return aMin + (int)(((double)random(aMax, aReset) / (double)aMax) * (double)(aMax - aMin));
 }
 
 double randomRate(double aRange)
@@ -70,18 +73,10 @@ double randomRate(double aRange)
 
     int rand = random(999, false) + 1;
     double a = sin(rand * PI / 1000.0);
-    double b;
 
-    if (rand >= 90)
-    {
-        b = (1.0 + aRange) - sqrt(sqrt(a)) * aRange;
-    }
-    else
-    {
-        b = (1.0 - aRange) + sqrt(sqrt(a)) * aRange;
-    }
-
-    return b;
+    return (rand >= 90) ?
+                (1.0 + aRange) - sqrt(sqrt(a)) * aRange :
+                (1.0 - aRange) + sqrt(sqrt(a)) * aRange;
 }
 
 bool isValidString(const char* aStr)

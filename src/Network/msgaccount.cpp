@@ -57,7 +57,7 @@ MsgAccount :: process(Client* aClient)
             fprintf(stdout, "Connection of %s on %s...\n",
                     mInfo->Account, mInfo->Server);
 
-            int32_t token = random(INT32_MAX);
+            int32_t token = random(10000, INT32_MAX);
 
             MsgConnectEx msg(client.getAccountID(), token,
                              Server::getServerIP(), Server::MSGSERVER_PORT);

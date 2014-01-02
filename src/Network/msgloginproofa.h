@@ -31,19 +31,33 @@ public:
     #pragma pack(push, 1)
     typedef struct
     {
+        /** Junk padding ? */
         uint8_t Padding[MsgLoginProofA::PADDING_LEN];
+        /** Size of the whole message, including the TQ seal. */
         int32_t Size;
+        /** Size of the junk part. */
         int32_t JunkSize;
+        /** Junk (random bytes). */
         uint8_t Junk[MsgLoginProofA::JUNK_LEN];
+        /** Size of the encryption IV */
         int32_t EnIVSize;
+        /** New encryption IV to be used. */
         uint8_t EnIV[Blowfish::BLOCK_SIZE];
+        /** Size of the decryption IV */
         int32_t DeIVSize;
+        /** New decryption IV to be used. */
         uint8_t DeIV[Blowfish::BLOCK_SIZE];
+        /** Size of the p key. */
         int32_t PSize;
+        /** p key used by the DH exchange. */
         char P[1];
+        /** Size of the g key. */
         int32_t GSize;
+        /** g key used by the DH exchange. */
         char G[1];
+        /** Size of the A key. */
         int32_t ASize;
+        /** A key used by the DH exchange. */
         char A[1];
     }MsgInfo;
     #pragma pack(pop)

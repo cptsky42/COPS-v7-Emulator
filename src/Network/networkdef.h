@@ -11,8 +11,11 @@
 
 #include "common.h"
 
+/** Maximum length of a name, including the NUL character. */
 const size_t MAX_NAMESIZE = 16;
+/** Maximum length of a message, including the NUL character. */
 const size_t MAX_WORDSSIZE = 255;
+/** Maximum length of a parameter, including the NUL character. */
 const size_t MAX_PARAMSIZE = 255;
 
 const uint16_t MSG_NONE = 0;

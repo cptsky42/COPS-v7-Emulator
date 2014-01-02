@@ -87,7 +87,7 @@ public:
         /** Kick back the player at a previous position (the client answer with ACTION_SYNCHRO) */
         ACTION_KICK_BACK = 108, // to client    idUser is Player ID, unPosX unPosY is Player pos
         /** Open a dialog on the client. */
-        ACTION_OPEN_DIALOG = 126, // to client only, open a dialog, dwData is id of dialog
+        ACTION_OPEN_DIALOG = 126 // to client only, open a dialog, dwData is id of dialog
     };
 
     /** List of all PK modes. */

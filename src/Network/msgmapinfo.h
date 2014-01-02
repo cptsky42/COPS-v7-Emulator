@@ -25,9 +25,11 @@ public:
     {
         /** Generic header of all msgs */
         Msg::Header Header;
-        /** The unique Id of the player */
+        /** Unique Id of the map */
         uint32_t UniqId;
+        /** Real Id of the map. */
         uint32_t DocId;
+        /** Type (flags) of the map. */
         uint32_t Type;
     }MsgInfo;
     #pragma pack(pop)

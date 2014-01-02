@@ -76,7 +76,7 @@ public:
         /** Use fireworks ??? */
         ACTION_FIREWORKS = 26,
         /** Ping evaluation */
-        ACTION_COMPLETE_TASK = 27,
+        ACTION_COMPLETE_TASK = 27
     };
 
 public:

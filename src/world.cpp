@@ -35,7 +35,7 @@ private:
         // TODO: with all entities... maps, items, magics
 //        while (!mTerminate)
 //        {
-//            for (map<int32_t, Player*>::const_iterator
+//            for (map<uint32_t, Player*>::const_iterator
 //                    it = world.AllPlayers.begin(), end = world.AllPlayers.end();
 //                 !mTerminate && it != end; ++it)
 //            {

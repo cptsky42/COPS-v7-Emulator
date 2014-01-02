@@ -12,6 +12,9 @@
 #include "common.h"
 #include "msg.h"
 
+/**
+ * Message used for NPC's dialogs.
+ */
 class MsgDialog : public Msg
 {
 public:
@@ -19,9 +22,13 @@ public:
     {
         /** No action specified. (Invalid) */
         ACTION_NONE = 0,
+        /** Text of the dialog. */
         ACTION_TEXT = 1,
+        /** Options (with next task ID). */
         ACTION_LINK = 2,
+        /** Input (with next task ID). */
         ACTION_EDIT = 3,
+        /** Pic of the NPC. */
         ACTION_PIC = 4,
         ACTION_LISTLINE = 5,
         ACTION_CREATE = 100, // idxTask => default
@@ -46,16 +53,45 @@ public:
             };
         };
 
+        /** Data of the action (e.g. Pic) */
         uint16_t Data;
+        /** Task's index (0 is default, 255 is end). */
         uint8_t IdxTask;
+        /** Action Id. */
         uint8_t Action;
+        /** Text of the action. */
         uint8_t Buf[1];
     }MsgInfo;
     #pragma pack(pop)
 
 public:
+    /**
+     * Create a new MsgDialog packet with the specified text and data.
+     *
+     * @param[in]   aText       the action's text
+     * @param[in]   aData       the action's data
+     * @param[in]   aIdxTask    the task's index
+     * @param[in]   aAction     the action Id
+     */
     MsgDialog(const char* aText, uint16_t aData, uint8_t aIdxTask, Action aAction);
+
+    /**
+     * Create a new MsgDialog packet with the specified coords and data.
+     *
+     * @param[in]   aPosX       the X coord
+     * @param[in]   aPosY       the Y coord
+     * @param[in]   aPic        the pic Id
+     * @param[in]   aIdxTask    the task's index
+     * @param[in]   aAction     the action Id
+     */
     MsgDialog(uint16_t aPosX, uint16_t aPosY, uint16_t aPic, uint8_t aIdxTask, Action aAction);
+
+    /**
+     * Create a new MsgDialog packet with empty text and data.
+     *
+     * @param[in]   aIdxTask    the task's index
+     * @param[in]   aAction     the action Id
+     */
     MsgDialog(uint8_t aIdxTask, Action aAction);
 
     /**

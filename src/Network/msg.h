@@ -52,6 +52,10 @@ public:
      * Print the msg in the standard output stream.
      */
     static void dump(const uint8_t* aBuf, size_t aLen);
+
+    /**
+     * Print the msg in the standard output stream.
+     */
     static void dump(Msg* aMsg);
 
 public:

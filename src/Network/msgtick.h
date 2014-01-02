@@ -14,6 +14,9 @@
 
 class Player;
 
+/**
+ * Message used to validate the client connection.
+ */
 class MsgTick : public Msg
 {
 public:

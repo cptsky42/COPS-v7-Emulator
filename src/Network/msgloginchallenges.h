@@ -27,11 +27,17 @@ public:
     #pragma pack(push, 1)
     typedef struct
     {
+        /** Junk padding ? */
         uint8_t Padding[MsgLoginChallengeS::PADDING_LEN];
+        /** Size of the whole message, including the TQ seal. */
         int32_t Size;
+        /** Size of the junk part. */
         int32_t JunkSize;
+        /** Junk (random bytes) */
         uint8_t Junk[1];
+        /** Size of the hex string representing the B key. */
         int32_t BSize;
+        /** B key of the DH exchange */
         char B[1];
     }MsgInfo;
     #pragma pack(pop)
@@ -57,10 +63,10 @@ public:
     /**
      * Process the message received from the client.
      *
-     * @param[in]     aClient      a pointer to the client which
-     *                             has sent the message
-     * @param[in]   aEncryptIV      the encryption IV
-     * @param[in]   aDecryptIV      the decryption IV
+     * @param[in]     aClient         a pointer to the client which
+     *                                has sent the message
+     * @param[in]     aEncryptIV      the encryption IV
+     * @param[in]     aDecryptIV      the decryption IV
      */
     void process(Client* aClient,
                  const uint8_t* aEncryptIV, const uint8_t* aDecryptIV);

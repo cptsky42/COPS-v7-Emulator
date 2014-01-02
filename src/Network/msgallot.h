@@ -12,6 +12,9 @@
 #include "common.h"
 #include "msg.h"
 
+/**
+ * Message sent by the client to allocate points.
+ */
 class MsgAllot : public Msg
 {
 public:
