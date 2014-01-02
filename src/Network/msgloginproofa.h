@@ -35,10 +35,10 @@ public:
         int32_t Size;
         int32_t JunkSize;
         uint8_t Junk[MsgLoginProofA::JUNK_LEN];
-        int32_t DeIVSize;
-        uint8_t DeIV[Blowfish::BLOCK_SIZE];
         int32_t EnIVSize;
         uint8_t EnIV[Blowfish::BLOCK_SIZE];
+        int32_t DeIVSize;
+        uint8_t DeIV[Blowfish::BLOCK_SIZE];
         int32_t PSize;
         char P[1];
         int32_t GSize;

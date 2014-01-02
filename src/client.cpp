@@ -118,19 +118,21 @@ Client :: generateExchangeRequest()
 {
     ASSERT(mExchange == nullptr);
 
+    // N.B. As the P & G keys are sent to the client in MsgLoginProofA, they can be random !
+    // Although they are hard-coded in the client, they won't be used as-is.
     static const string P = "E7A69EBDF105F2A6BBDEAD7E798F76A209AD73FB466431E2E7352ED262F8C558F10BEFEA977DE9E21DCEE9B04D245F300ECCBBA03E72630556D011023F9E857F";
     static const string G = "05";
-
-    Blowfish* cipher = (Blowfish*)mCipher;
-    ASSERT(mCipher->getAlgorithm() == ICipher::BLOWFISH);
 
     mExchange = new DiffieHellman(P.c_str(), G.c_str());
     string pubKey = mExchange->generateRequest();
 
     mEncryptIV = new uint8_t[Blowfish::BLOCK_SIZE];
-    memcpy(mEncryptIV, cipher->getEncryptIV(), Blowfish::BLOCK_SIZE); // TODO random
     mDecryptIV = new uint8_t[Blowfish::BLOCK_SIZE];
-    memcpy(mDecryptIV, cipher->getDecryptIV(), Blowfish::BLOCK_SIZE); // TODO random
+    for (int32_t i = 0; i < Blowfish::BLOCK_SIZE; ++i)
+    {
+        mEncryptIV[i] = (uint8_t)(rand() - rand());
+        mDecryptIV[i] = (uint8_t)(rand() + rand());
+    }
 
     MsgLoginProofA msg(mEncryptIV, mDecryptIV, P, G, pubKey);
     send(&msg);

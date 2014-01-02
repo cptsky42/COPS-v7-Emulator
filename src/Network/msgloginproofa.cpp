@@ -33,10 +33,10 @@ MsgLoginProofA :: MsgLoginProofA(const uint8_t* aEncryptIV, const uint8_t* aDecr
     // Will include the TQServer seal (added by send())...
     info->Size = (int32_t)(mLen - MsgLoginProofA::PADDING_LEN + 8);
 
-    info->DeIVSize = Blowfish::BLOCK_SIZE;
-    memcpy(info->DeIV, aDecryptIV, Blowfish::BLOCK_SIZE);
     info->EnIVSize = Blowfish::BLOCK_SIZE;
     memcpy(info->EnIV, aEncryptIV, Blowfish::BLOCK_SIZE);
+    info->DeIVSize = Blowfish::BLOCK_SIZE;
+    memcpy(info->DeIV, aDecryptIV, Blowfish::BLOCK_SIZE);
 
     uint8_t* ptr = (uint8_t*)&info->PSize;
 
@@ -72,8 +72,8 @@ MsgLoginProofA :: swap(uint8_t* aBuf) const
 
     info->Size = bswap32(info->Size);
     info->JunkSize = bswap32(info->JunkSize);
-    info->DeIVSize = bswap32(info->DeIVSize);
     info->EnIVSize = bswap32(info->EnIVSize);
+    info->DeIVSize = bswap32(info->DeIVSize);
 
     size = *((int32_t*)(ptr));
     *((int32_t*)(ptr)) = bswap32(size);
