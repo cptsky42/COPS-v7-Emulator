@@ -50,11 +50,9 @@ void
 Entity :: clearBroadcastSet() const
 {
     // TODO thread-safe
-    for (map<uint32_t, const Entity*>::const_iterator
-            it = mViewSet.begin(), end = mViewSet.end();
-         it != end; ++it)
+    while (!mViewSet.empty())
     {
-        const Entity& entity = *it->second;
+        const Entity& entity = *mViewSet.begin()->second;
         entity.removeEntityFromBCSet(*this);
         removeEntityFromBCSet(entity);
     }
@@ -88,20 +86,20 @@ Entity :: removeEntityFromBCSet(const Entity& aEntity) const
     ASSERT(&aEntity != nullptr);
     ASSERT(&aEntity != this);
 
-    if (isPlayer())
-    {
-        Player* player = (Player*)this;
-
-        MsgAction msg(&aEntity, 0, MsgAction::ACTION_LEAVE_MAP);
-        player->send(&msg);
-    }
-
     // TODO thread-safe
     map<uint32_t, const Entity*>::iterator it =
             mViewSet.find(aEntity.getUID());
     if (mViewSet.end() != it)
     {
         mViewSet.erase(it);
+
+        if (isPlayer())
+        {
+            Player* player = (Player*)this;
+
+            MsgAction msg(&aEntity, 0, MsgAction::ACTION_LEAVE_MAP);
+            player->send(&msg);
+        }
     }
 }
 

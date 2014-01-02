@@ -45,11 +45,18 @@ MsgItemInfo :: create(void* aItem, Action aAction)
     mInfo->Action = (uint8_t)aAction;
     mInfo->Ident = 0;
     mInfo->Position = ((int*)aItem)[1];
-    mInfo->Gem1 = 5; // Familiary of the horse
-    mInfo->Gem2 = 10;
-    mInfo->Magic1 = 11;
-    mInfo->Magic2 = 8; // Luck
+    memset(mInfo->Padding, 0, sizeof(mInfo->Padding));
+    mInfo->Gem1 = 13;
+    mInfo->Gem2 = 23;
+    mInfo->Magic1 = 201;
+    mInfo->Magic2 = 0;
     mInfo->Magic3 = 9; // Ph-Def Bonus
+    mInfo->Bless = 7;
+    mInfo->Enchant = 255;
+    mInfo->Restrain = 2;
+    mInfo->Locked = true;
+    mInfo->Suspicious = true;
+    mInfo->Color = 4;
 }
 
 void
@@ -63,4 +70,6 @@ MsgItemInfo :: swap(uint8_t* aBuf) const
     info->Type = bswap32(info->Type);
     info->Amount = bswap16(info->Amount);
     info->AmountLimit = bswap16(info->AmountLimit);
+    info->Restrain = bswap32(info->Restrain);
+    info->Color = bswap32(info->Color);
 }

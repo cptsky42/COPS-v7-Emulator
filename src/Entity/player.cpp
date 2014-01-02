@@ -346,8 +346,11 @@ Player :: enterMap()
         //    SendLight();
         //    int	nKeepSecs = 0;		// keep light
 
-        MsgAction msg(this, map->getLight(), MsgAction::ACTION_MAP_ARGB);
-        send(&msg);
+        Msg* msg = nullptr;
+
+        msg = new MsgAction(this, map->getLight(), MsgAction::ACTION_MAP_ARGB);
+        send(msg);
+        SAFE_DELETE(msg);
 
         map->enterRoom(*this);
         //		pMap->SendRegionInfo(this);

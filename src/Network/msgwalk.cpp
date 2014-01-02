@@ -101,10 +101,11 @@ MsgWalk :: process(Client* aClient)
     //    return;
     //}
 
+    player.send(this); // send back...
     if (player.move(newX, newY, dir))
     {
         // broadcast the message to everyone
-        player.broadcastRoomMsg(this, true);
+        player.broadcastRoomMsg(this, false);
     }
 }
 

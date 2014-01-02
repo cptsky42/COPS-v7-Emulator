@@ -64,6 +64,9 @@ public:
     /** Get the entity's pose. */
     uint16_t getPose() const { return mPose; }
 
+    /** Set the entity's pose. */
+    void setPose(uint16_t aPose) { mPose = aPose; }
+
 protected:
     /* constructor */
     AdvancedEntity(uint32_t aUID);

@@ -160,13 +160,10 @@ MsgTalk :: process(Client* aClient)
                 player.setMapId(mapId);
                 player.setPosition(x, y);
 
-                MsgAction msg(&player, player.getMapId(), MsgAction::ACTION_ENTER_MAP);
-                client.send(&msg);
-            }
-            else if (sscanf(words, "/action %d %d", &type, &param))
-            {
-                MsgAction msg(&player, param, (MsgAction::Action)type);
-                client.send(&msg);
+                MsgAction msg(&player, mapId, MsgAction::ACTION_FLY_MAP);
+                player.send(&msg);
+
+                player.enterMap();
             }
             else if (sscanf(words, "/item %d %d", &type, &param))
             {
@@ -174,33 +171,6 @@ MsgTalk :: process(Client* aClient)
                 data[0] = type;
                 data[1] = param;
                 MsgItemInfo msg(data, MsgItemInfo::ACTION_ADD_ITEM);
-                client.send(&msg);
-            }
-            else if (sscanf(words, "/lvl %d", &param))
-            {
-                MsgUserAttrib msg(&player, param, MsgUserAttrib::USER_ATTRIB_LEV);
-                client.send(&msg);
-
-                player.sendSysMsg("MaxHP: %u, MaxMP: %u, MaxEnergy: %u, MaxWeight: %u",
-                                  player.getMaxHP(), player.getMaxMP(), player.getMaxEnergy(), player.getMaxWeight());
-                player.sendSysMsg("MinAtk: %d, MaxAtk: %d, Def: %d, MAtk: %d, MDef: %d, Dext: %u",
-                                  player.getMinAtk(), player.getMaxAtk(), player.getDefense(), player.getMAtk(),
-                                  player.getMDef(), player.getDext());
-            }
-            else if (sscanf(words, "/job %d", &param))
-            {
-                MsgUserAttrib msg(&player, param, MsgUserAttrib::USER_ATTRIB_PROFESSION);
-                client.send(&msg);
-
-                player.sendSysMsg("MaxHP: %u, MaxMP: %u, MaxEnergy: %u, MaxWeight: %u",
-                                  player.getMaxLife(), player.getMaxMana(), player.getMaxEnergy(), player.getMaxWeight());
-                player.sendSysMsg("MinAtk: %d, MaxAtk: %d, Def: %d, MAtk: %d, MDef: %d, Dext: %u",
-                                  player.getMinAtk(), player.getMaxAtk(), player.getDefense(), player.getMAtk(),
-                                  player.getMDef(), player.getDext());
-            }
-            else if (sscanf(words, "/attr %d %d", &param, &type))
-            {
-                MsgUserAttrib msg(&player, param, (MsgUserAttrib::UserAttrType)type);
                 client.send(&msg);
             }
             else if (strcmp(words, "/break") == 0)

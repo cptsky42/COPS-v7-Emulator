@@ -13,6 +13,8 @@
 #include "finder.h"
 #include "inifile.h"
 #include <stdio.h>
+#include <QtConcurrentRun>
+#include <QThread>
 
 using namespace std;
 
@@ -75,10 +77,11 @@ MapManager :: loadData()
         vector<string> sections;
         gamemap.getSections(sections);
 
-        // TODO: Multi-threaded loading ?
         int numCPU = getNumCPU();
-        LOG(INFO, "Detected %d core(s).", numCPU);
+        LOG(INFO, "Detected %d core(s). Spawning %d workers for loading maps...",
+            numCPU, numCPU);
 
+        map< string, vector<uint16_t> > maps;
         for (vector<string>::const_iterator
                 it = sections.begin(), end = sections.end();
              ERROR_SUCCESS == err && it != end; ++it)
@@ -93,53 +96,14 @@ MapManager :: loadData()
                     string dataPath = gamemap.readString(section + "/File", "N/A");
                     if (dataPath != "N/A")
                     {
-                        map<string, MapData*>::const_iterator data_it;
-                        if ((data_it = mData.find(dataPath)) == mData.end())
+                        map< string, vector<uint16_t> >::iterator maps_it;
+                        if ((maps_it = maps.find(dataPath)) == maps.end())
                         {
-                            MapData* data = nullptr;
-                            err = MapData::load(&data, dataPath.c_str());
-
-                            if (IS_SUCCESS(err))
-                            {
-                                ASSERT_ERR(data != nullptr, ERROR_INVALID_POINTER);
-
-                                LOG(INFO, "Loaded map data at '%s' for id=%u.",
-                                    dataPath.c_str(), mapId);
-
-                                LOG(DBG, "Compressing map data of '%s'...",
-                                    dataPath.c_str());
-                                err = data->pack();
-
-                                if (IS_SUCCESS(err))
-                                {
-                                    LOG(INFO, "Compressed map data of '%s'...",
-                                        dataPath.c_str());
-
-                                    mData[dataPath] = data;
-                                    mMaps[(uint16_t)mapId] = data;
-                                    data = nullptr;
-                                }
-                                else
-                                {
-                                    LOG(ERROR, "Could not compress the map data file '%s'. Ignoring error.",
-                                        dataPath.c_str());
-                                    err = ERROR_SUCCESS;
-                                }
-                            }
-                            else if (ERROR_FILE_NOT_FOUND == err)
-                            {
-                                LOG(ERROR, "Could not find all files for loading the map data file '%s'. Ignoring error.",
-                                    dataPath.c_str());
-                                err = ERROR_SUCCESS;
-                            }
-                            SAFE_DELETE(data);
+                            vector<uint16_t> mapIds; mapIds.push_back((uint16_t)mapId);
+                            maps.insert(maps_it, pair< string, vector<uint16_t> >(dataPath, mapIds));
                         }
                         else
-                        {
-                            LOG(INFO, "Found already loaded map data for id=%u.",
-                                mapId);
-                            mMaps[(uint16_t)mapId] = data_it->second;
-                        }
+                            maps_it->second.push_back((uint16_t)mapId);
                     }
                     else
                     {
@@ -159,12 +123,116 @@ MapManager :: loadData()
                     section.c_str());
             }
         }
+
+        vector< QFuture<err_t> > errors;
+        for (int i = 0; ERROR_SUCCESS == err && i < numCPU; ++i)
+        {
+            QFuture<err_t> error = QtConcurrent::run(MapManager::loadData, &maps);
+            errors.push_back(error);
+        }
+
+        for (vector< QFuture<err_t> >::const_iterator
+                it = errors.begin(), end = errors.end();
+             ERROR_SUCCESS == err && it != end; ++it)
+        {
+            err = (*it).result();
+        }
     }
     else
     {
         LOG(ERROR, "Could not find the '%s' file for loading maps.", path);
         err = ERROR_FILE_NOT_FOUND;
     }
+
+    return err;
+}
+
+/* static */
+err_t
+MapManager :: loadData(map< string, vector<uint16_t> >* aWork)
+{
+    ASSERT_ERR(aWork != nullptr, ERROR_INVALID_POINTER);
+
+    MapManager& mgr = MapManager::getInstance();
+
+    err_t err = ERROR_SUCCESS;
+
+    LOG(INFO, "Worker %u starting.", QThread::currentThreadId());
+
+    while (IS_SUCCESS(err))
+    {
+        mgr.mWorkMutex.lock();
+
+        if (aWork->empty())
+        {
+            mgr.mWorkMutex.unlock();
+            break;
+        }
+
+        map< string, vector<uint16_t> >::iterator work_it = aWork->begin();
+        ASSERT(work_it != aWork->end());
+
+        string dataPath(work_it->first);
+        vector<uint16_t> mapIds; mapIds.swap(work_it->second); // swap O(1)
+        aWork->erase(work_it);
+
+        mgr.mWorkMutex.unlock();
+
+        MapData* data = nullptr;
+        DOIF(err, MapData::load(&data, dataPath.c_str()));
+
+        if (IS_SUCCESS(err))
+        {
+            ASSERT_ERR(data != nullptr, ERROR_INVALID_POINTER);
+
+            LOG(INFO, "Loaded map data at '%s'.",
+                dataPath.c_str());
+
+            LOG(DBG, "Compressing map data of '%s'...",
+                dataPath.c_str());
+            err = data->pack();
+
+            if (IS_SUCCESS(err))
+            {
+                LOG(INFO, "Compressed map data of '%s'...",
+                    dataPath.c_str());
+
+                mgr.mDataMutex.lock();
+
+                mgr.mData[dataPath] = data;
+                for (vector<uint16_t>::const_iterator
+                        it = mapIds.begin(), end = mapIds.end();
+                     it != end; ++it)
+                {
+                    uint16_t mapId = *it;
+                    LOG(INFO, "Found already loaded map data for id=%u. Using %s.",
+                        mapId, dataPath.c_str());
+
+                    mgr.mMaps[(uint16_t)mapId] = data;
+                }
+                data = nullptr;
+
+                mgr.mDataMutex.unlock();
+            }
+            else
+            {
+                LOG(ERROR, "Could not compress the map data file '%s'. Ignoring error.",
+                    dataPath.c_str());
+                err = ERROR_SUCCESS;
+            }
+        }
+        else if (ERROR_FILE_NOT_FOUND == err)
+        {
+            LOG(WARN, "Could not find all files for loading the map data file '%s'. Ignoring error.",
+                dataPath.c_str());
+            err = ERROR_SUCCESS;
+        }
+        SAFE_DELETE(data);
+
+        QThread::yieldCurrentThread();
+    }
+
+    LOG(INFO, "Worker %u done. (err=%d)", QThread::currentThreadId(), err);
 
     return err;
 }

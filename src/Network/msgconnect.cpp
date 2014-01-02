@@ -125,11 +125,11 @@ MsgConnect :: process(Client* aClient)
                 client.send(msg);
                 SAFE_DELETE(msg);
 
-                msg = new MsgUserInfo(player);
+                msg = new MsgDate();
                 client.send(msg);
                 SAFE_DELETE(msg);
 
-                msg = new MsgDate();
+                msg = new MsgUserInfo(player);
                 client.send(msg);
                 SAFE_DELETE(msg);
 

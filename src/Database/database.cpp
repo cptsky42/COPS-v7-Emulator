@@ -346,6 +346,7 @@ Database :: loadAllNPCs()
     if (query.exec())
     {
         World& world = World::getInstance();
+        MapManager& mgr = MapManager::getInstance();
         while (ERROR_SUCCESS == err && query.next())
         {
             Npc* npc = new Npc(
@@ -362,7 +363,12 @@ Database :: loadAllNPCs()
             ASSERT(npc != nullptr);
             ASSERT(world.AllNPCs.find(npc->getUID()) == world.AllNPCs.end());
 
-            world.AllNPCs[npc->getUID()] = npc;
+            GameMap* map = mgr.getMap(npc->getMapId());
+            if (map != nullptr)
+            {
+                world.AllNPCs[npc->getUID()] = npc;
+                map->enterRoom(*npc);
+            }
         }
 
         if (IS_SUCCESS(err))

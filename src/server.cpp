@@ -174,7 +174,11 @@ Server :: receiveHandler(NetworkClient* aClient, uint8_t* aBuf, size_t aLen)
 
                     cipher.decrypt(ptr, MsgLoginChallengeS::PADDING_LEN + sizeof(int32_t));
                     ptr += MsgLoginChallengeS::PADDING_LEN; // Padding
+                    #if BYTE_ORDER == BIG_ENDIAN
+                    size = bswap32(*((int32_t*)ptr));
+                    #else
                     size = *((int32_t*)ptr);
+                    #endif // BYTE_ORDER == BIG_ENDIAN
                     cipher.decrypt(ptr + sizeof(int32_t), size - sizeof(int32_t)); // skip the Size, but decrypt the whole msg
 
                     size_t len = MsgLoginChallengeS::PADDING_LEN + size;

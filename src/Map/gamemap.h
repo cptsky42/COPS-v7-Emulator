@@ -212,6 +212,7 @@ private:
     MapData& mData; //!< The map's data.
 
     std::map<uint32_t, Entity*> mEntities; //!< the entities on the map
+    uint64_t mPlayerCount; //!< the number of players on the map
 };
 
 #endif // _COPS_V7_EMULATOR_GAMEMAP_H_

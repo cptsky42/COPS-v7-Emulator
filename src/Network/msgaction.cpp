@@ -85,6 +85,29 @@ MsgAction :: process(Client* aClient)
                 player.broadcastRoomMsg(this, false);
                 break;
             }
+        case ACTION_EMOTION:
+            {
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
+
+                // TODO: mining = false, intone = false, in battle = false
+
+                player.setPose((uint16_t)mInfo->Data);
+                if (AdvancedEntity::POSE_COOL == player.getPose())
+                {
+                    // TODO
+                    // if (TickCount - LastCoolShow > 3000)
+                    // if (isAllNonsuchEquip()) mInfo->Data |= (player.getProfession() * 0x00010000 + 0x01000000);
+                    // else if (% 10 == 9) mInfo->Data |= (player.getProfession() * 0x010000);
+                    // LastCoolShow = TickCount;
+                }
+
+                player.broadcastRoomMsg(this, true);
+                break;
+            }
         case ACTION_ENTER_MAP:
             {
                 const MapManager& mgr = MapManager::getInstance();
@@ -181,6 +204,17 @@ MsgAction :: process(Client* aClient)
         case ACTION_DESTROY_BOOTH:
             {
                 // TODO: Implement booths
+                break;
+            }
+        case ACTION_JUMP:
+            {
+                uint16_t newX = (uint16_t)mInfo->Data;
+                uint16_t newY = (uint16_t)(mInfo->Data >> 16);
+
+                player.sendSysMsg("Jump to (%u, %u)", newX, newY);
+
+                // TODO
+
                 break;
             }
         default:

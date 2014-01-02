@@ -15,7 +15,7 @@
 using namespace std;
 
 GameMap :: GameMap(uint32_t aUID, Info** aInfo, MapData& aData)
-    : mUID(aUID), mInfo(*aInfo), mData(aData)
+    : mUID(aUID), mInfo(*aInfo), mData(aData), mPlayerCount(0)
 {
     ASSERT(aInfo != nullptr && *aInfo != nullptr);
     *aInfo = nullptr;
@@ -107,8 +107,12 @@ GameMap :: updateBroadcastSet(const Entity& aEntity) const
                 aEntity.addEntityToBCSet(entity);
                 entity.addEntityToBCSet(aEntity);
             }
-
-            // TODO remove others
+            else
+            {
+                // try to remove the entity from the set...
+                aEntity.removeEntityFromBCSet(entity);
+                entity.removeEntityFromBCSet(aEntity);
+            }
         }
     }
 }
@@ -116,24 +120,41 @@ GameMap :: updateBroadcastSet(const Entity& aEntity) const
 void
 GameMap :: enterRoom(Entity& aEntity)
 {
-    // activate the map...
-    if (mEntities.size() == 0)
-    {
-        mData.unpack();
-    }
+    // TODO
+    // TODO: thread-safe
 
-    //TODO
-    mEntities[aEntity.getUID()] = &aEntity;
+    map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
+    if (mEntities.end() == it)
+    {
+        // activate the map...
+        if (aEntity.isPlayer())
+        {
+            if (mPlayerCount == 0)
+                mData.unpack();
+            ++mPlayerCount;
+        }
+
+        mEntities[aEntity.getUID()] = &aEntity;
+    }
 }
 
 void
 GameMap :: leaveRoom(Entity& aEntity)
 {
     // TODO
+    // TODO: thread-safe
 
-    // desactivate the map...
-    if (mEntities.size() == 0)
+    map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
+    if (mEntities.end() != it)
     {
-        mData.pack();
+        mEntities.erase(it);
+
+        // desactivate the map...
+        if (aEntity.isPlayer())
+        {
+            --mPlayerCount;
+            if (mPlayerCount == 0)
+                mData.pack();
+        }
     }
 }

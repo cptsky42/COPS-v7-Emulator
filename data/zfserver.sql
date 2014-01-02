@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.8
+-- version 4.0.0
 -- http://www.phpmyadmin.net
 --
--- Client: localhost:3306
--- Généré le: Lun 30 Décembre 2013 à 23:10
--- Version du serveur: 5.1.72
--- Version de PHP: 5.3.28
+-- Host: localhost
+-- Generation Time: Jan 01, 2014 at 02:02 PM
+-- Server version: 5.0.67-log
+-- PHP Version: 5.2.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,31 +17,31 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `zfserver`
+-- Database: `zfserver`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `account`
+-- Table structure for table `account`
 --
 
 CREATE TABLE IF NOT EXISTS `account` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `email` char(128) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `password` char(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `type` tinyint(2) unsigned zerofill NOT NULL DEFAULT '02',
-  `creationtime` int(8) unsigned zerofill NOT NULL DEFAULT '20130101',
-  `online` tinyint(1) DEFAULT '0',
-  `licence` tinyint(1) DEFAULT '0',
-  `last_ip` char(15) COLLATE latin1_general_ci DEFAULT '127.0.0.1',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(16) collate latin1_general_ci NOT NULL default '',
+  `email` char(128) collate latin1_general_ci NOT NULL default '',
+  `password` char(16) collate latin1_general_ci NOT NULL default '',
+  `type` tinyint(2) unsigned zerofill NOT NULL default '02',
+  `creationtime` int(8) unsigned zerofill NOT NULL default '20130101',
+  `online` tinyint(1) default '0',
+  `licence` tinyint(1) default '0',
+  `last_ip` char(15) collate latin1_general_ci default '127.0.0.1',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `ix_name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
 
 --
--- Contenu de la table `account`
+-- Dumping data for table `account`
 --
 
 INSERT INTO `account` (`id`, `name`, `email`, `password`, `type`, `creationtime`, `online`, `licence`, `last_ip`) VALUES
@@ -51,79 +51,79 @@ INSERT INTO `account` (`id`, `name`, `email`, `password`, `type`, `creationtime`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `config`
+-- Table structure for table `config`
 --
 
 CREATE TABLE IF NOT EXISTS `config` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `id` int(4) NOT NULL auto_increment,
   `type` int(4) NOT NULL,
   `data1` int(4) NOT NULL,
   `data2` int(4) NOT NULL,
   `data3` int(4) NOT NULL,
   `data4` int(4) NOT NULL,
   `data5` int(4) NOT NULL,
-  `desc` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
+  `desc` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_deluser`
+-- Table structure for table `cq_deluser`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_deluser` (
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `mate` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `lookface` int(4) unsigned NOT NULL DEFAULT '0',
-  `hair` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `money` int(4) unsigned NOT NULL DEFAULT '0',
-  `money_saved` int(4) unsigned NOT NULL DEFAULT '0',
-  `coin_money` int(3) unsigned NOT NULL DEFAULT '0',
-  `level` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `exp` bigint(4) NOT NULL DEFAULT '0',
-  `strength` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `physique` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `Speed` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `health` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `soul` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `additional_point` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `auto_allot` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `life` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `mana` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `profession` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `deed` int(4) NOT NULL DEFAULT '0',
-  `pk` smallint(2) NOT NULL DEFAULT '0',
-  `nobility` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `medal` int(4) unsigned NOT NULL DEFAULT '0',
-  `medal_select` int(4) unsigned NOT NULL DEFAULT '0',
-  `metempsychosis` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `syndicate_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `recordmap_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `recordx` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `recordy` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `account_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `last_login` int(8) unsigned NOT NULL DEFAULT '0',
-  `account` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'ÎÞ',
-  `password` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'ÎÞ',
-  `task_mask` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `time_of_life` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `virtue` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `home_id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `lock_key` int(10) unsigned NOT NULL DEFAULT '0',
-  `emoney` int(4) unsigned NOT NULL DEFAULT '0',
-  `chk_sum` int(4) unsigned NOT NULL DEFAULT '0',
-  `god_status` int(4) unsigned NOT NULL DEFAULT '0',
-  `exp_ball_usage` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `online_time` int(4) unsigned NOT NULL DEFAULT '0',
-  `auto_exercise` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `last_logout` int(4) unsigned NOT NULL DEFAULT '0',
-  `big_prize_fails` int(4) unsigned NOT NULL DEFAULT '0',
-  `small_prize_fails` int(4) unsigned NOT NULL DEFAULT '0',
-  `mete_lev` int(4) NOT NULL DEFAULT '0',
-  `current_layout_type` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default '',
+  `mate` varchar(15) character set latin1 collate latin1_bin NOT NULL default '',
+  `lookface` int(4) unsigned NOT NULL default '0',
+  `hair` smallint(2) unsigned NOT NULL default '0',
+  `money` int(4) unsigned NOT NULL default '0',
+  `money_saved` int(4) unsigned NOT NULL default '0',
+  `coin_money` int(3) unsigned NOT NULL default '0',
+  `level` tinyint(1) unsigned NOT NULL default '1',
+  `exp` bigint(4) NOT NULL default '0',
+  `strength` smallint(2) unsigned NOT NULL default '0',
+  `physique` smallint(2) unsigned NOT NULL default '0',
+  `Speed` smallint(2) unsigned NOT NULL default '0',
+  `health` smallint(2) unsigned NOT NULL default '0',
+  `soul` smallint(2) unsigned NOT NULL default '0',
+  `additional_point` smallint(2) unsigned NOT NULL default '0',
+  `auto_allot` tinyint(1) unsigned NOT NULL default '1',
+  `life` smallint(2) unsigned NOT NULL default '0',
+  `mana` smallint(2) unsigned NOT NULL default '0',
+  `profession` tinyint(2) unsigned NOT NULL default '0',
+  `deed` int(4) NOT NULL default '0',
+  `pk` smallint(2) NOT NULL default '0',
+  `nobility` tinyint(1) unsigned NOT NULL default '0',
+  `medal` int(4) unsigned NOT NULL default '0',
+  `medal_select` int(4) unsigned NOT NULL default '0',
+  `metempsychosis` tinyint(1) unsigned NOT NULL default '0',
+  `syndicate_id` int(4) unsigned NOT NULL default '0',
+  `recordmap_id` int(4) unsigned NOT NULL default '0',
+  `recordx` smallint(2) unsigned NOT NULL default '0',
+  `recordy` smallint(2) unsigned NOT NULL default '0',
+  `account_id` int(4) unsigned NOT NULL default '0',
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `last_login` int(8) unsigned NOT NULL default '0',
+  `account` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'ÎÞ',
+  `password` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'ÎÞ',
+  `task_mask` int(4) unsigned zerofill NOT NULL default '0000',
+  `time_of_life` int(4) unsigned zerofill NOT NULL default '0000',
+  `virtue` int(4) unsigned zerofill NOT NULL default '0000',
+  `home_id` int(4) unsigned zerofill NOT NULL default '0000',
+  `lock_key` int(10) unsigned NOT NULL default '0',
+  `emoney` int(4) unsigned NOT NULL default '0',
+  `chk_sum` int(4) unsigned NOT NULL default '0',
+  `god_status` int(4) unsigned NOT NULL default '0',
+  `exp_ball_usage` smallint(2) unsigned NOT NULL default '0',
+  `online_time` int(4) unsigned NOT NULL default '0',
+  `auto_exercise` tinyint(2) unsigned NOT NULL default '0',
+  `last_logout` int(4) unsigned NOT NULL default '0',
+  `big_prize_fails` int(4) unsigned NOT NULL default '0',
+  `small_prize_fails` int(4) unsigned NOT NULL default '0',
+  `mete_lev` int(4) NOT NULL default '0',
+  `current_layout_type` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   KEY `index_name` (`name`),
   KEY `index_account` (`account_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -131,16 +131,16 @@ CREATE TABLE IF NOT EXISTS `cq_deluser` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_depot`
+-- Table structure for table `cq_depot`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_depot` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `playerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `level` tinyint(4) unsigned NOT NULL DEFAULT '0',
-  `pwd` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `ownerid` int(4) unsigned NOT NULL default '0',
+  `playerid` int(4) unsigned NOT NULL default '0',
+  `level` tinyint(4) unsigned NOT NULL default '0',
+  `pwd` varchar(32) default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -148,167 +148,167 @@ CREATE TABLE IF NOT EXISTS `cq_depot` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_dropitemrule`
+-- Table structure for table `cq_dropitemrule`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_dropitemrule` (
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
-  `RuleId` int(10) unsigned NOT NULL DEFAULT '0',
-  `Chance` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item0` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item1` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item2` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item3` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item4` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item5` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item6` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item7` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item8` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item9` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item10` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item11` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item12` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item13` int(10) unsigned NOT NULL DEFAULT '0',
-  `Item14` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`,`RuleId`)
+  `id` int(10) unsigned NOT NULL default '0',
+  `RuleId` int(10) unsigned NOT NULL default '0',
+  `Chance` int(10) unsigned NOT NULL default '0',
+  `Item0` int(10) unsigned NOT NULL default '0',
+  `Item1` int(10) unsigned NOT NULL default '0',
+  `Item2` int(10) unsigned NOT NULL default '0',
+  `Item3` int(10) unsigned NOT NULL default '0',
+  `Item4` int(10) unsigned NOT NULL default '0',
+  `Item5` int(10) unsigned NOT NULL default '0',
+  `Item6` int(10) unsigned NOT NULL default '0',
+  `Item7` int(10) unsigned NOT NULL default '0',
+  `Item8` int(10) unsigned NOT NULL default '0',
+  `Item9` int(10) unsigned NOT NULL default '0',
+  `Item10` int(10) unsigned NOT NULL default '0',
+  `Item11` int(10) unsigned NOT NULL default '0',
+  `Item12` int(10) unsigned NOT NULL default '0',
+  `Item13` int(10) unsigned NOT NULL default '0',
+  `Item14` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`,`RuleId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_dynamap`
+-- Table structure for table `cq_dynamap`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_dynamap` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'Î´ÃüÃû',
-  `describe_text` varchar(127) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `mapdoc` int(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `owner_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `mapgroup` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `idxserver` int(4) NOT NULL DEFAULT '-1',
-  `weather` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bgmusic` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bgmusic_show` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal0_x` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal0_y` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `reborn_mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `reborn_portal` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `res_lev` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `owner_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `link_map` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `link_x` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `link_y` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `del_flag` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `color` int(4) unsigned zerofill DEFAULT '4294967295',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'Î´ÃüÃû',
+  `describe_text` varchar(127) character set latin1 collate latin1_bin NOT NULL default '',
+  `mapdoc` int(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `owner_id` int(4) unsigned NOT NULL default '0',
+  `mapgroup` int(4) unsigned zerofill NOT NULL default '0000',
+  `idxserver` int(4) NOT NULL default '-1',
+  `weather` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic_show` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal0_x` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal0_y` int(4) unsigned zerofill NOT NULL default '0000',
+  `reborn_mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `reborn_portal` int(4) unsigned zerofill NOT NULL default '0000',
+  `res_lev` tinyint(3) unsigned NOT NULL default '0',
+  `owner_type` tinyint(3) unsigned NOT NULL default '0',
+  `link_map` int(4) unsigned zerofill NOT NULL default '0000',
+  `link_x` smallint(2) unsigned zerofill NOT NULL default '00',
+  `link_y` smallint(2) unsigned zerofill NOT NULL default '00',
+  `del_flag` tinyint(1) unsigned NOT NULL default '0',
+  `color` int(4) unsigned zerofill default '4294967295',
+  PRIMARY KEY  (`id`),
   KEY `idx` (`idxserver`,`mapgroup`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_dynanpc`
+-- Table structure for table `cq_dynanpc`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_dynanpc` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `ownertype` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'Unnamed',
-  `type` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `lookface` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `idxserver` tinyint(3) NOT NULL DEFAULT '-1',
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `cellx` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `celly` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `task0` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task1` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task2` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task3` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task4` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task5` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task6` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task7` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data0` int(4) NOT NULL DEFAULT '0',
-  `data1` int(4) NOT NULL DEFAULT '0',
-  `data2` int(4) NOT NULL DEFAULT '0',
-  `data3` int(4) NOT NULL DEFAULT '0',
-  `datastr` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'None',
-  `linkid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `life` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `maxlife` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `base` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `itemid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `defence` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `magic_def` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `ownerid` int(4) unsigned NOT NULL default '0',
+  `ownertype` tinyint(3) unsigned NOT NULL default '0',
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'Unnamed',
+  `type` smallint(2) unsigned zerofill NOT NULL default '00',
+  `lookface` int(4) unsigned zerofill NOT NULL default '0000',
+  `idxserver` tinyint(3) NOT NULL default '-1',
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `cellx` smallint(2) unsigned zerofill NOT NULL default '00',
+  `celly` smallint(2) unsigned zerofill NOT NULL default '00',
+  `task0` int(4) unsigned zerofill NOT NULL default '0000',
+  `task1` int(4) unsigned zerofill NOT NULL default '0000',
+  `task2` int(4) unsigned zerofill NOT NULL default '0000',
+  `task3` int(4) unsigned zerofill NOT NULL default '0000',
+  `task4` int(4) unsigned zerofill NOT NULL default '0000',
+  `task5` int(4) unsigned zerofill NOT NULL default '0000',
+  `task6` int(4) unsigned zerofill NOT NULL default '0000',
+  `task7` int(4) unsigned zerofill NOT NULL default '0000',
+  `data0` int(4) NOT NULL default '0',
+  `data1` int(4) NOT NULL default '0',
+  `data2` int(4) NOT NULL default '0',
+  `data3` int(4) NOT NULL default '0',
+  `datastr` varchar(255) character set latin1 collate latin1_bin NOT NULL default 'None',
+  `linkid` int(4) unsigned zerofill NOT NULL default '0000',
+  `life` int(4) unsigned zerofill NOT NULL default '0000',
+  `maxlife` int(4) unsigned zerofill NOT NULL default '0000',
+  `base` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` smallint(2) unsigned zerofill NOT NULL default '00',
+  `itemid` int(4) unsigned zerofill NOT NULL default '0000',
+  `defence` smallint(2) unsigned zerofill NOT NULL default '00',
+  `magic_def` smallint(2) unsigned zerofill NOT NULL default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_enemy`
+-- Table structure for table `cq_enemy`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_enemy` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `userid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `enemy` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `enemyname` varchar(15) NOT NULL DEFAULT '?T',
-  `time` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `userid` int(4) unsigned zerofill NOT NULL default '0000',
+  `enemy` int(4) unsigned zerofill NOT NULL default '0000',
+  `enemyname` varchar(15) NOT NULL default '?T',
+  `time` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `userid` (`userid`,`enemy`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_friend`
+-- Table structure for table `cq_friend`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_friend` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `userid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `friend` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `friendname` varchar(32) DEFAULT '?T',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `userid` int(4) unsigned zerofill NOT NULL default '0000',
+  `friend` int(4) unsigned zerofill NOT NULL default '0000',
+  `friendname` varchar(32) default '?T',
+  PRIMARY KEY  (`id`),
   KEY `userid` (`userid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_item`
+-- Table structure for table `cq_item`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_item` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `type` int(4) unsigned NOT NULL DEFAULT '0',
-  `owner_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `player_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `amount` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `amount_limit` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `ident` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `position` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic3` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `data` int(4) NOT NULL DEFAULT '0',
-  `reduce_dmg` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `add_life` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `anti_monster` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `chk_sum` int(4) unsigned NOT NULL DEFAULT '0',
-  `plunder` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `SpecialFlag` int(4) unsigned NOT NULL DEFAULT '0',
-  `color` tinyint(1) unsigned DEFAULT '0',
-  `Addlevel_exp` int(4) unsigned NOT NULL DEFAULT '0',
-  `monopoly` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `type` int(4) unsigned NOT NULL default '0',
+  `owner_id` int(4) unsigned NOT NULL default '0',
+  `player_id` int(4) unsigned NOT NULL default '0',
+  `amount` smallint(2) unsigned NOT NULL default '100',
+  `amount_limit` smallint(2) unsigned NOT NULL default '100',
+  `ident` tinyint(1) unsigned NOT NULL default '0',
+  `position` tinyint(1) unsigned NOT NULL default '0',
+  `gem1` tinyint(1) unsigned NOT NULL default '0',
+  `gem2` tinyint(1) unsigned NOT NULL default '0',
+  `magic1` tinyint(1) unsigned NOT NULL default '0',
+  `magic2` tinyint(1) unsigned NOT NULL default '0',
+  `magic3` tinyint(1) unsigned NOT NULL default '0',
+  `data` int(4) NOT NULL default '0',
+  `reduce_dmg` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `add_life` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `anti_monster` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `chk_sum` int(4) unsigned NOT NULL default '0',
+  `plunder` smallint(2) unsigned zerofill NOT NULL default '00',
+  `SpecialFlag` int(4) unsigned NOT NULL default '0',
+  `color` tinyint(1) unsigned default '0',
+  `Addlevel_exp` int(4) unsigned NOT NULL default '0',
+  `monopoly` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   KEY `package` (`owner_id`,`position`,`player_id`),
   KEY `index_item_playerid` (`player_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=770883 ;
@@ -316,185 +316,185 @@ CREATE TABLE IF NOT EXISTS `cq_item` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_leaveword`
+-- Table structure for table `cq_leaveword`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_leaveword` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `user_name` char(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '????a',
-  `send_name` char(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '????a',
-  `time` char(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '00000000000000',
-  `words` char(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '????¡§1??',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `user_name` char(15) character set latin1 collate latin1_bin NOT NULL default '????a',
+  `send_name` char(15) character set latin1 collate latin1_bin NOT NULL default '????a',
+  `time` char(15) character set latin1 collate latin1_bin NOT NULL default '00000000000000',
+  `words` char(255) character set latin1 collate latin1_bin NOT NULL default '????¡§1??',
+  PRIMARY KEY  (`id`),
   KEY `user_name` (`user_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_magic`
+-- Table structure for table `cq_magic`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_magic` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `type` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `exp` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `unlearn` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `old_level` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `ownerid` int(4) unsigned zerofill NOT NULL default '0000',
+  `type` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `level` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `exp` int(4) unsigned zerofill NOT NULL default '0000',
+  `unlearn` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `old_level` smallint(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `user_magic` (`ownerid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8006 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_magictype`
+-- Table structure for table `cq_magictype`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_magictype` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `crime` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `ground` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `multi` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `target` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_mp` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `power` int(4) NOT NULL DEFAULT '0',
-  `intone_speed` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `percent` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `step_secs` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `range` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `distance` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `status` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_prof` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_exp` int(4) NOT NULL DEFAULT '0',
-  `need_level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_xp` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `weapon_subtype` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `active_times` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `auto_active` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `floor_attr` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `auto_learn` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `learn_level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `drop_weapon` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `use_ep` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `weapon_hit` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `use_item` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `next_magic` int(4) unsigned zerofill DEFAULT '0000',
-  `delay_ms` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_item_num` int(4) unsigned zerofill NOT NULL DEFAULT '0001',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` int(4) unsigned zerofill NOT NULL default '0000',
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default '',
+  `crime` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `ground` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `multi` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `target` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_mp` int(4) unsigned zerofill NOT NULL default '0000',
+  `power` int(4) NOT NULL default '0',
+  `intone_speed` int(4) unsigned zerofill NOT NULL default '0000',
+  `percent` int(4) unsigned zerofill NOT NULL default '0000',
+  `step_secs` int(4) unsigned zerofill NOT NULL default '0000',
+  `range` int(4) unsigned zerofill NOT NULL default '0000',
+  `distance` int(4) unsigned zerofill NOT NULL default '0000',
+  `status` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_prof` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_exp` int(4) NOT NULL default '0',
+  `need_level` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_xp` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `weapon_subtype` int(4) unsigned zerofill NOT NULL default '0000',
+  `active_times` int(4) unsigned zerofill NOT NULL default '0000',
+  `auto_active` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `floor_attr` int(4) unsigned zerofill NOT NULL default '0000',
+  `auto_learn` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `learn_level` int(4) unsigned zerofill NOT NULL default '0000',
+  `drop_weapon` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `use_ep` int(4) unsigned zerofill NOT NULL default '0000',
+  `weapon_hit` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `use_item` int(4) unsigned zerofill NOT NULL default '0000',
+  `next_magic` int(4) unsigned zerofill default '0000',
+  `delay_ms` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_item_num` int(4) unsigned zerofill NOT NULL default '0001',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_passway`
+-- Table structure for table `cq_passway`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_passway` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `passway_idx` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `passway_mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `passway_mapportal` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `passway_idx` int(4) unsigned zerofill NOT NULL default '0000',
+  `passway_mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `passway_mapportal` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_portal`
+-- Table structure for table `cq_portal`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_portal` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal_idx` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal_x` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal_y` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal_idx` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal_x` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal_y` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_trap`
+-- Table structure for table `cq_trap`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_trap` (
   `id` int(4) unsigned zerofill NOT NULL,
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
   `look` int(4) unsigned zerofill NOT NULL,
   `owner_id` int(4) unsigned zerofill NOT NULL,
   `map_id` int(4) unsigned zerofill NOT NULL,
   `pos_x` smallint(2) unsigned NOT NULL,
   `pos_y` smallint(2) unsigned NOT NULL,
   `data` int(4) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_traptype`
+-- Table structure for table `cq_traptype`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_traptype` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` tinyint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `look` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `action_id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_max` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_min` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `dexterity` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_speed` int(4) unsigned zerofill NOT NULL DEFAULT '1000',
-  `active_times` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `magic_type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `magic_hitrate` int(4) unsigned zerofill NOT NULL DEFAULT '0100',
-  `size` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `atk_mode` int(3) unsigned zerofill NOT NULL DEFAULT '001',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` tinyint(3) unsigned zerofill NOT NULL default '000',
+  `look` int(4) unsigned zerofill NOT NULL default '0000',
+  `action_id` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_max` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_min` int(4) unsigned zerofill NOT NULL default '0000',
+  `dexterity` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_speed` int(4) unsigned zerofill NOT NULL default '1000',
+  `active_times` int(4) unsigned zerofill NOT NULL default '0000',
+  `magic_type` int(4) unsigned zerofill NOT NULL default '0000',
+  `magic_hitrate` int(4) unsigned zerofill NOT NULL default '0100',
+  `size` int(4) unsigned zerofill NOT NULL default '0000',
+  `atk_mode` int(3) unsigned zerofill NOT NULL default '001',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `forbidname`
+-- Table structure for table `forbidname`
 --
 
 CREATE TABLE IF NOT EXISTS `forbidname` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `check` char(15) COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `check` char(15) collate latin1_general_ci NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=40 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `generator`
+-- Table structure for table `generator`
 --
 
 CREATE TABLE IF NOT EXISTS `generator` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_x` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_y` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cy` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `max_npc` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `rest_secs` smallint(4) unsigned zerofill NOT NULL DEFAULT '0001',
-  `max_per_gen` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `monster_type` int(3) unsigned zerofill NOT NULL DEFAULT '000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `bound_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cy` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `max_npc` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `rest_secs` smallint(4) unsigned zerofill NOT NULL default '0001',
+  `max_per_gen` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `monster_type` int(3) unsigned zerofill NOT NULL default '000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
@@ -502,19 +502,19 @@ CREATE TABLE IF NOT EXISTS `generator` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `goods`
+-- Table structure for table `goods`
 --
 
 CREATE TABLE IF NOT EXISTS `goods` (
-  `id` int(4) unsigned NOT NULL DEFAULT '1',
+  `id` int(4) unsigned NOT NULL default '1',
   `ownerid` int(4) unsigned NOT NULL,
   `itemtype` int(4) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY  (`id`),
   KEY `index_id` (`ownerid`,`itemtype`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `goods`
+-- Dumping data for table `goods`
 --
 
 INSERT INTO `goods` (`id`, `ownerid`, `itemtype`) VALUES
@@ -1085,48 +1085,48 @@ INSERT INTO `goods` (`id`, `ownerid`, `itemtype`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `itemtype`
+-- Table structure for table `itemtype`
 --
 
 CREATE TABLE IF NOT EXISTS `itemtype` (
-  `id` int(4) unsigned NOT NULL DEFAULT '0',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `req_profession` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_weaponskill` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_level` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_sex` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_force` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_speed` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_health` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_soul` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `monopoly` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `weight` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `price` int(4) unsigned NOT NULL DEFAULT '0',
-  `task` int(4) NOT NULL DEFAULT '0',
-  `attack_max` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `attack_min` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `defense` smallint(2) NOT NULL DEFAULT '0',
-  `dexterity` smallint(2) NOT NULL DEFAULT '0',
-  `dodge` smallint(2) NOT NULL DEFAULT '0',
-  `life` smallint(2) NOT NULL DEFAULT '0',
-  `mana` smallint(2) NOT NULL DEFAULT '0',
-  `amount` smallint(2) unsigned NOT NULL DEFAULT '1',
-  `amount_limit` smallint(2) unsigned NOT NULL DEFAULT '1',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic3` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic_atk` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `magic_def` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `atk_range` smallint(2) unsigned zerofill NOT NULL DEFAULT '01',
-  `atk_speed` smallint(2) unsigned zerofill NOT NULL DEFAULT '800',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned NOT NULL default '0',
+  `name` char(15) collate latin1_general_ci NOT NULL,
+  `req_profession` tinyint(1) unsigned NOT NULL default '0',
+  `req_weaponskill` tinyint(1) unsigned NOT NULL default '0',
+  `req_level` tinyint(1) unsigned NOT NULL default '0',
+  `req_sex` tinyint(1) unsigned NOT NULL default '0',
+  `req_force` smallint(2) unsigned NOT NULL default '0',
+  `req_speed` smallint(2) unsigned NOT NULL default '0',
+  `req_health` smallint(2) unsigned NOT NULL default '0',
+  `req_soul` smallint(2) unsigned NOT NULL default '0',
+  `monopoly` tinyint(1) unsigned NOT NULL default '0',
+  `weight` smallint(2) unsigned NOT NULL default '100',
+  `price` int(4) unsigned NOT NULL default '0',
+  `task` int(4) NOT NULL default '0',
+  `attack_max` smallint(2) unsigned NOT NULL default '0',
+  `attack_min` smallint(2) unsigned NOT NULL default '0',
+  `defense` smallint(2) NOT NULL default '0',
+  `dexterity` smallint(2) NOT NULL default '0',
+  `dodge` smallint(2) NOT NULL default '0',
+  `life` smallint(2) NOT NULL default '0',
+  `mana` smallint(2) NOT NULL default '0',
+  `amount` smallint(2) unsigned NOT NULL default '1',
+  `amount_limit` smallint(2) unsigned NOT NULL default '1',
+  `status` tinyint(1) unsigned NOT NULL default '0',
+  `gem1` tinyint(1) unsigned NOT NULL default '0',
+  `gem2` tinyint(1) unsigned NOT NULL default '0',
+  `magic1` tinyint(1) unsigned NOT NULL default '0',
+  `magic2` tinyint(1) unsigned NOT NULL default '0',
+  `magic3` tinyint(1) unsigned NOT NULL default '0',
+  `magic_atk` smallint(2) unsigned NOT NULL default '0',
+  `magic_def` smallint(2) unsigned NOT NULL default '0',
+  `atk_range` smallint(2) unsigned zerofill NOT NULL default '01',
+  `atk_speed` smallint(2) unsigned zerofill NOT NULL default '800',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `itemtype`
+-- Dumping data for table `itemtype`
 --
 
 INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_level`, `req_sex`, `req_force`, `req_speed`, `req_health`, `req_soul`, `monopoly`, `weight`, `price`, `task`, `attack_max`, `attack_min`, `defense`, `dexterity`, `dodge`, `life`, `mana`, `amount`, `amount_limit`, `status`, `gem1`, `gem2`, `magic1`, `magic2`, `magic3`, `magic_atk`, `magic_def`, `atk_range`, `atk_speed`) VALUES
@@ -5767,17 +5767,17 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 -- --------------------------------------------------------
 
 --
--- Structure de la table `levelexp`
+-- Table structure for table `levelexp`
 --
 
 CREATE TABLE IF NOT EXISTS `levelexp` (
-  `level` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `exp` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`level`)
+  `level` tinyint(3) unsigned NOT NULL auto_increment,
+  `exp` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`level`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=120 ;
 
 --
--- Contenu de la table `levelexp`
+-- Dumping data for table `levelexp`
 --
 
 INSERT INTO `levelexp` (`level`, `exp`) VALUES
@@ -5904,29 +5904,27 @@ INSERT INTO `levelexp` (`level`, `exp`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `map`
+-- Table structure for table `map`
 --
 
 CREATE TABLE IF NOT EXISTS `map` (
-  `id` int(4) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `describe_text` varchar(127) COLLATE latin1_general_ci DEFAULT NULL,
-  `doc_id` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill DEFAULT '0000',
-  `weather` int(4) unsigned zerofill DEFAULT '0000',
-  `bgmusic` int(4) unsigned zerofill DEFAULT '0000',
-  `bgmusic_show` int(4) unsigned zerofill DEFAULT '0000',
-  `portal_x` smallint(4) unsigned zerofill DEFAULT '0000',
-  `portal_y` smallint(4) unsigned zerofill DEFAULT '0000',
-  `reborn_map` int(4) unsigned DEFAULT '0',
-  `reborn_portal` int(4) DEFAULT '0',
-  `light` int(4) unsigned zerofill DEFAULT '4294967295',
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `id` int(4) unsigned NOT NULL default '0',
+  `name` varchar(15) character set latin1 collate latin1_general_ci default NULL,
+  `describe_text` varchar(127) character set latin1 collate latin1_general_ci default NULL,
+  `doc_id` smallint(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill default '0000',
+  `weather` int(4) unsigned zerofill default '0000',
+  `bgmusic` int(4) unsigned zerofill default '0000',
+  `bgmusic_show` int(4) unsigned zerofill default '0000',
+  `portal_x` smallint(4) unsigned zerofill default '0000',
+  `portal_y` smallint(4) unsigned zerofill default '0000',
+  `reborn_map` int(4) unsigned default '0',
+  `reborn_portal` int(4) default '0',
+  `light` int(4) unsigned zerofill default '4294967295'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `map`
+-- Dumping data for table `map`
 --
 
 INSERT INTO `map` (`id`, `name`, `describe_text`, `doc_id`, `type`, `weather`, `bgmusic`, `bgmusic_show`, `portal_x`, `portal_y`, `reborn_map`, `reborn_portal`, `light`) VALUES
@@ -6090,248 +6088,638 @@ INSERT INTO `map` (`id`, `name`, `describe_text`, `doc_id`, `type`, `weather`, `
 -- --------------------------------------------------------
 
 --
--- Structure de la table `monstertype`
+-- Table structure for table `monstertype`
 --
 
 CREATE TABLE IF NOT EXISTS `monstertype` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'None',
-  `type` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `look` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `life` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `escape_life` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `attack_min` int(4) unsigned NOT NULL DEFAULT '0',
-  `attack_max` int(4) unsigned NOT NULL DEFAULT '0',
-  `defense` int(4) unsigned NOT NULL DEFAULT '0',
-  `dexterity` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `dodge` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `view_range` tinyint(2) unsigned NOT NULL DEFAULT '5',
-  `attack_speed` smallint(4) unsigned zerofill DEFAULT '1000',
-  `move_speed` smallint(4) unsigned zerofill DEFAULT '0500',
-  `defy` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL default 'None',
+  `type` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `look` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` tinyint(3) unsigned NOT NULL default '1',
+  `life` smallint(5) unsigned NOT NULL default '0',
+  `escape_life` smallint(5) unsigned NOT NULL default '0',
+  `attack_min` int(4) unsigned NOT NULL default '0',
+  `attack_max` int(4) unsigned NOT NULL default '0',
+  `defense` int(4) unsigned NOT NULL default '0',
+  `dexterity` tinyint(2) unsigned NOT NULL default '0',
+  `dodge` tinyint(2) unsigned NOT NULL default '0',
+  `view_range` tinyint(2) unsigned NOT NULL default '5',
+  `attack_speed` smallint(4) unsigned zerofill default '1000',
+  `move_speed` smallint(4) unsigned zerofill default '0500',
+  `defy` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1013 ;
-
---
--- Contenu de la table `monstertype`
---
-
-INSERT INTO `monstertype` (`id`, `name`, `type`, `look`, `level`, `life`, `escape_life`, `attack_min`, `attack_max`, `defense`, `dexterity`, `dodge`, `view_range`, `attack_speed`, `move_speed`, `defy`) VALUES
-(0001, 'Hound', 0, 0123, 1, 100, 0, 2, 3, 0, 0, 0, 5, 1000, 0500, 0),
-(0002, 'Bull', 0, 0103, 4, 266, 0, 8, 12, 0, 0, 0, 5, 1000, 0500, 0),
-(0003, 'Wolf', 0, 0102, 7, 400, 0, 25, 30, 0, 0, 0, 5, 1000, 0500, 0),
-(0004, 'Boar', 0, 0113, 10, 564, 0, 30, 36, 0, 0, 0, 5, 1000, 0500, 0),
-(0005, 'Tiger', 0, 0106, 13, 760, 0, 40, 43, 0, 0, 0, 5, 1000, 0500, 0),
-(0006, 'BloodyTiger', 0, 0107, 16, 968, 0, 54, 82, 0, 0, 0, 5, 1000, 0500, 0),
-(0007, 'Pan', 0, 0112, 19, 1258, 0, 59, 89, 0, 0, 0, 5, 1000, 0500, 0),
-(0008, 'Rat', 0, 0110, 24, 1638, 0, 72, 108, 0, 0, 0, 5, 1000, 0500, 0),
-(0009, 'Bear', 0, 0111, 29, 2055, 0, 85, 127, 0, 0, 0, 5, 1000, 0500, 0),
-(0010, 'Werewolf', 0, 0108, 34, 2520, 0, 93, 139, 0, 0, 0, 5, 1000, 0500, 0),
-(0011, 'WildWerewolf', 0, 0108, 39, 3021, 0, 109, 163, 0, 0, 0, 5, 1000, 0500, 0),
-(0012, 'Penguin', 0, 0124, 44, 3570, 0, 118, 178, 0, 0, 0, 5, 1000, 0500, 0),
-(0013, 'SnowWolf', 0, 0128, 49, 4113, 0, 127, 191, 0, 0, 0, 5, 1000, 0500, 0),
-(0014, 'KodiakBear', 0, 0107, 53, 4674, 0, 139, 209, 0, 0, 0, 5, 1000, 0500, 0),
-(0015, 'SnowWerewolf', 0, 0127, 57, 5250, 0, 150, 224, 0, 0, 0, 5, 1000, 0500, 0),
-(0016, 'SnowLeopard', 0, 0126, 61, 5859, 0, 154, 232, 0, 0, 0, 5, 1000, 0500, 0),
-(0017, 'FrostGiant', 0, 0125, 65, 6512, 0, 163, 245, 0, 0, 0, 5, 1000, 0500, 0),
-(0018, 'Guard', 0, 0000, 120, 50000, 0, 0, 0, 100, 0, 0, 5, 1000, 0500, 0),
-(0019, 'Orc', 0, 0100, 24, 998, 0, 95, 116, 48, 0, 0, 5, 1000, 0500, 0),
-(0020, 'Spider', 0, 0115, 24, 1186, 0, 95, 116, 24, 0, 0, 5, 1000, 0500, 0),
-(0021, 'OrcBoss', 0, 0101, 24, 3328, 0, 165, 202, 64, 0, 0, 5, 1000, 0500, 0),
-(0022, 'AberrantSpider', 0, 0115, 34, 1400, 0, 128, 158, 63, 0, 0, 5, 1000, 0500, 0),
-(0023, 'Cerberus', 0, 0113, 34, 2218, 0, 128, 158, 31, 0, 0, 5, 1000, 0500, 0),
-(0024, 'BoneDemon', 0, 0134, 34, 4700, 0, 224, 274, 83, 0, 0, 5, 1000, 0500, 0),
-(0025, 'GhostSpider', 0, 0116, 38, 1680, 0, 145, 177, 70, 0, 0, 5, 1000, 0500, 0),
-(0026, 'Chimera', 0, 0120, 38, 2664, 0, 145, 177, 70, 0, 0, 5, 1000, 0500, 0),
-(0027, 'VileCaster', 0, 0105, 38, 1260, 0, 111, 111, 35, 0, 0, 5, 1000, 0500, 0),
-(0028, 'HorrorDemon', 0, 0119, 38, 747, 0, 145, 177, 47, 0, 0, 5, 1000, 0500, 0),
-(0029, 'LesserDragon', 0, 0121, 38, 5600, 0, 245, 300, 93, 0, 0, 5, 1000, 0500, 0),
-(0030, 'ChimeraBoss', 0, 0120, 38, 5600, 0, 245, 300, 93, 0, 0, 5, 1000, 0500, 0),
-(0031, 'RockGolem', 0, 0129, 51, 2750, 0, 185, 225, 48, 0, 0, 5, 1000, 0500, 0),
-(0032, 'Hawkman', 0, 0130, 51, 3672, 0, 185, 225, 48, 0, 0, 5, 1000, 0500, 0),
-(0033, 'IceQueen', 0, 0133, 51, 9168, 0, 318, 389, 48, 0, 0, 5, 1000, 0500, 0),
-(0034, 'Skeleton', 0, 0134, 57, 3552, 0, 213, 260, 48, 0, 0, 5, 1000, 0500, 0),
-(0035, 'FleshGolem', 0, 0135, 57, 4256, 0, 213, 260, 48, 0, 0, 5, 1000, 0500, 0),
-(0036, 'SnowQueen', 0, 0132, 57, 11840, 0, 357, 436, 48, 0, 0, 5, 1000, 0500, 0),
-(0037, 'TowerGuard', 0, 0140, 57, 3552, 0, 213, 260, 48, 0, 0, 5, 1000, 0500, 0),
-(0038, 'Ghost', 0, 0141, 57, 4256, 0, 213, 260, 48, 0, 0, 5, 1000, 0500, 0),
-(0039, 'IceQueen', 0, 0133, 57, 11840, 0, 357, 436, 48, 0, 0, 5, 1000, 0500, 0),
-(0040, 'CorpseKing', 0, 0000, 64, 4250, 0, 0, 0, 126, 0, 0, 5, 1000, 0500, 0),
-(0041, 'CorpseGobelin', 0, 0000, 64, 5410, 0, 0, 0, 63, 0, 0, 5, 1000, 0500, 0),
-(0042, 'AncientWizard', 0, 0000, 64, 1890, 0, 0, 0, 63, 0, 0, 5, 1000, 0500, 0),
-(0043, 'Drake', 0, 0000, 64, 14168, 0, 0, 0, 169, 0, 0, 5, 1000, 0500, 0),
-(0044, 'AncientWizard', 0, 0140, 64, 1890, 0, 156, 190, 156, 0, 0, 5, 1000, 0500, 0),
-(0045, 'Lich', 0, 0137, 64, 5410, 0, 182, 231, 182, 0, 0, 5, 1000, 0500, 0),
-(0046, 'LichLord', 0, 0136, 64, 4250, 0, 227, 272, 224, 0, 0, 5, 1000, 0500, 0),
-(0047, 'FireDragon', 0, 0138, 64, 14168, 0, 395, 483, 169, 0, 0, 5, 1000, 0500, 0),
-(0048, 'Beetle', 0, 0160, 73, 8614, 0, 264, 323, 0, 0, 0, 5, 1000, 0500, 0),
-(0049, 'Scorpion', 0, 0166, 73, 8614, 0, 214, 273, 0, 0, 0, 5, 1000, 0500, 0),
-(0050, 'Savage', 0, 0167, 73, 8614, 0, 264, 323, 0, 0, 0, 5, 1000, 0500, 0),
-(0051, 'GhostLord', 0, 0168, 73, 10658, 0, 214, 273, 0, 0, 0, 5, 1000, 0500, 0),
-(0052, 'StoneGolem', 0, 0164, 77, 9828, 0, 273, 334, 0, 0, 0, 5, 1000, 0500, 0),
-(0053, 'Cyclops', 0, 0157, 78, 9828, 0, 264, 323, 0, 0, 0, 5, 1000, 0500, 0),
-(0054, 'WraithWatcher', 0, 0156, 78, 24570, 0, 449, 549, 0, 0, 0, 5, 1000, 0500, 0),
-(0055, 'CarrionBird', 0, 0152, 69, 7188, 0, 178, 268, 0, 0, 0, 5, 1000, 0500, 0),
-(0056, 'Zombie', 0, 0150, 73, 7920, 0, 186, 278, 0, 0, 0, 5, 1000, 0500, 0),
-(0057, 'Wraith', 0, 0154, 77, 8663, 0, 190, 286, 0, 0, 0, 5, 1000, 0500, 0),
-(0058, 'LizzardMan', 0, 0153, 81, 9438, 0, 200, 300, 0, 0, 0, 5, 1000, 0500, 0),
-(0059, 'ZombieSoldier', 0, 0151, 85, 10206, 0, 213, 319, 0, 0, 0, 5, 1000, 0500, 0),
-(0060, 'Scavenger', 0, 0162, 78, 9828, 0, 273, 334, 0, 0, 0, 5, 1000, 0500, 0),
-(0061, 'Ghoul', 0, 0163, 78, 12137, 0, 223, 284, 0, 0, 0, 5, 1000, 0500, 0),
-(0062, 'Ogre', 0, 0165, 82, 10463, 0, 281, 343, 0, 0, 0, 5, 1000, 0500, 0),
-(0063, 'LizzardMagus', 0, 0166, 82, 7088, 0, 223, 284, 0, 0, 0, 5, 1000, 0500, 0),
-(0064, 'Picaroon', 0, 0158, 82, 10463, 0, 281, 343, 0, 0, 0, 5, 1000, 0500, 0),
-(0065, 'HellLord', 0, 0161, 82, 7088, 0, 223, 284, 0, 0, 0, 5, 1000, 0500, 0),
-(0066, 'Dinosaur', 0, 0159, 82, 26158, 0, 491, 600, 0, 0, 0, 5, 1000, 0500, 0),
-(1000, 'BigBeholder', 0, 0170, 89, 11183, 0, 230, 335, 0, 0, 0, 5, 1000, 0500, 0),
-(1001, 'GhostBird', 0, 0171, 93, 12224, 0, 236, 345, 0, 0, 0, 5, 1000, 0500, 0),
-(1002, 'Wasp', 0, 0172, 97, 13268, 0, 245, 360, 0, 0, 0, 5, 1000, 0500, 0),
-(1003, 'FineDeadWood', 0, 0173, 101, 14379, 0, 250, 376, 0, 0, 0, 5, 1000, 0500, 0),
-(1004, 'Ant', 0, 0174, 105, 15555, 0, 255, 383, 0, 0, 0, 5, 1000, 0500, 0),
-(1005, 'FeiHuTailBoa', 0, 0175, 109, 16753, 0, 262, 394, 0, 0, 0, 5, 1000, 0500, 0),
-(1006, 'Garygole', 0, 0176, 113, 18188, 0, 276, 414, 0, 0, 0, 5, 1000, 0500, 0),
-(1007, 'Harpies', 0, 0177, 117, 19799, 0, 282, 422, 0, 0, 0, 5, 1000, 0500, 0),
-(1008, 'Chesterton', 0, 0178, 93, 18336, 0, 236, 345, 220, 0, 0, 5, 1000, 0500, 0),
-(1009, 'Barocco', 0, 0179, 101, 21569, 0, 236, 345, 120, 0, 0, 5, 1000, 0500, 0),
-(1010, 'HeadlessHorsema', 0, 0195, 109, 25130, 0, 262, 394, 260, 0, 0, 5, 1000, 0500, 0),
-(1011, 'ConfusionSwords', 0, 0196, 117, 29699, 0, 282, 422, 180, 0, 0, 5, 1000, 0500, 0),
-(1012, 'Death', 0, 0198, 255, 65535, 0, 1250, 2000, 5000, 0, 0, 5, 1000, 0500, 0);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `npc`
+-- Table structure for table `npc`
 --
 
 CREATE TABLE IF NOT EXISTS `npc` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `type` tinyint(2) unsigned zerofill DEFAULT '02',
-  `lookface` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `mapid` int(4) unsigned NOT NULL DEFAULT '0',
-  `cellx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `celly` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `life` smallint(5) unsigned zerofill DEFAULT '00000',
-  `maxlife` smallint(5) unsigned zerofill DEFAULT '00000',
-  `base` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `sort` tinyint(2) unsigned zerofill DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `type` tinyint(2) unsigned zerofill default '02',
+  `lookface` int(4) unsigned zerofill NOT NULL default '0000',
+  `mapid` int(4) unsigned NOT NULL default '0',
+  `cellx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `celly` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `life` smallint(5) unsigned zerofill default '00000',
+  `maxlife` smallint(5) unsigned zerofill default '00000',
+  `base` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `sort` tinyint(2) unsigned zerofill default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `npc`
+-- Dumping data for table `npc`
 --
 
 INSERT INTO `npc` (`id`, `name`, `type`, `lookface`, `mapid`, `cellx`, `celly`, `life`, `maxlife`, `base`, `sort`) VALUES
-(1001, '×°±¸µêÀÏ°å', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(1002, 'Ä§·¨ÉÌµêÅ®Î×', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(1004, 'Ìú½³ ÌµêÅ®Î×', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(1003, 'Ê×ÊÎµêÀÏ°å ×', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2002, 'Ä§·¨ÉÌµêÀÏ°å', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2004, 'Á÷ÀËÉÌÈË Ï°å', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(0001, 'FrontSentinel', 02, 0090, 1000, 0610, 0533, 00000, 00000, 00, 00),
-(0002, 'MerchantZesu', 02, 0390, 1000, 0604, 0517, 00000, 00000, 00, 00),
-(0003, 'Holt', 02, 0340, 1000, 0200, 0250, 00000, 00000, 00, 00),
-(0004, 'CoachYaka', 02, 0900, 1000, 0210, 0592, 00000, 00000, 00, 00),
-(0005, 'Toke', 02, 0360, 1000, 0877, 1137, 00000, 00000, 00, 00),
-(0006, 'TutorAdissan', 02, 0910, 1000, 0662, 0427, 00000, 00000, 00, 00),
-(0008, 'Jit', 02, 0000, 1000, 1068, 0820, 00000, 00000, 00, 00),
-(0009, 'Lacheure', 02, 0000, 1000, 1079, 0813, 00000, 00000, 00, 00),
-(0010, 'Aaron', 02, 9000, 1000, 0869, 0501, 00000, 00000, 00, 00),
-(0011, 'Nuytten', 02, 0350, 1000, 0620, 0089, 00000, 00000, 00, 00),
-(0012, 'SnowfieldGuard', 02, 0110, 1000, 0438, 0012, 00000, 00000, 00, 00),
-(0013, 'Chris', 02, 0000, 1000, 0620, 0766, 00000, 00000, 00, 00),
-(0014, 'Aowa', 02, 0500, 1000, 0613, 0766, 00000, 00000, 00, 00),
-(0015, 'Malasi', 02, 0320, 1000, 0599, 0763, 00000, 00000, 00, 00),
-(0016, 'Eugene', 02, 0330, 1000, 0593, 0783, 00000, 00000, 00, 00),
-(0017, 'Sartre', 02, 0000, 1000, 0583, 0783, 00000, 00000, 00, 00),
-(0018, 'Deira', 02, 0050, 1000, 0557, 0789, 00000, 00000, 00, 00),
-(0019, 'Anvika', 02, 0700, 1000, 0534, 0770, 00000, 00000, 00, 00),
-(0020, 'Meyer', 02, 0040, 1000, 0531, 0783, 00000, 00000, 00, 00),
-(0021, 'Kalin', 02, 0300, 1000, 0523, 0784, 00000, 00000, 00, 00),
-(0022, 'Raikko', 02, 0080, 1000, 0581, 0806, 00000, 00000, 00, 00),
-(0024, 'Zela', 02, 0280, 1000, 0538, 0795, 00000, 00000, 00, 00),
-(0025, 'Flamen', 02, 0270, 1000, 0520, 0817, 00000, 00000, 00, 00),
-(0026, 'Harles', 02, 0000, 1000, 0520, 0824, 00000, 00000, 00, 00),
-(0027, 'Ezeya', 02, 0060, 1000, 0534, 0851, 00000, 00000, 00, 00),
-(0028, 'Mulak', 02, 0370, 1000, 0503, 0831, 00000, 00000, 00, 00),
-(0029, 'Tortois', 02, 0010, 1000, 0534, 0851, 00000, 00000, 00, 00),
-(0030, 'Elin', 02, 0030, 1000, 0519, 0871, 00000, 00000, 00, 00),
-(0031, 'Legion Manager', 02, 0120, 1000, 0520, 0876, 00000, 00000, 00, 00),
-(0032, 'Appraiser', 02, 0070, 1000, 0563, 0869, 00000, 00000, 00, 00),
-(0033, 'HairstylistSpie', 02, 0000, 1000, 0561, 0860, 00000, 00000, 00, 00),
-(0034, 'Vita', 02, 0310, 1000, 0613, 0766, 00000, 00000, 00, 00),
-(0035, 'Fleirin', 02, 0380, 1000, 0574, 0786, 00000, 00000, 00, 00),
-(0036, 'Emily', 02, 0000, 1000, 0576, 0819, 00000, 00000, 00, 00),
-(0037, 'Ken', 02, 0000, 1000, 0591, 0854, 00000, 00000, 00, 00),
-(0038, 'Framill', 02, 0000, 1000, 0591, 0866, 00000, 00000, 00, 00),
-(0039, 'RealmMessenger', 02, 0000, 1000, 0611, 0834, 00000, 00000, 00, 00),
-(0040, 'Appraiser', 02, 0240, 2000, 0598, 0797, 00000, 00000, 00, 00),
-(0041, 'Slice', 02, 0000, 2000, 0640, 0804, 00000, 00000, 00, 00),
-(0042, 'Hardar', 02, 0290, 2000, 0666, 0789, 00000, 00000, 00, 00),
-(0043, 'Grindwald', 02, 0250, 2000, 0587, 0774, 00000, 00000, 00, 00),
-(0044, 'Heimler', 02, 0160, 2000, 0600, 0768, 00000, 00000, 00, 00),
-(0045, 'Herroka', 02, 0000, 2000, 0590, 0727, 00000, 00000, 00, 00),
-(0046, 'Nash', 02, 0510, 2000, 0627, 0730, 00000, 00000, 00, 00),
-(0047, 'Oresi', 02, 0260, 2000, 0611, 0721, 00000, 00000, 00, 00),
-(0048, 'Richard', 02, 0000, 2000, 0594, 0809, 00000, 00000, 00, 00),
-(0049, 'TutorPolino', 02, 0000, 2000, 0638, 0723, 00000, 00000, 00, 00),
-(0050, 'Libya', 02, 0000, 2000, 0594, 0731, 00000, 00000, 00, 00),
-(0051, 'Rane', 02, 0000, 2000, 0609, 0788, 00000, 00000, 00, 00),
-(0052, 'Veronica', 02, 0000, 2000, 0597, 0788, 00000, 00000, 00, 00),
-(0053, 'Oid', 02, 0000, 2000, 0922, 1142, 00000, 00000, 00, 00),
-(0054, 'Marget', 02, 0000, 2000, 1230, 0862, 00000, 00000, 00, 00),
-(0055, 'TutorFedaly', 02, 0000, 2000, 0643, 0328, 00000, 00000, 00, 00),
-(0056, 'Piero', 02, 0000, 2000, 0357, 0309, 00000, 00000, 00, 00),
-(0057, 'Io', 02, 0000, 2000, 0037, 0331, 00000, 00000, 00, 00),
-(0058, 'Euro', 02, 0000, 2000, 0411, 0727, 00000, 00000, 00, 00),
-(0059, 'Zahn', 02, 0000, 3000, 0590, 0730, 00000, 00000, 00, 00),
-(0060, 'Hodges', 02, 0000, 3000, 0199, 0423, 00000, 00000, 00, 00),
-(0061, 'Klein', 02, 0000, 3000, 0221, 0417, 00000, 00000, 00, 00),
-(0062, 'Appraiser', 02, 0070, 3000, 0235, 0428, 00000, 00000, 00, 00),
-(0063, 'Gray', 02, 0000, 3000, 0195, 0465, 00000, 00000, 00, 00),
-(0064, 'Andrew', 02, 0000, 3000, 0263, 0420, 00000, 00000, 00, 00),
-(0065, 'TutorDaniel', 02, 0000, 3000, 0224, 0516, 00000, 00000, 00, 00),
-(0066, 'Rick', 02, 0000, 3000, 0155, 0384, 00000, 00000, 00, 00),
-(0067, 'TutorCuthbert', 02, 0000, 3000, 0201, 0165, 00000, 00000, 00, 00),
-(2187, '¥´?Ã ø À œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(4002, 'ƒß?®…ÃµÍ¿œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(4003, '¡˜¿À…Ã»À œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(3002, 'ƒß?®…ÃµÍ¿œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(3004, '¡˜¿À…Ã»À œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2156, 'µ¬¿º–??Æ œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2198, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2199, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2200, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2201, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2202, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2203, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2204, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2205, '—Ãª??®¬Ù œ?Â', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2206, '±‹ƒ—À????¯?Ÿ', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2251, '—Ãª??®¬Ù ¯?Ÿ', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00),
-(2299, '—Ãª??®¬Ù ¯?Ÿ', 01, 0000, 0, 0000, 0000, 00000, 00000, 00, 00);
+(10001, 'WarriorGod', 02, 0166, 1004, 0033, 0065, 00000, 00000, 00, 00),
+(10000, 'TaoistMoon', 02, 0120, 1004, 0056, 0033, 00000, 00000, 00, 00),
+(0400, 'ArcherGod', 02, 1657, 1004, 0033, 0053, 00000, 00000, 00, 00),
+(0030, 'Taoist', 02, 0130, 1004, 0060, 0033, 00000, 00000, 00, 00),
+(600050, 'Fortuneteller', 02, 6207, 1002, 0337, 0720, 00000, 00000, 00, 00),
+(30165, 'EscortChief', 02, 8400, 1002, 0423, 0320, 00000, 00000, 00, 00),
+(30161, 'FurnitureNPC', 02, 8120, 1002, 0409, 0370, 00000, 00000, 00, 00),
+(30157, 'HouseAgent', 02, 8070, 1002, 0400, 0284, 00000, 00000, 00, 00),
+(30154, 'Luna', 02, 8040, 1002, 0372, 0407, 00000, 00000, 00, 00),
+(30112, 'GeneralChen', 02, 7380, 1002, 0480, 0351, 00000, 00000, 00, 00),
+(30110, 'Mr.Leisure', 02, 7360, 1002, 0392, 0032, 00000, 00000, 00, 00),
+(30106, 'David', 02, 7351, 1002, 0444, 0290, 00000, 00000, 00, 00),
+(30099, 'GeneralLong', 02, 7271, 1002, 0443, 0242, 00000, 00000, 00, 00),
+(30096, 'Richard', 02, 7253, 1002, 0458, 0375, 00000, 00000, 00, 00),
+(30095, 'John', 02, 7240, 1002, 0458, 0233, 00000, 00000, 00, 00),
+(30085, 'FoodCarrier', 02, 7200, 1002, 0076, 0401, 00000, 00000, 00, 00),
+(30084, 'GeneralQing', 02, 7190, 1002, 0400, 0288, 00000, 00000, 00, 00),
+(30082, 'GeneralCai', 02, 7171, 1002, 0552, 0754, 00000, 00000, 00, 00),
+(30080, 'CoachLi', 02, 7150, 1002, 0349, 0313, 00000, 00000, 00, 00),
+(20005, 'Celestine', 02, 8350, 1002, 0365, 0092, 00000, 00000, 00, 00),
+(15140, 'Gouda', 02, 1820, 1002, 0473, 0325, 00000, 00000, 00, 01),
+(10063, 'Shopboy', 02, 5020, 1002, 0424, 0350, 00000, 00000, 00, 00),
+(10060, 'Sunfer', 02, 1070, 1002, 0409, 0386, 00000, 00000, 00, 00),
+(10054, 'GeneralPeace', 02, 0296, 1002, 0060, 0463, 00000, 00000, 00, 00),
+(10050, 'Conductress', 02, 0280, 1002, 0435, 0440, 00000, 00000, 00, 00),
+(10033, 'SpaceMark', 02, 0270, 1002, 0795, 0465, 00000, 00000, 00, 00),
+(10032, 'SpaceMark', 02, 0270, 1002, 0096, 0323, 00000, 00000, 00, 00),
+(10031, 'SpaceMark', 02, 0270, 1002, 0411, 0704, 00000, 00000, 00, 00),
+(10021, 'ArenaGuard', 02, 0260, 1002, 0459, 0291, 00000, 00000, 00, 00),
+(10020, 'Beautician', 05, 0250, 1002, 0457, 0332, 00000, 00000, 00, 00),
+(10019, 'ArtisanWind', 06, 0240, 1002, 0421, 0352, 00000, 00000, 00, 00),
+(10003, 'GuildDirector', 02, 0150, 1002, 0398, 0392, 00000, 00000, 00, 00),
+(10002, 'Barber', 02, 0026, 1002, 0412, 0376, 00000, 00000, 00, 00),
+(1611, 'GeneralJudd', 02, 6990, 1002, 0396, 0233, 00000, 00000, 00, 00),
+(1152, 'Simon', 02, 6520, 1002, 0393, 0235, 00000, 00000, 00, 00),
+(1061, 'WhsGuardian', 02, 2620, 1002, 0409, 0392, 00000, 00000, 00, 00),
+(0423, 'Pedlar', 01, 2706, 1002, 0412, 0361, 00000, 00000, 00, 00),
+(0380, 'GuildController', 02, 1156, 1002, 0350, 0337, 00000, 00000, 00, 00),
+(0043, 'CaptainLi', 02, 0391, 1002, 0512, 0351, 00000, 00000, 00, 00),
+(0008, 'Warehouseman', 03, 0080, 1002, 0409, 0351, 00000, 00000, 00, 01),
+(0005, 'Blacksmith', 01, 0050, 1002, 0452, 0330, 00000, 00000, 00, 00),
+(0004, 'Armorer', 01, 0040, 1002, 0412, 0366, 00000, 00000, 00, 00),
+(0003, 'Pharmacist', 01, 0030, 1002, 0466, 0327, 00000, 00000, 00, 00),
+(0001, 'Shopkeeper', 01, 0010, 1002, 0415, 0351, 00000, 00000, 00, 00),
+(600100, 'Alcoholist', 02, 9200, 1001, 0674, 0340, 00000, 00000, 00, 00),
+(10043, 'SpaceMark', 02, 0270, 1001, 0472, 0366, 00000, 00000, 00, 00),
+(600066, 'ToughWei', 02, 6287, 1000, 0066, 0354, 00000, 00000, 00, 00),
+(600061, 'RichmanZhang', 02, 6247, 1000, 0520, 0620, 00000, 00000, 00, 00),
+(600060, 'Mr.Pine', 02, 6232, 1000, 0454, 0242, 00000, 00000, 00, 00),
+(600002, 'Joe', 02, 6020, 1000, 0077, 0326, 00000, 00000, 00, 00),
+(30166, 'Shopboy', 02, 8410, 1000, 0469, 0273, 00000, 00000, 00, 00),
+(30164, 'Mike', 02, 8290, 1000, 0486, 0618, 00000, 00000, 00, 00),
+(30104, 'GeneralShou', 02, 7310, 1000, 0519, 0615, 00000, 00000, 00, 00),
+(30103, 'StoneBandit', 02, 7320, 1000, 0324, 0456, 00000, 00000, 00, 00),
+(30102, 'VillageHead', 02, 7300, 1000, 0479, 0261, 00000, 00000, 00, 00),
+(30000, 'Matchmaker', 02, 6030, 1000, 0462, 0589, 00000, 00000, 00, 00),
+(10051, 'Conductress', 02, 0280, 1000, 0478, 0631, 00000, 00000, 00, 00),
+(10041, 'SpaceMark', 02, 0270, 1000, 0793, 0549, 00000, 00000, 00, 00),
+(10040, 'SpaceMark', 02, 0270, 1000, 0225, 0205, 00000, 00000, 00, 00),
+(10016, 'Pharmacist', 01, 0236, 1000, 0519, 0259, 00000, 00000, 00, 00),
+(10015, 'Blacksmith', 01, 0220, 1000, 0493, 0255, 00000, 00000, 00, 00),
+(10011, 'Warehouseman', 03, 0200, 1000, 0471, 0629, 00000, 00000, 00, 01),
+(0127, 'Assistant', 02, 1176, 1000, 0312, 0008, 00000, 00000, 00, 00),
+(0010, 'Blacksmith', 01, 0100, 1000, 0486, 0621, 00000, 00000, 00, 00),
+(0009, 'Pharmacist', 01, 0030, 1000, 0511, 0630, 00000, 00000, 00, 00),
+(3953, 'JewelerSun', 02, 1440, 700, 0034, 0047, 00000, 00000, 00, 00),
+(3952, 'CollectorWong', 02, 3236, 700, 0034, 0042, 00000, 00000, 00, 00),
+(0945, 'LuckyBox3', 02, 9277, 700, 0045, 0059, 00000, 00000, 00, 00),
+(0944, 'LuckyBox5', 02, 9307, 700, 0057, 0059, 00000, 00000, 00, 00),
+(0943, 'LuckyBox3', 02, 9277, 700, 0053, 0059, 00000, 00000, 00, 00),
+(0942, 'LuckyBox4', 02, 9287, 700, 0049, 0059, 00000, 00000, 00, 00),
+(0940, 'LuckyBox2', 02, 9267, 700, 0057, 0055, 00000, 00000, 00, 00),
+(0939, 'LuckyBox4', 02, 9287, 700, 0053, 0055, 00000, 00000, 00, 00),
+(0938, 'LuckyBox1', 02, 9257, 700, 0049, 0055, 00000, 00000, 00, 00),
+(0937, 'LuckyBox4', 02, 9287, 700, 0045, 0055, 00000, 00000, 00, 00),
+(0936, 'LuckyBox1', 02, 9257, 700, 0057, 0051, 00000, 00000, 00, 00),
+(0935, 'LuckyBox5', 02, 9307, 700, 0053, 0051, 00000, 00000, 00, 00),
+(0934, 'LuckyBox3', 02, 9267, 700, 0049, 0051, 00000, 00000, 00, 00),
+(0933, 'LuckyBox3', 02, 9277, 700, 0045, 0051, 00000, 00000, 00, 00),
+(0932, 'LuckyBox5', 02, 9307, 700, 0057, 0047, 00000, 00000, 00, 00),
+(0931, 'LuckyBox4', 02, 9287, 700, 0053, 0047, 00000, 00000, 00, 00),
+(0930, 'LuckyBox1', 02, 9257, 700, 0049, 0047, 00000, 00000, 00, 00),
+(0929, 'LuckyBox2', 02, 9267, 700, 0045, 0047, 00000, 00000, 00, 00),
+(0928, 'LuckyBox5', 02, 9307, 700, 0057, 0043, 00000, 00000, 00, 00),
+(0927, 'LuckyBox3', 02, 9277, 700, 0053, 0043, 00000, 00000, 00, 00),
+(0926, 'LuckyBox2', 02, 9267, 700, 0049, 0043, 00000, 00000, 00, 00),
+(0925, 'LuckyBox1', 02, 9257, 700, 0045, 0043, 00000, 00000, 00, 00),
+(0924, 'LadyLuck', 02, 9230, 700, 0040, 0050, 00000, 00000, 00, 00),
+(10022, 'TrojanStar', 02, 0060, 1004, 0044, 0033, 00000, 00000, 00, 00),
+(35500, 'MightyTao', 02, 8450, 1004, 0066, 0033, 00000, 00000, 00, 00),
+(10064, 'Tinter', 02, 5030, 1008, 0027, 0016, 00000, 00000, 00, 00),
+(0425, 'OldGeneralYang', 02, 2690, 1010, 0096, 0042, 00000, 00000, 00, 00),
+(1060, 'Guide', 02, 2610, 1010, 0061, 0105, 00000, 00000, 00, 00),
+(10004, 'BirthManager', 02, 0170, 1010, 0070, 0037, 00000, 00000, 00, 00),
+(10005, 'Blacksmith', 02, 0056, 1010, 0066, 0046, 00000, 00000, 00, 00),
+(10006, 'Warehouseman', 02, 0086, 1010, 0072, 0050, 00000, 00000, 00, 00),
+(10007, 'Armorer', 02, 0046, 1010, 0076, 0055, 00000, 00000, 00, 00),
+(10008, 'Pharmacist', 02, 0036, 1010, 0080, 0062, 00000, 00000, 00, 00),
+(10009, 'Mr.Nosy', 02, 0180, 1010, 0085, 0041, 00000, 00000, 00, 00),
+(10010, 'KnowItAll', 02, 0190, 1010, 0088, 0031, 00000, 00000, 00, 00),
+(10055, 'TaoistStar', 02, 0130, 1010, 0074, 0037, 00000, 00000, 00, 00),
+(0011, 'Armorer', 01, 0116, 1011, 0202, 0242, 00000, 00000, 00, 00),
+(0035, 'ArtisanCloud', 07, 0350, 1011, 0242, 0237, 00000, 00000, 00, 00),
+(0040, 'Alchemist', 02, 0360, 1011, 0178, 0224, 00000, 00000, 00, 00),
+(0125, 'Assistant', 02, 1176, 1011, 0934, 0562, 00000, 00000, 00, 00),
+(0421, 'Norbert', 02, 9210, 1011, 0810, 0458, 00000, 00000, 00, 00),
+(1610, 'OldMiner', 02, 6980, 1011, 0907, 0546, 00000, 00000, 00, 00),
+(3216, 'Mr.Free', 02, 1320, 1011, 0154, 0238, 00000, 00000, 00, 00),
+(10012, 'Warehouseman', 03, 0210, 1011, 0227, 0246, 00000, 00000, 00, 01),
+(10013, 'Blacksmith', 01, 0220, 1011, 0197, 0226, 00000, 00000, 00, 00),
+(10014, 'Pharmacist', 01, 0230, 1011, 0189, 0252, 00000, 00000, 00, 00),
+(10034, 'SpaceMark', 02, 0270, 1011, 0538, 0772, 00000, 00000, 00, 00),
+(10035, 'SpaceMark', 02, 0270, 1011, 0734, 0452, 00000, 00000, 00, 00),
+(10036, 'SpaceMark', 02, 0270, 1011, 0067, 0423, 00000, 00000, 00, 00),
+(10052, 'Conductress', 02, 0287, 1011, 0228, 0255, 00000, 00000, 00, 00),
+(20000, 'Shirley', 02, 8190, 1011, 0783, 0456, 00000, 00000, 00, 00),
+(30081, 'CoachLin', 02, 7161, 1011, 0178, 0271, 00000, 00000, 00, 00),
+(30083, 'Killer', 02, 7187, 1011, 0774, 0414, 00000, 00000, 00, 00),
+(30086, 'BanditHead', 02, 7210, 1011, 0233, 0271, 00000, 00000, 00, 00),
+(30088, 'OldmanTang', 02, 7230, 1011, 0779, 0467, 00000, 00000, 00, 00),
+(30114, 'GeneralWu', 02, 7400, 1011, 0800, 0471, 00000, 00000, 00, 00),
+(30163, 'Joy', 02, 8280, 1011, 0324, 0187, 00000, 00000, 00, 00),
+(30167, 'Roy', 02, 8420, 1011, 0182, 0214, 00000, 00000, 00, 00),
+(600000, 'Milly', 02, 6000, 1011, 0804, 0461, 00000, 00000, 00, 00),
+(600065, 'William', 02, 6310, 1011, 0211, 0195, 00000, 00000, 00, 00),
+(30055, 'Daniel', 02, 7097, 1012, 0155, 0165, 00000, 00000, 00, 00),
+(30120, 'DevineArtisan', 02, 7500, 1012, 0403, 0362, 00000, 00000, 00, 00),
+(30123, 'JailGuard', 02, 7530, 1012, 0364, 0343, 00000, 00000, 00, 00),
+(300500, 'Eternity', 02, 8360, 1012, 0119, 0192, 00000, 00000, 00, 00),
+(10017, 'Pharmacist', 01, 0230, 1013, 0046, 0022, 00000, 00000, 00, 00),
+(10018, 'Blacksmith', 01, 0220, 1013, 0030, 0024, 00000, 00000, 00, 00),
+(0041, 'ArtisanOu', 02, 0370, 1015, 0756, 0545, 00000, 00000, 00, 00),
+(3010, 'AntiqueDealer', 02, 6910, 1015, 0761, 0588, 00000, 00000, 00, 00),
+(10023, 'Shopkeeper', 01, 0010, 1015, 0721, 0541, 00000, 00000, 00, 00),
+(10025, 'Blacksmith', 01, 0050, 1015, 0751, 0544, 00000, 00000, 00, 00),
+(10026, 'Pharmacist', 01, 0030, 1015, 0765, 0542, 00000, 00000, 00, 00),
+(10027, 'Warehouseman', 03, 0080, 1015, 0716, 0541, 00000, 00000, 00, 01),
+(10056, 'Conductress', 02, 0280, 1015, 0789, 0566, 00000, 00000, 00, 00),
+(30115, 'GreenSnake', 02, 7410, 1015, 0678, 0966, 00000, 00000, 00, 00),
+(300010, 'Exorcist', 02, 7680, 1015, 0715, 0584, 00000, 00000, 00, 00),
+(600001, 'Minner', 02, 6010, 1015, 0707, 0545, 00000, 00000, 00, 00),
+(600062, 'GossiperWang', 02, 6257, 1015, 0743, 0515, 00000, 00000, 00, 00),
+(600063, 'Roger', 02, 6267, 1015, 0697, 0595, 00000, 00000, 00, 00),
+(600064, 'Rachel', 02, 6277, 1015, 0209, 0183, 00000, 00000, 00, 00),
+(0126, 'Assistant', 02, 1176, 1020, 0523, 0889, 00000, 00000, 00, 00),
+(0422, 'OldQuarrier', 02, 9220, 1020, 0568, 0527, 00000, 00000, 00, 00),
+(3215, 'SolarSaint', 02, 1314, 1020, 0532, 0480, 00000, 00000, 00, 00),
+(3600, 'Alex', 02, 2160, 1020, 0436, 0311, 00000, 00000, 00, 00),
+(3610, 'Carl', 02, 2377, 1020, 0369, 0309, 00000, 00000, 00, 00),
+(10028, 'Warehouseman', 03, 0080, 1020, 0576, 0542, 00000, 00000, 00, 01),
+(10029, 'Blacksmith', 01, 0050, 1020, 0560, 0508, 00000, 00000, 00, 00),
+(10030, 'Pharmacist', 01, 0030, 1020, 0550, 0542, 00000, 00000, 00, 00),
+(10037, 'SpaceMark', 02, 0270, 1020, 0824, 0601, 00000, 00000, 00, 00),
+(10038, 'SpaceMark', 02, 0270, 1020, 0491, 0731, 00000, 00000, 00, 00),
+(10039, 'SpaceMark', 02, 0270, 1020, 0106, 0394, 00000, 00000, 00, 00),
+(10053, 'Conductress', 02, 0286, 1020, 0566, 0622, 00000, 00000, 00, 00),
+(20001, 'SoldierLeader', 02, 8210, 1020, 0448, 0396, 00000, 00000, 00, 00),
+(30100, 'MountainKing', 02, 7280, 1020, 0543, 0544, 00000, 00000, 00, 00),
+(30101, 'SnakemanLeader', 02, 7290, 1020, 0088, 0387, 00000, 00000, 00, 00),
+(30105, 'HeresyLeader', 02, 7342, 1020, 0441, 0451, 00000, 00000, 00, 00),
+(30111, 'BlacksmithLi', 02, 7370, 1020, 0566, 0509, 00000, 00000, 00, 00),
+(30113, 'Soldier', 02, 7390, 1020, 0545, 0509, 00000, 00000, 00, 00),
+(30121, 'Hades', 02, 7510, 1020, 0381, 0033, 00000, 00000, 00, 00),
+(600068, 'OldGeneral', 02, 6296, 1020, 0535, 0533, 00000, 00000, 00, 00),
+(0044, 'Warehouseman', 03, 0087, 1036, 0182, 0180, 00000, 00000, 00, 01),
+(0045, 'Mark.Controller', 02, 0417, 1036, 0215, 0220, 00000, 00000, 00, 00),
+(0047, 'PrizeNPC', 02, 1067, 1036, 0185, 0170, 00000, 00000, 00, 00),
+(0050, 'ShopFlag', 16, 1086, 1036, 0118, 0217, 00000, 00000, 00, 00),
+(0051, 'ShopFlag', 16, 1086, 1036, 0118, 0213, 00000, 00000, 00, 00),
+(0052, 'ShopFlag', 16, 1086, 1036, 0118, 0209, 00000, 00000, 00, 00),
+(0053, 'ShopFlag', 16, 1086, 1036, 0118, 0205, 00000, 00000, 00, 00),
+(0054, 'ShopFlag', 16, 1086, 1036, 0118, 0201, 00000, 00000, 00, 00),
+(0055, 'ShopFlag', 16, 1086, 1036, 0118, 0197, 00000, 00000, 00, 00),
+(0056, 'ShopFlag', 16, 1086, 1036, 0118, 0193, 00000, 00000, 00, 00),
+(0057, 'ShopFlag', 16, 1086, 1036, 0118, 0189, 00000, 00000, 00, 00),
+(0058, 'ShopFlag', 16, 1086, 1036, 0118, 0185, 00000, 00000, 00, 00),
+(0059, 'ShopFlag', 16, 1086, 1036, 0118, 0181, 00000, 00000, 00, 00),
+(0060, 'ShopFlag', 16, 1086, 1036, 0118, 0177, 00000, 00000, 00, 00),
+(0061, 'ShopFlag', 16, 1086, 1036, 0118, 0173, 00000, 00000, 00, 00),
+(0062, 'ShopFlag', 16, 1086, 1036, 0125, 0217, 00000, 00000, 00, 00),
+(0063, 'ShopFlag', 16, 1086, 1036, 0125, 0213, 00000, 00000, 00, 00),
+(0064, 'ShopFlag', 16, 1086, 1036, 0125, 0209, 00000, 00000, 00, 00),
+(0065, 'ShopFlag', 16, 1086, 1036, 0125, 0205, 00000, 00000, 00, 00),
+(0066, 'ShopFlag', 16, 1086, 1036, 0125, 0201, 00000, 00000, 00, 00),
+(0067, 'ShopFlag', 16, 1086, 1036, 0125, 0197, 00000, 00000, 00, 00),
+(0068, 'ShopFlag', 16, 1086, 1036, 0125, 0193, 00000, 00000, 00, 00),
+(0069, 'ShopFlag', 16, 1086, 1036, 0125, 0189, 00000, 00000, 00, 00),
+(0070, 'ShopFlag', 16, 1086, 1036, 0125, 0185, 00000, 00000, 00, 00),
+(0071, 'ShopFlag', 16, 1086, 1036, 0125, 0181, 00000, 00000, 00, 00),
+(0072, 'ShopFlag', 16, 1086, 1036, 0125, 0177, 00000, 00000, 00, 00),
+(0073, 'ShopFlag', 16, 1086, 1036, 0125, 0173, 00000, 00000, 00, 00),
+(0074, 'ShopFlag', 16, 1086, 1036, 0150, 0217, 00000, 00000, 00, 00),
+(0075, 'ShopFlag', 16, 1086, 1036, 0150, 0213, 00000, 00000, 00, 00),
+(0076, 'ShopFlag', 16, 1086, 1036, 0150, 0209, 00000, 00000, 00, 00),
+(0077, 'ShopFlag', 16, 1086, 1036, 0150, 0205, 00000, 00000, 00, 00),
+(0078, 'ShopFlag', 16, 1086, 1036, 0150, 0201, 00000, 00000, 00, 00),
+(0079, 'ShopFlag', 16, 1086, 1036, 0150, 0197, 00000, 00000, 00, 00),
+(0080, 'ShopFlag', 16, 1086, 1036, 0150, 0193, 00000, 00000, 00, 00),
+(0081, 'ShopFlag', 16, 1086, 1036, 0150, 0189, 00000, 00000, 00, 00),
+(0082, 'ShopFlag', 16, 1086, 1036, 0150, 0185, 00000, 00000, 00, 00),
+(0083, 'ShopFlag', 16, 1086, 1036, 0150, 0181, 00000, 00000, 00, 00),
+(0084, 'ShopFlag', 16, 1086, 1036, 0150, 0177, 00000, 00000, 00, 00),
+(0085, 'ShopFlag', 16, 1086, 1036, 0150, 0173, 00000, 00000, 00, 00),
+(0086, 'ShopFlag', 16, 1086, 1036, 0157, 0217, 00000, 00000, 00, 00),
+(0087, 'ShopFlag', 16, 1086, 1036, 0157, 0213, 00000, 00000, 00, 00),
+(0088, 'ShopFlag', 16, 1086, 1036, 0157, 0209, 00000, 00000, 00, 00),
+(0089, 'ShopFlag', 16, 1086, 1036, 0157, 0205, 00000, 00000, 00, 00),
+(0090, 'ShopFlag', 16, 1086, 1036, 0157, 0201, 00000, 00000, 00, 00),
+(0091, 'ShopFlag', 16, 1086, 1036, 0157, 0197, 00000, 00000, 00, 00),
+(0092, 'ShopFlag', 16, 1086, 1036, 0157, 0193, 00000, 00000, 00, 00),
+(0093, 'ShopFlag', 16, 1086, 1036, 0157, 0189, 00000, 00000, 00, 00),
+(0094, 'ShopFlag', 16, 1086, 1036, 0157, 0185, 00000, 00000, 00, 00),
+(0095, 'ShopFlag', 16, 1086, 1036, 0157, 0181, 00000, 00000, 00, 00),
+(0096, 'ShopFlag', 16, 1086, 1036, 0157, 0177, 00000, 00000, 00, 00),
+(0097, 'ShopFlag', 16, 1086, 1036, 0157, 0173, 00000, 00000, 00, 00),
+(0098, 'ShopFlag', 16, 1086, 1036, 0178, 0268, 00000, 00000, 00, 00),
+(0099, 'ShopFlag', 16, 1086, 1036, 0178, 0263, 00000, 00000, 00, 00),
+(0100, 'ShopFlag', 16, 1086, 1036, 0178, 0258, 00000, 00000, 00, 00),
+(0101, 'ShopFlag', 16, 1086, 1036, 0178, 0253, 00000, 00000, 00, 00),
+(0102, 'ShopFlag', 16, 1086, 1036, 0178, 0248, 00000, 00000, 00, 00),
+(0103, 'ShopFlag', 16, 1086, 1036, 0178, 0243, 00000, 00000, 00, 00),
+(0104, 'ShopFlag', 16, 1086, 1036, 0185, 0268, 00000, 00000, 00, 00),
+(0105, 'ShopFlag', 16, 1086, 1036, 0185, 0263, 00000, 00000, 00, 00),
+(0106, 'ShopFlag', 16, 1086, 1036, 0185, 0258, 00000, 00000, 00, 00),
+(0107, 'ShopFlag', 16, 1086, 1036, 0185, 0253, 00000, 00000, 00, 00),
+(0108, 'ShopFlag', 16, 1086, 1036, 0185, 0248, 00000, 00000, 00, 00),
+(0109, 'ShopFlag', 16, 1086, 1036, 0185, 0243, 00000, 00000, 00, 00),
+(0110, 'ShopFlag', 16, 1086, 1036, 0210, 0268, 00000, 00000, 00, 00),
+(0111, 'ShopFlag', 16, 1086, 1036, 0210, 0263, 00000, 00000, 00, 00),
+(0112, 'ShopFlag', 16, 1086, 1036, 0210, 0258, 00000, 00000, 00, 00),
+(0113, 'ShopFlag', 16, 1086, 1036, 0210, 0253, 00000, 00000, 00, 00),
+(0114, 'ShopFlag', 16, 1086, 1036, 0210, 0248, 00000, 00000, 00, 00),
+(0115, 'ShopFlag', 16, 1086, 1036, 0210, 0243, 00000, 00000, 00, 00),
+(0116, 'ShopFlag', 16, 1086, 1036, 0217, 0268, 00000, 00000, 00, 00),
+(0117, 'ShopFlag', 16, 1086, 1036, 0217, 0263, 00000, 00000, 00, 00),
+(0118, 'ShopFlag', 16, 1086, 1036, 0217, 0258, 00000, 00000, 00, 00),
+(0119, 'ShopFlag', 16, 1086, 1036, 0217, 0253, 00000, 00000, 00, 00),
+(0120, 'ShopFlag', 16, 1086, 1036, 0217, 0248, 00000, 00000, 00, 00),
+(0121, 'ShopFlag', 16, 1086, 1036, 0217, 0243, 00000, 00000, 00, 00),
+(0122, 'ShopFlag', 16, 1086, 1036, 0269, 0174, 00000, 00000, 00, 00),
+(0141, 'Pharmacist', 01, 0032, 1036, 0198, 0181, 00000, 00000, 00, 00),
+(0150, 'ShopFlag', 16, 1086, 1036, 0166, 0152, 00000, 00000, 00, 00),
+(0151, 'ShopFlag', 16, 1086, 1036, 0166, 0147, 00000, 00000, 00, 00),
+(0152, 'ShopFlag', 16, 1086, 1036, 0166, 0142, 00000, 00000, 00, 00),
+(0153, 'ShopFlag', 16, 1086, 1036, 0166, 0137, 00000, 00000, 00, 00),
+(0154, 'ShopFlag', 16, 1086, 1036, 0166, 0132, 00000, 00000, 00, 00),
+(0155, 'ShopFlag', 16, 1086, 1036, 0166, 0127, 00000, 00000, 00, 00),
+(0156, 'ShopFlag', 16, 1086, 1036, 0173, 0152, 00000, 00000, 00, 00),
+(0157, 'ShopFlag', 16, 1086, 1036, 0173, 0147, 00000, 00000, 00, 00),
+(0158, 'ShopFlag', 16, 1086, 1036, 0173, 0142, 00000, 00000, 00, 00),
+(0159, 'ShopFlag', 16, 1086, 1036, 0173, 0137, 00000, 00000, 00, 00),
+(0160, 'ShopFlag', 16, 1086, 1036, 0173, 0132, 00000, 00000, 00, 00),
+(0161, 'ShopFlag', 16, 1086, 1036, 0173, 0127, 00000, 00000, 00, 00),
+(0162, 'ShopFlag', 16, 1086, 1036, 0198, 0152, 00000, 00000, 00, 00),
+(0163, 'ShopFlag', 16, 1086, 1036, 0198, 0147, 00000, 00000, 00, 00),
+(0164, 'ShopFlag', 16, 1086, 1036, 0198, 0142, 00000, 00000, 00, 00),
+(0165, 'ShopFlag', 16, 1086, 1036, 0198, 0137, 00000, 00000, 00, 00),
+(0166, 'ShopFlag', 16, 1086, 1036, 0198, 0132, 00000, 00000, 00, 00),
+(0167, 'ShopFlag', 16, 1086, 1036, 0198, 0127, 00000, 00000, 00, 00),
+(0168, 'ShopFlag', 16, 1086, 1036, 0205, 0152, 00000, 00000, 00, 00),
+(0169, 'ShopFlag', 16, 1086, 1036, 0205, 0147, 00000, 00000, 00, 00),
+(0170, 'ShopFlag', 16, 1086, 1036, 0205, 0142, 00000, 00000, 00, 00),
+(0171, 'ShopFlag', 16, 1086, 1036, 0205, 0137, 00000, 00000, 00, 00),
+(0172, 'ShopFlag', 16, 1086, 1036, 0205, 0132, 00000, 00000, 00, 00),
+(0173, 'ShopFlag', 16, 1086, 1036, 0205, 0127, 00000, 00000, 00, 00),
+(0174, 'ShopFlag', 16, 1086, 1036, 0230, 0217, 00000, 00000, 00, 00),
+(0175, 'ShopFlag', 16, 1086, 1036, 0230, 0213, 00000, 00000, 00, 00),
+(0176, 'ShopFlag', 16, 1086, 1036, 0230, 0209, 00000, 00000, 00, 00),
+(0177, 'ShopFlag', 16, 1086, 1036, 0230, 0205, 00000, 00000, 00, 00),
+(0178, 'ShopFlag', 16, 1086, 1036, 0230, 0201, 00000, 00000, 00, 00),
+(0179, 'ShopFlag', 16, 1086, 1036, 0230, 0197, 00000, 00000, 00, 00),
+(0180, 'ShopFlag', 16, 1086, 1036, 0230, 0193, 00000, 00000, 00, 00),
+(0181, 'ShopFlag', 16, 1086, 1036, 0230, 0189, 00000, 00000, 00, 00),
+(0182, 'ShopFlag', 16, 1086, 1036, 0230, 0185, 00000, 00000, 00, 00),
+(0183, 'ShopFlag', 16, 1086, 1036, 0230, 0181, 00000, 00000, 00, 00),
+(0184, 'ShopFlag', 16, 1086, 1036, 0230, 0177, 00000, 00000, 00, 00),
+(0185, 'ShopFlag', 16, 1086, 1036, 0230, 0173, 00000, 00000, 00, 00),
+(0186, 'ShopFlag', 16, 1086, 1036, 0269, 0218, 00000, 00000, 00, 00),
+(0187, 'ShopFlag', 16, 1086, 1036, 0269, 0214, 00000, 00000, 00, 00),
+(0188, 'ShopFlag', 16, 1086, 1036, 0269, 0210, 00000, 00000, 00, 00),
+(0189, 'ShopFlag', 16, 1086, 1036, 0269, 0206, 00000, 00000, 00, 00),
+(0190, 'ShopFlag', 16, 1086, 1036, 0269, 0202, 00000, 00000, 00, 00),
+(0191, 'ShopFlag', 16, 1086, 1036, 0269, 0198, 00000, 00000, 00, 00),
+(0192, 'ShopFlag', 16, 1086, 1036, 0269, 0194, 00000, 00000, 00, 00),
+(0193, 'ShopFlag', 16, 1086, 1036, 0269, 0190, 00000, 00000, 00, 00),
+(0194, 'ShopFlag', 16, 1086, 1036, 0269, 0186, 00000, 00000, 00, 00),
+(0196, 'ShopFlag', 16, 1086, 1036, 0269, 0182, 00000, 00000, 00, 00),
+(0197, 'ShopFlag', 16, 1086, 1036, 0269, 0178, 00000, 00000, 00, 00),
+(0198, 'ShopFlag', 16, 1086, 1036, 0237, 0217, 00000, 00000, 00, 00),
+(0199, 'ShopFlag', 16, 1086, 1036, 0237, 0213, 00000, 00000, 00, 00),
+(0200, 'ShopFlag', 16, 1086, 1036, 0237, 0209, 00000, 00000, 00, 00),
+(0201, 'ShopFlag', 16, 1086, 1036, 0237, 0205, 00000, 00000, 00, 00),
+(0202, 'ShopFlag', 16, 1086, 1036, 0237, 0201, 00000, 00000, 00, 00),
+(0203, 'ShopFlag', 16, 1086, 1036, 0237, 0197, 00000, 00000, 00, 00),
+(0204, 'ShopFlag', 16, 1086, 1036, 0237, 0193, 00000, 00000, 00, 00),
+(0205, 'ShopFlag', 16, 1086, 1036, 0237, 0189, 00000, 00000, 00, 00),
+(0206, 'ShopFlag', 16, 1086, 1036, 0237, 0185, 00000, 00000, 00, 00),
+(0207, 'ShopFlag', 16, 1086, 1036, 0237, 0181, 00000, 00000, 00, 00),
+(0208, 'ShopFlag', 16, 1086, 1036, 0237, 0177, 00000, 00000, 00, 00),
+(0209, 'ShopFlag', 16, 1086, 1036, 0237, 0173, 00000, 00000, 00, 00),
+(0210, 'ShopFlag', 16, 1086, 1036, 0262, 0218, 00000, 00000, 00, 00),
+(0211, 'ShopFlag', 16, 1086, 1036, 0262, 0214, 00000, 00000, 00, 00),
+(0212, 'ShopFlag', 16, 1086, 1036, 0262, 0210, 00000, 00000, 00, 00),
+(0213, 'ShopFlag', 16, 1086, 1036, 0262, 0206, 00000, 00000, 00, 00),
+(0214, 'ShopFlag', 16, 1086, 1036, 0262, 0202, 00000, 00000, 00, 00),
+(0215, 'ShopFlag', 16, 1086, 1036, 0262, 0198, 00000, 00000, 00, 00),
+(0216, 'ShopFlag', 16, 1086, 1036, 0262, 0194, 00000, 00000, 00, 00),
+(0217, 'ShopFlag', 16, 1086, 1036, 0262, 0190, 00000, 00000, 00, 00),
+(0218, 'ShopFlag', 16, 1086, 1036, 0262, 0186, 00000, 00000, 00, 00),
+(0219, 'ShopFlag', 16, 1086, 1036, 0262, 0182, 00000, 00000, 00, 00),
+(0220, 'ShopFlag', 16, 1086, 1036, 0262, 0178, 00000, 00000, 00, 00),
+(0221, 'ShopFlag', 16, 1086, 1036, 0262, 0174, 00000, 00000, 00, 00),
+(0390, 'LoveStone', 02, 1600, 1036, 0192, 0193, 00000, 00000, 00, 00),
+(0432, 'GreatMerchant', 01, 1390, 1036, 0212, 0179, 00000, 00000, 00, 01),
+(0433, 'CostumerChen', 01, 0330, 1036, 0204, 0179, 00000, 00000, 00, 01),
+(0923, 'LadyLuck', 02, 9230, 1036, 0212, 0188, 00000, 00000, 00, 00),
+(0941, 'ProficiencyGod', 02, 9410, 1036, 0189, 0212, 00000, 00000, 00, 00),
+(2065, 'JewelerLau', 02, 1432, 1036, 0240, 0256, 00000, 00000, 00, 00),
+(2070, 'CollectorZhao', 02, 3220, 1036, 0212, 0184, 00000, 00000, 00, 00),
+(2071, 'CPAdmin', 02, 3336, 1036, 0178, 0182, 00000, 00000, 00, 00),
+(3381, 'SurgeonMiracle', 02, 2410, 1036, 0252, 0242, 00000, 00000, 00, 00),
+(3825, 'UnknownMan', 02, 3196, 1036, 0212, 0204, 00000, 00000, 00, 00),
+(5004, 'MillionaireLee', 02, 4294, 1036, 0242, 0242, 00000, 00000, 00, 00),
+(6003, 'PrisonOfficer', 02, 9994, 1036, 0260, 0242, 00000, 00000, 00, 00),
+(7050, 'WeaponMaster', 02, 9500, 1036, 0178, 0192, 00000, 00000, 00, 00),
+(9999, 'DiceKing', 19, 1696, 1036, 0139, 0139, 00000, 00000, 00, 00),
+(10062, 'MagicArtisan', 02, 5014, 1036, 0179, 0208, 00000, 00000, 00, 00),
+(10065, 'GodlyArtisan', 02, 5044, 1036, 0193, 0212, 00000, 00000, 00, 00),
+(30156, 'HouseAdmin', 02, 8060, 1036, 0199, 0087, 00000, 00000, 00, 00),
+(30158, 'Craftsman', 02, 8086, 1036, 0141, 0107, 00000, 00000, 00, 00),
+(30159, 'Carpenter', 02, 8090, 1036, 0168, 0099, 00000, 00000, 00, 00),
+(30160, 'Stoneman', 02, 8119, 1036, 0184, 0103, 00000, 00000, 00, 00),
+(35015, 'Ethereal', 02, 6690, 1036, 0320, 0228, 00000, 00000, 00, 00),
+(35016, 'WuxingOven', 02, 6680, 1036, 0320, 0224, 00000, 00000, 00, 00),
+(35501, 'ArtisanRow', 02, 8504, 1036, 0179, 0198, 00000, 00000, 00, 00),
+(300000, 'Shelby', 02, 7624, 1036, 0240, 0249, 00000, 00000, 00, 00),
+(350050, 'CelestialTao', 02, 8460, 1036, 0291, 0200, 00000, 00000, 00, 00),
+(600055, 'Starlit', 02, 6217, 1036, 0073, 0173, 00000, 00000, 00, 00),
+(7000, 'GuildKeeper', 02, 1131, 1038, 0354, 0345, 00000, 00000, 00, 01),
+(600075, 'BoxerHuang', 02, 6440, 1039, 0222, 0220, 00000, 00000, 00, 00),
+(30001, 'GlumMonster', 02, 7000, 1040, 0585, 0381, 00000, 00000, 00, 00),
+(30002, 'GlumMonster', 02, 7000, 1040, 0587, 0379, 00000, 00000, 00, 00),
+(30003, 'GlumMonster', 02, 7000, 1040, 0589, 0377, 00000, 00000, 00, 00),
+(30004, 'GlumMonster', 02, 7000, 1040, 0591, 0375, 00000, 00000, 00, 00),
+(30005, 'GlumMonster', 02, 7000, 1040, 0593, 0373, 00000, 00000, 00, 00),
+(30006, 'StageGuard', 02, 7011, 1040, 0467, 0484, 00000, 00000, 00, 00),
+(30007, 'StageGuard', 02, 7011, 1040, 0443, 0508, 00000, 00000, 00, 00),
+(30008, 'StageGuard', 02, 7011, 1040, 0419, 0532, 00000, 00000, 00, 00),
+(30009, 'StageGuard', 02, 7011, 1040, 0395, 0556, 00000, 00000, 00, 00),
+(30010, 'StageGuard', 02, 7011, 1040, 0371, 0580, 00000, 00000, 00, 00),
+(30011, 'GreenSnake', 02, 7020, 1040, 0532, 0326, 00000, 00000, 00, 00),
+(30012, 'GreenSnake', 02, 7020, 1040, 0534, 0324, 00000, 00000, 00, 00),
+(30013, 'GreenSnake', 02, 7020, 1040, 0536, 0322, 00000, 00000, 00, 00),
+(30014, 'GreenSnake', 02, 7020, 1040, 0538, 0320, 00000, 00000, 00, 00),
+(30015, 'GreenSnake', 02, 7020, 1040, 0540, 0318, 00000, 00000, 00, 00),
+(30016, 'StageGuard', 02, 7011, 1040, 0419, 0436, 00000, 00000, 00, 00),
+(30017, 'StageGuard', 02, 7011, 1040, 0395, 0460, 00000, 00000, 00, 00),
+(30018, 'StageGuard', 02, 7011, 1040, 0371, 0484, 00000, 00000, 00, 00),
+(30019, 'StageGuard', 02, 7011, 1040, 0347, 0508, 00000, 00000, 00, 00),
+(30020, 'StageGuard', 02, 7011, 1040, 0323, 0532, 00000, 00000, 00, 00),
+(30021, 'EvilHawk', 02, 7030, 1040, 0482, 0278, 00000, 00000, 00, 00),
+(30022, 'EvilHawk', 02, 7030, 1040, 0484, 0276, 00000, 00000, 00, 00),
+(30023, 'EvilHawk', 02, 7030, 1040, 0486, 0274, 00000, 00000, 00, 00),
+(30024, 'EvilHawk', 02, 7030, 1040, 0488, 0272, 00000, 00000, 00, 00),
+(30025, 'EvilHawk', 02, 7030, 1040, 0490, 0270, 00000, 00000, 00, 00),
+(30026, 'StageGuard', 02, 7011, 1040, 0371, 0388, 00000, 00000, 00, 00),
+(30027, 'StageGuard', 02, 7011, 1040, 0347, 0412, 00000, 00000, 00, 00),
+(30028, 'StageGuard', 02, 7011, 1040, 0323, 0436, 00000, 00000, 00, 00),
+(30029, 'StageGuard', 02, 7011, 1040, 0299, 0460, 00000, 00000, 00, 00),
+(30030, 'StageGuard', 02, 7011, 1040, 0275, 0484, 00000, 00000, 00, 00),
+(30031, 'MonsterGeneral', 02, 7040, 1040, 0426, 0222, 00000, 00000, 00, 00),
+(30032, 'MonsterGeneral', 02, 7040, 1040, 0428, 0220, 00000, 00000, 00, 00),
+(30033, 'MonsterGeneral', 02, 7040, 1040, 0430, 0218, 00000, 00000, 00, 00),
+(30034, 'MonsterGeneral', 02, 7040, 1040, 0432, 0216, 00000, 00000, 00, 00),
+(30035, 'MonsterGeneral', 02, 7040, 1040, 0434, 0214, 00000, 00000, 00, 00),
+(30036, 'StageGuard', 02, 7011, 1040, 0323, 0340, 00000, 00000, 00, 00),
+(30037, 'StageGuard', 02, 7011, 1040, 0299, 0364, 00000, 00000, 00, 00),
+(30038, 'StageGuard', 02, 7011, 1040, 0275, 0388, 00000, 00000, 00, 00),
+(30039, 'StageGuard', 02, 7011, 1040, 0251, 0412, 00000, 00000, 00, 00),
+(30040, 'StageGuard', 02, 7011, 1040, 0227, 0436, 00000, 00000, 00, 00),
+(30043, 'TerminalGuard', 02, 7050, 1040, 0383, 0179, 00000, 00000, 00, 00),
+(30044, 'TerminalGuard', 02, 7050, 1040, 0385, 0177, 00000, 00000, 00, 00),
+(30045, 'TerminalGuard', 02, 7050, 1040, 0387, 0175, 00000, 00000, 00, 00),
+(30046, 'StageGuard', 02, 7011, 1040, 0275, 0292, 00000, 00000, 00, 00),
+(30047, 'StageGuard', 02, 7011, 1040, 0251, 0316, 00000, 00000, 00, 00),
+(30048, 'StageGuard', 02, 7011, 1040, 0227, 0340, 00000, 00000, 00, 00),
+(30049, 'StageGuard', 02, 7011, 1040, 0203, 0364, 00000, 00000, 00, 00),
+(30050, 'StageGuard', 02, 7011, 1040, 0179, 0388, 00000, 00000, 00, 00),
+(30051, 'TerminalGuard', 02, 7050, 1040, 0389, 0173, 00000, 00000, 00, 00),
+(30052, 'TerminalGuard', 02, 7050, 1040, 0391, 0171, 00000, 00000, 00, 00),
+(30054, 'GodCloud', 02, 7100, 1040, 0083, 0184, 00000, 00000, 00, 00),
+(30061, 'GuardingKid', 02, 7130, 1041, 0510, 0324, 00000, 00000, 00, 00),
+(30062, 'GuardingKid', 02, 7130, 1041, 0584, 0393, 00000, 00000, 00, 00),
+(30063, 'GuardingKid', 02, 7130, 1041, 0544, 0289, 00000, 00000, 00, 00),
+(30064, 'GuardingKid', 02, 7130, 1041, 0616, 0361, 00000, 00000, 00, 00),
+(30077, 'KindTaoist', 02, 7110, 1041, 0301, 0151, 00000, 00000, 00, 00),
+(30090, 'GuardingKid', 02, 7130, 1041, 0512, 0322, 00000, 00000, 00, 00),
+(600003, 'Maggie', 02, 6100, 1042, 0019, 0019, 00000, 00000, 00, 00),
+(600004, 'GuardianGod', 02, 6111, 1043, 0204, 0150, 00000, 00000, 00, 00),
+(600005, 'Ghost', 02, 6127, 1043, 0006, 0066, 00000, 00000, 00, 00),
+(600006, 'GuardianGod', 02, 6111, 1044, 0204, 0150, 00000, 00000, 00, 00),
+(600007, 'Ghost', 02, 6127, 1044, 0006, 0066, 00000, 00000, 00, 00),
+(600008, 'GuardianGod', 02, 6111, 1045, 0204, 0150, 00000, 00000, 00, 00),
+(600009, 'Ghost', 02, 6127, 1045, 0006, 0066, 00000, 00000, 00, 00),
+(600010, 'GuardianGod', 02, 6111, 1046, 0204, 0150, 00000, 00000, 00, 00),
+(600011, 'Ghost', 02, 6127, 1046, 0006, 0066, 00000, 00000, 00, 00),
+(600012, 'GuardianGod', 02, 6111, 1047, 0204, 0150, 00000, 00000, 00, 00),
+(600013, 'Ghost', 02, 6127, 1047, 0006, 0066, 00000, 00000, 00, 00),
+(600014, 'GuardianGod', 02, 6111, 1048, 0204, 0150, 00000, 00000, 00, 00),
+(600015, 'Ghost', 02, 6127, 1048, 0006, 0066, 00000, 00000, 00, 00),
+(600016, 'GuardianGod', 02, 6111, 1049, 0204, 0150, 00000, 00000, 00, 00),
+(600017, 'Ghost', 02, 6127, 1049, 0006, 0066, 00000, 00000, 00, 00),
+(600018, 'LonelyGhost', 02, 6132, 1050, 0184, 0165, 00000, 00000, 00, 00),
+(600019, 'LonelyGhost', 02, 6132, 1050, 0160, 0161, 00000, 00000, 00, 00),
+(600020, 'LonelyGhost', 02, 6131, 1050, 0183, 0187, 00000, 00000, 00, 00),
+(600021, 'LonelyGhost', 02, 6133, 1050, 0132, 0124, 00000, 00000, 00, 00),
+(600022, 'LonelyGhost', 02, 6134, 1050, 0100, 0109, 00000, 00000, 00, 00),
+(600023, 'LonelyGhost', 02, 6132, 1050, 0081, 0103, 00000, 00000, 00, 00),
+(600024, 'LonelyGhost', 02, 6132, 1050, 0134, 0096, 00000, 00000, 00, 00),
+(600025, 'LonelyGhost', 02, 6135, 1050, 0094, 0073, 00000, 00000, 00, 00),
+(600026, 'LonelyGhost', 02, 6133, 1050, 0079, 0130, 00000, 00000, 00, 00),
+(600027, 'LonelyGhost', 02, 6132, 1050, 0121, 0178, 00000, 00000, 00, 00),
+(600028, 'LonelyGhost', 02, 6136, 1050, 0093, 0041, 00000, 00000, 00, 00),
+(600029, 'LonelyGhost', 02, 6130, 1050, 0156, 0119, 00000, 00000, 00, 00),
+(600030, 'LonelyGhost', 02, 6132, 1050, 0184, 0134, 00000, 00000, 00, 00),
+(600031, 'LonelyGhost', 02, 6135, 1050, 0082, 0082, 00000, 00000, 00, 00),
+(600032, 'LonelyGhost', 02, 6133, 1050, 0054, 0096, 00000, 00000, 00, 00),
+(600033, 'LonelyGhost', 02, 6137, 1050, 0175, 0123, 00000, 00000, 00, 00),
+(600034, 'LonelyGhost', 02, 6131, 1050, 0152, 0111, 00000, 00000, 00, 00),
+(600035, 'LonelyGhost', 02, 6132, 1050, 0125, 0100, 00000, 00000, 00, 00),
+(600036, 'LonelyGhost', 02, 6133, 1050, 0122, 0139, 00000, 00000, 00, 00),
+(600037, 'LonelyGhost', 02, 6135, 1050, 0139, 0156, 00000, 00000, 00, 00),
+(600038, 'LonelyGhost', 02, 6136, 1050, 0138, 0123, 00000, 00000, 00, 00),
+(600039, 'LonelyGhost', 02, 6137, 1050, 0050, 0040, 00000, 00000, 00, 00),
+(600040, 'LonelyGhost', 02, 6133, 1050, 0059, 0028, 00000, 00000, 00, 00),
+(600041, 'LonelyGhost', 02, 6135, 1050, 0087, 0048, 00000, 00000, 00, 00),
+(600042, 'LonelyGhost', 02, 6132, 1050, 0114, 0067, 00000, 00000, 00, 00),
+(300011, 'WarriorGuard', 02, 7690, 1052, 0229, 0233, 00000, 00000, 00, 00),
+(300012, 'TrojanGuard', 02, 7710, 1052, 0191, 0201, 00000, 00000, 00, 00),
+(300013, 'FireGuard', 02, 7720, 1052, 0181, 0176, 00000, 00000, 00, 00),
+(300014, 'WaterGuard', 02, 7730, 1052, 0206, 0179, 00000, 00000, 00, 00),
+(300015, 'ArcherGuard', 02, 7740, 1052, 0243, 0219, 00000, 00000, 00, 00),
+(30065, 'ProtectingKid', 02, 7140, 1060, 0510, 0324, 00000, 00000, 00, 00),
+(30066, 'ProtectingKid', 02, 7140, 1060, 0582, 0395, 00000, 00000, 00, 00),
+(30067, 'ProtectingKid', 02, 7140, 1060, 0542, 0291, 00000, 00000, 00, 00),
+(30068, 'ProtectingKid', 02, 7140, 1060, 0615, 0363, 00000, 00000, 00, 00),
+(30091, 'ProtectingKid', 02, 7140, 1060, 0512, 0322, 00000, 00000, 00, 00),
+(30069, 'ProtectingKid', 02, 7140, 1061, 0510, 0324, 00000, 00000, 00, 00),
+(30070, 'ProtectingKid', 02, 7140, 1061, 0582, 0395, 00000, 00000, 00, 00),
+(30071, 'ProtectingKid', 02, 7140, 1061, 0542, 0291, 00000, 00000, 00, 00),
+(30072, 'ProtectingKid', 02, 7140, 1061, 0615, 0363, 00000, 00000, 00, 00),
+(30092, 'ProtectingKid', 02, 7140, 1061, 0512, 0322, 00000, 00000, 00, 00),
+(30124, 'Lauren', 02, 7540, 1061, 0266, 0126, 00000, 00000, 00, 00),
+(30127, 'CellGuard', 02, 7530, 1061, 0303, 0142, 00000, 00000, 00, 00),
+(30073, 'ProtectingKid', 02, 7140, 1062, 0510, 0324, 00000, 00000, 00, 00),
+(30074, 'ProtectingKid', 02, 7140, 1062, 0582, 0395, 00000, 00000, 00, 00),
+(30075, 'ProtectingKid', 02, 7140, 1062, 0542, 0291, 00000, 00000, 00, 00),
+(30076, 'ProtectingKid', 02, 7140, 1062, 0615, 0363, 00000, 00000, 00, 00),
+(30093, 'ProtectingKid', 02, 7140, 1062, 0512, 0322, 00000, 00000, 00, 00),
+(30125, 'GreenSnake', 02, 7410, 1063, 0087, 0044, 00000, 00000, 00, 00),
+(30168, 'Yougo', 02, 8430, 1077, 0547, 0193, 00000, 00000, 00, 00),
+(300651, 'Explorer', 02, 9100, 1077, 0360, 0008, 00000, 00000, 00, 00),
+(1500, 'Matchmaker', 02, 1710, 1102, 0095, 0060, 00000, 00000, 00, 00),
+(300652, 'MineSupervisor', 02, 9110, 1210, 0717, 1036, 00000, 00000, 00, 00),
+(300653, 'Grandpa', 02, 9120, 1212, 0381, 0032, 00000, 00000, 00, 00),
+(3000, 'DoctorHolt', 02, 6900, 1213, 0474, 0255, 00000, 00000, 00, 00),
+(4100, 'Pharmacist', 01, 0030, 1213, 0468, 0251, 00000, 00000, 00, 00),
+(4101, 'Warehouseman', 03, 0086, 1213, 0425, 0269, 00000, 00000, 00, 01),
+(300655, 'OldExplorer', 02, 9140, 1216, 0009, 0478, 00000, 00000, 00, 00),
+(300654, 'Boatman', 02, 9130, 1219, 0381, 0032, 00000, 00000, 00, 00),
+(1153, 'EastGeneral', 02, 6530, 1351, 0488, 0372, 00000, 00000, 00, 00),
+(1154, 'WestGeneral', 02, 6540, 1352, 0670, 0468, 00000, 00000, 00, 00),
+(1155, 'SouthGeneral', 02, 6550, 1353, 0788, 0545, 00000, 00000, 00, 00),
+(1156, 'NorthGeneral', 02, 6560, 1354, 0900, 0677, 00000, 00000, 00, 00),
+(3113, 'Lamp', 26, 0010, 1511, 0041, 0061, 00000, 00000, 01, 01),
+(3114, 'LowShelf', 26, 0021, 1511, 0044, 0050, 00000, 00000, 02, 01),
+(3115, 'Cabinet', 26, 0037, 1511, 0037, 0054, 00000, 00000, 03, 01),
+(3116, 'BombeChest', 26, 0051, 1511, 0045, 0042, 00000, 00000, 05, 01),
+(3117, 'RosewoodCabinet', 26, 0061, 1511, 0038, 0035, 00000, 00000, 06, 01),
+(3118, 'HighCabinet', 26, 0071, 1511, 0051, 0038, 00000, 00000, 07, 01),
+(3119, 'FoldingScreen', 26, 0081, 1511, 0044, 0058, 00000, 00000, 08, 01),
+(3120, 'Dresser', 26, 0091, 1511, 0052, 0050, 00000, 00000, 09, 01),
+(3121, 'BasinRack', 26, 0101, 1511, 0056, 0044, 00000, 00000, 10, 01),
+(3122, 'Chair', 26, 0111, 1511, 0052, 0058, 00000, 00000, 11, 01),
+(3123, 'EndTable', 26, 0121, 1511, 0056, 0059, 00000, 00000, 12, 01),
+(3124, 'ItemBox', 02, 8200, 1511, 0062, 0054, 00000, 00000, 00, 00),
+(3125, 'HighShelf', 26, 0041, 1511, 0037, 0042, 00000, 00000, 04, 01),
+(3601, 'Arthur', 02, 2177, 1700, 0607, 0637, 00000, 00000, 00, 00),
+(3602, 'Bryan', 02, 2180, 1700, 0609, 0633, 00000, 00000, 00, 00),
+(3603, 'Angela', 02, 2190, 1700, 0611, 0638, 00000, 00000, 00, 00),
+(3604, 'Bruce', 02, 2200, 1700, 0601, 0641, 00000, 00000, 00, 00),
+(3605, 'EarthSeal', 02, 2210, 1700, 0444, 0878, 00000, 00000, 00, 00),
+(3606, 'WaterSeal', 02, 2220, 1700, 0883, 0447, 00000, 00000, 00, 00),
+(3607, 'FireSeal', 02, 2230, 1700, 0920, 0929, 00000, 00000, 00, 00),
+(3608, 'SatanSeal', 02, 2240, 1700, 0331, 0340, 00000, 00000, 00, 00),
+(3609, 'CleansingStove', 02, 2250, 1700, 0715, 0744, 00000, 00000, 00, 00),
+(3615, 'AndrewCurse', 02, 2277, 1700, 0271, 0721, 00000, 00000, 00, 00),
+(3616, 'AndrewCurse', 02, 2277, 1700, 0338, 0580, 00000, 00000, 00, 00),
+(3617, 'PeterCurse', 02, 2287, 1700, 0286, 0722, 00000, 00000, 00, 00),
+(3618, 'PeterCurse', 02, 2287, 1700, 0339, 0592, 00000, 00000, 00, 00),
+(3619, 'PhilipCurse', 02, 2290, 1700, 0411, 0596, 00000, 00000, 00, 00),
+(3620, 'PhilipCurse', 02, 2290, 1700, 0447, 0757, 00000, 00000, 00, 00),
+(3621, 'PhilipCurse', 02, 2290, 1700, 0525, 0687, 00000, 00000, 00, 00),
+(3622, 'TimothyCurse', 02, 2307, 1700, 0660, 0441, 00000, 00000, 00, 00),
+(3623, 'Stanley', 01, 2350, 1700, 0617, 0639, 00000, 00000, 00, 00),
+(3626, 'TimothyCurse', 02, 2307, 1700, 0731, 0478, 00000, 00000, 00, 00),
+(3627, 'TimothyCurse', 02, 2307, 1700, 0695, 0557, 00000, 00000, 00, 00),
+(3628, 'DaphneCurse', 02, 2310, 1700, 0651, 0341, 00000, 00000, 00, 00),
+(3629, 'DaphneCurse', 02, 2310, 1700, 0731, 0313, 00000, 00000, 00, 00),
+(3630, 'VictoriaCurse', 02, 2327, 1700, 0680, 0919, 00000, 00000, 00, 00),
+(3631, 'VictoriaCurse', 02, 2327, 1700, 0591, 0974, 00000, 00000, 00, 00),
+(3632, 'VictoriaCurse', 02, 2327, 1700, 0790, 0979, 00000, 00000, 00, 00),
+(3633, 'WayneCurse', 02, 2336, 1700, 0635, 0340, 00000, 00000, 00, 00),
+(3634, 'WayneCurse', 02, 2330, 1700, 0729, 0298, 00000, 00000, 00, 00),
+(3635, 'TheodoreCurse', 02, 2346, 1700, 0956, 0789, 00000, 00000, 00, 00),
+(3636, 'TheodoreCurse', 02, 2346, 1700, 0923, 0724, 00000, 00000, 00, 00),
+(3637, 'TheodoreCurse', 02, 2346, 1700, 0985, 0593, 00000, 00000, 00, 00),
+(1613, 'BlueMouse', 02, 6890, 2001, 0081, 0081, 00000, 00000, 00, 00),
+(1612, 'BlueMouse', 02, 6890, 2003, 0043, 0061, 00000, 00000, 00, 00),
+(1617, 'BlueMouse', 02, 6890, 2004, 0068, 0090, 00000, 00000, 00, 00),
+(1614, 'BlueMouse', 02, 6890, 2006, 0104, 0085, 00000, 00000, 00, 00),
+(1616, 'BlueMouse', 02, 6890, 2009, 0096, 0117, 00000, 00000, 00, 00),
+(1615, 'BlueMouse', 02, 6890, 2011, 0109, 0126, 00000, 00000, 00, 00),
+(0031, 'GeneralBravery', 02, 0310, 5000, 0028, 0082, 00000, 00000, 00, 00),
+(0032, 'GeneralWinner', 02, 0320, 5000, 0032, 0078, 00000, 00000, 00, 00),
+(0145, 'GeneralWinner', 02, 0320, 5000, 0035, 0078, 00000, 00000, 00, 00),
+(0146, 'GeneralWinner', 02, 0320, 5000, 0037, 0078, 00000, 00000, 00, 00),
+(2888, 'VIPSHOP', 01, 1390, 5000, 0100, 0100, 00000, 00000, 00, 01),
+(3640, 'Luna', 02, 8040, 5000, 0039, 0089, 00000, 00000, 00, 00),
+(3641, 'Luna', 02, 8040, 5000, 0040, 0089, 00000, 00000, 00, 00),
+(3642, 'Luna', 02, 8040, 5000, 0041, 0089, 00000, 00000, 00, 00),
+(3643, 'Luna', 02, 8040, 5000, 0042, 0089, 00000, 00000, 00, 00),
+(3644, 'Luna', 02, 8040, 5000, 0043, 0089, 00000, 00000, 00, 00),
+(3645, 'Luna', 02, 8040, 5000, 0044, 0089, 00000, 00000, 00, 00),
+(3646, 'Luna', 02, 8040, 5000, 0045, 0089, 00000, 00000, 00, 00),
+(3647, 'Luna', 02, 8040, 5000, 0046, 0089, 00000, 00000, 00, 00),
+(3648, 'Luna', 02, 8040, 5000, 0047, 0089, 00000, 00000, 00, 00),
+(3649, 'Luna', 02, 8040, 5000, 0048, 0089, 00000, 00000, 00, 00),
+(3650, 'Luna', 02, 8040, 5000, 0049, 0089, 00000, 00000, 00, 00),
+(3666, 'Luna', 02, 8040, 5000, 0039, 0088, 00000, 00000, 00, 00),
+(3667, 'Luna', 02, 8040, 5000, 0040, 0088, 00000, 00000, 00, 00),
+(3668, 'Luna', 02, 8040, 5000, 0041, 0088, 00000, 00000, 00, 00),
+(3669, 'Luna', 02, 8040, 5000, 0042, 0088, 00000, 00000, 00, 00),
+(3670, 'Luna', 02, 8040, 5000, 0043, 0088, 00000, 00000, 00, 00),
+(3671, 'Luna', 02, 8040, 5000, 0044, 0088, 00000, 00000, 00, 00),
+(3672, 'Luna', 02, 8040, 5000, 0045, 0088, 00000, 00000, 00, 00),
+(3673, 'Luna', 02, 8040, 5000, 0046, 0088, 00000, 00000, 00, 00),
+(3674, 'Luna', 02, 8040, 5000, 0047, 0088, 00000, 00000, 00, 00),
+(3675, 'Luna', 02, 8040, 5000, 0048, 0088, 00000, 00000, 00, 00),
+(3676, 'Luna', 02, 8040, 5000, 0049, 0088, 00000, 00000, 00, 00),
+(3677, 'Luna', 02, 8040, 5000, 0050, 0088, 00000, 00000, 00, 00),
+(7212, 'null', 02, 8530, 5000, 0110, 0060, 00000, 00000, 00, 00),
+(10061, 'CaptainFang', 02, 5006, 5000, 0125, 0125, 00000, 00000, 00, 00),
+(20060, 'ArenaGuard', 02, 0260, 5000, 0030, 0078, 00000, 00000, 00, 00),
+(20090, 'ArenaGuard', 02, 0260, 5000, 0032, 0078, 00000, 00000, 00, 00),
+(20120, 'ArenaGuard', 02, 0260, 5000, 0034, 0078, 00000, 00000, 00, 00),
+(30087, 'Druggist', 02, 7220, 5000, 0052, 0056, 00000, 00000, 00, 00),
+(30122, 'Tientsin', 02, 7520, 5000, 0058, 0059, 00000, 00000, 00, 00),
+(600067, 'Emily', 02, 6303, 5000, 0027, 0077, 00000, 00000, 00, 00),
+(0042, 'Warden', 02, 0380, 6000, 0025, 0068, 00000, 00000, 00, 00),
+(0140, 'Warden', 02, 1160, 6001, 0025, 0070, 00000, 00000, 00, 00),
+(6002, 'Warden', 02, 6510, 6002, 0025, 0068, 00000, 00000, 00, 00),
+(0420, 'Warden', 02, 0380, 6010, 0025, 0068, 00000, 00000, 00, 00);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `point_allot`
+-- Table structure for table `point_allot`
 --
 
 CREATE TABLE IF NOT EXISTS `point_allot` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `profession` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `path` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'First = 0, Second = 1',
-  `force` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `speed` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `health` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `soul` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `profession` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `path` tinyint(1) unsigned NOT NULL default '0' COMMENT 'First = 0, Second = 1',
+  `force` smallint(3) unsigned zerofill NOT NULL default '000',
+  `speed` smallint(3) unsigned zerofill NOT NULL default '000',
+  `health` smallint(3) unsigned zerofill NOT NULL default '000',
+  `soul` smallint(3) unsigned zerofill NOT NULL default '000',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=7 ;
 
 --
--- Contenu de la table `point_allot`
+-- Dumping data for table `point_allot`
 --
 
 INSERT INTO `point_allot` (`id`, `profession`, `path`, `force`, `speed`, `health`, `soul`) VALUES
@@ -6345,44 +6733,44 @@ INSERT INTO `point_allot` (`id`, `profession`, `path`, `force`, `speed`, `health
 -- --------------------------------------------------------
 
 --
--- Structure de la table `rebirth`
+-- Table structure for table `rebirth`
 --
 
 CREATE TABLE IF NOT EXISTS `rebirth` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_prof` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `new_prof` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `need_level` tinyint(3) unsigned zerofill NOT NULL DEFAULT '120',
-  `new_level` tinyint(3) unsigned zerofill NOT NULL DEFAULT '015',
-  `metepsychosis` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_prof` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `new_prof` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `need_level` tinyint(3) unsigned zerofill NOT NULL default '120',
+  `new_level` tinyint(3) unsigned zerofill NOT NULL default '015',
+  `metepsychosis` tinyint(2) unsigned zerofill NOT NULL default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `region`
+-- Table structure for table `region`
 --
 
 CREATE TABLE IF NOT EXISTS `region` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_x` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_y` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cy` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `datastr` varchar(127) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `data0` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data1` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data2` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data3` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `mapid` int(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `bound_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cy` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `datastr` varchar(127) collate latin1_general_ci NOT NULL default '',
+  `data0` int(4) unsigned zerofill NOT NULL default '0000',
+  `data1` int(4) unsigned zerofill NOT NULL default '0000',
+  `data2` int(4) unsigned zerofill NOT NULL default '0000',
+  `data3` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=57 ;
 
 --
--- Contenu de la table `region`
+-- Dumping data for table `region`
 --
 
 INSERT INTO `region` (`id`, `mapid`, `type`, `bound_x`, `bound_y`, `bound_cx`, `bound_cy`, `datastr`, `data0`, `data1`, `data2`, `data3`) VALUES
@@ -6411,59 +6799,59 @@ INSERT INTO `region` (`id`, `mapid`, `type`, `bound_x`, `bound_y`, `bound_cx`, `
 -- --------------------------------------------------------
 
 --
--- Structure de la table `superman`
+-- Table structure for table `superman`
 --
 
 CREATE TABLE IF NOT EXISTS `superman` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `number` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Number of monsters killed.',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL COMMENT 'Player''s name.',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `number` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Number of monsters killed.',
+  `name` char(15) collate latin1_general_ci NOT NULL COMMENT 'Player''s name.',
+  PRIMARY KEY  (`id`),
   KEY `number` (`number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `synattr`
+-- Table structure for table `synattr`
 --
 
 CREATE TABLE IF NOT EXISTS `synattr` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Member UID.',
-  `syn_id` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Syndicate UID.',
-  `rank` tinyint(3) unsigned zerofill NOT NULL DEFAULT '000' COMMENT 'Rank in the syndicate.',
-  `proffer` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Money given to the syndicate.',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Member UID.',
+  `syn_id` smallint(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Syndicate UID.',
+  `rank` tinyint(3) unsigned zerofill NOT NULL default '000' COMMENT 'Rank in the syndicate.',
+  `proffer` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Money given to the syndicate.',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `syndicate`
+-- Table structure for table `syndicate`
 --
 
 CREATE TABLE IF NOT EXISTS `syndicate` (
-  `id` smallint(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `announce` char(255) COLLATE latin1_general_ci DEFAULT '',
-  `leader_title` char(15) COLLATE latin1_general_ci DEFAULT '°ïÖ÷' COMMENT '??',
-  `member_title` char(15) COLLATE latin1_general_ci DEFAULT '°ïÖÚ' COMMENT '??',
+  `id` smallint(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL,
+  `announce` char(255) collate latin1_general_ci default '',
+  `leader_title` char(15) collate latin1_general_ci default '°ïÖ÷' COMMENT '??',
+  `member_title` char(15) collate latin1_general_ci default '°ïÖÚ' COMMENT '??',
   `leader_id` int(4) unsigned NOT NULL,
-  `leader_name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `money` int(4) unsigned DEFAULT '0',
-  `fealty_syn` smallint(4) unsigned zerofill DEFAULT '0000',
-  `del_flag` tinyint(1) DEFAULT '0',
-  `enemy0` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy1` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy2` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy3` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy4` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally0` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally1` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally2` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally3` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally4` smallint(4) unsigned zerofill DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `leader_name` char(15) collate latin1_general_ci NOT NULL,
+  `money` int(4) unsigned default '0',
+  `fealty_syn` smallint(4) unsigned zerofill default '0000',
+  `del_flag` tinyint(1) default '0',
+  `enemy0` smallint(4) unsigned zerofill default '0000',
+  `enemy1` smallint(4) unsigned zerofill default '0000',
+  `enemy2` smallint(4) unsigned zerofill default '0000',
+  `enemy3` smallint(4) unsigned zerofill default '0000',
+  `enemy4` smallint(4) unsigned zerofill default '0000',
+  `ally0` smallint(4) unsigned zerofill default '0000',
+  `ally1` smallint(4) unsigned zerofill default '0000',
+  `ally2` smallint(4) unsigned zerofill default '0000',
+  `ally3` smallint(4) unsigned zerofill default '0000',
+  `ally4` smallint(4) unsigned zerofill default '0000',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `index_money` (`money`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
@@ -6471,67 +6859,71 @@ CREATE TABLE IF NOT EXISTS `syndicate` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `account_id` int(4) unsigned DEFAULT '0',
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `mate` char(15) COLLATE latin1_general_ci DEFAULT 'None',
+  `account_id` int(4) unsigned default '0',
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `mate` char(15) collate latin1_general_ci default 'None',
   `lookface` int(7) unsigned zerofill NOT NULL,
-  `hair` smallint(3) unsigned zerofill DEFAULT '310',
-  `money` int(4) unsigned DEFAULT '1000',
-  `money_saved` int(4) unsigned DEFAULT '0',
-  `level` tinyint(3) unsigned DEFAULT '1',
-  `exp` int(10) unsigned DEFAULT '0',
-  `force` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `dexterity` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `health` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `soul` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `add_points` smallint(3) unsigned DEFAULT '0',
-  `life` smallint(5) unsigned NOT NULL DEFAULT '1',
-  `mana` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `profession` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `pk` smallint(5) DEFAULT '0',
-  `virtue` int(4) DEFAULT '0',
-  `nobility` tinyint(1) unsigned DEFAULT '0',
-  `medal` int(4) unsigned DEFAULT '0',
-  `medal_select` int(4) unsigned DEFAULT '0',
-  `metempsychosis` tinyint(1) unsigned DEFAULT '0',
-  `syndicate_id` smallint(4) unsigned zerofill DEFAULT '0000',
-  `record_map` int(4) unsigned DEFAULT '1010',
-  `record_x` smallint(4) unsigned zerofill DEFAULT '0031',
-  `record_y` smallint(4) unsigned zerofill DEFAULT '0083',
-  `last_login` int(8) unsigned DEFAULT '20130101',
-  PRIMARY KEY (`id`),
+  `hair` smallint(3) unsigned zerofill default '310',
+  `money` int(4) unsigned default '1000',
+  `money_saved` int(4) unsigned default '0',
+  `level` tinyint(3) unsigned default '1',
+  `exp` int(10) unsigned default '0',
+  `force` smallint(3) unsigned NOT NULL default '0',
+  `dexterity` smallint(3) unsigned NOT NULL default '0',
+  `health` smallint(3) unsigned NOT NULL default '0',
+  `soul` smallint(3) unsigned NOT NULL default '0',
+  `add_points` smallint(3) unsigned default '0',
+  `life` smallint(5) unsigned NOT NULL default '1',
+  `mana` smallint(5) unsigned NOT NULL default '0',
+  `profession` tinyint(3) unsigned NOT NULL default '0',
+  `pk` smallint(5) default '0',
+  `virtue` int(4) default '0',
+  `nobility` tinyint(1) unsigned default '0',
+  `medal` int(4) unsigned default '0',
+  `medal_select` int(4) unsigned default '0',
+  `metempsychosis` tinyint(1) unsigned default '0',
+  `syndicate_id` smallint(4) unsigned zerofill default '0000',
+  `record_map` int(4) unsigned default '1010',
+  `record_x` smallint(4) unsigned zerofill default '0031',
+  `record_y` smallint(4) unsigned zerofill default '0083',
+  `last_login` int(8) unsigned default '20130101',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `index_name` (`name`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `account_id` (`account_id`),
-  KEY `index_account` (`account_id`) USING BTREE
+  KEY `index_account` USING BTREE (`account_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000003 ;
 
 --
--- Contenu de la table `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`account_id`, `id`, `name`, `mate`, `lookface`, `hair`, `money`, `money_saved`, `level`, `exp`, `force`, `dexterity`, `health`, `soul`, `add_points`, `life`, `mana`, `profession`, `pk`, `virtue`, `nobility`, `medal`, `medal_select`, `metempsychosis`, `syndicate_id`, `record_map`, `record_x`, `record_y`, `last_login`) VALUES
-(1, 1000001, 'CptSky[PM]', 'None', 1010004, 310, 1000, 0, 130, 1347234, 176, 45, 120, 0, 30, 150, 100, 15, 30, 0, 0, 0, 0, 2, 0000, 1002, 0400, 0400, 0);
+(1, 1000001, 'CptSky[PM]', 'None', 1011004, 310, 1000, 0, 130, 1347234, 176, 45, 120, 0, 30, 150, 100, 15, 30, 0, 0, 0, 0, 2, 0000, 1010, 0050, 0050, 0);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `wanted`
+-- Table structure for table `wanted`
 --
 
 CREATE TABLE IF NOT EXISTS `wanted` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `target` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the target.',
-  `payer` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the payer.',
-  `bounty` int(4) unsigned DEFAULT NULL COMMENT 'Price for the contract.',
-  `order_time` bigint(8) unsigned DEFAULT NULL COMMENT 'UNIX timestamp when the order was added.',
-  `hunter` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the hunder.',
-  `finish_time` bigint(8) unsigned DEFAULT NULL COMMENT 'UNIX timestamp when the target was hunted.',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `target` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the target.',
+  `payer` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the payer.',
+  `bounty` int(4) unsigned default NULL COMMENT 'Price for the contract.',
+  `order_time` bigint(8) unsigned default NULL COMMENT 'UNIX timestamp when the order was added.',
+  `hunter` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the hunder.',
+  `finish_time` bigint(8) unsigned default NULL COMMENT 'UNIX timestamp when the target was hunted.',
+  PRIMARY KEY  (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

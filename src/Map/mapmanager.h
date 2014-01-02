@@ -13,6 +13,8 @@
 #include "env.h"
 #include "gamemap.h"
 #include <map>
+#include <vector>
+#include <QMutex>
 
 class MapData;
 
@@ -76,6 +78,17 @@ private:
     /* constructor */
     MapManager();
 
+    /**
+     * Concurrent load of data maps.
+     *
+     * @param[in]   aMgr     the map manager
+     * @param[in]   aWork    the maps to load
+     *
+     * @retval ERROR_SUCCESS on success
+     * @returns Error code otherwise
+     */
+    static err_t loadData(std::map< std::string, std::vector<uint16_t> >* aWork);
+
 private:
     static MapManager* sInstance; //!< static instance of the singleton
 
@@ -83,6 +96,9 @@ private:
     std::map<uint32_t, GameMap*> mGameMaps; //!< all game maps
     std::map<uint16_t, MapData*> mMaps; //!< all map data based on the UID
     std::map<std::string, MapData*> mData; //!< all map data based on the file
+
+    QMutex mWorkMutex; //!< mutex for the work map
+    QMutex mDataMutex; //!< mutex for the data (others maps)
 };
 
 #endif // _COPS_V7_EMULATOR_MAPMANAGER_H_
