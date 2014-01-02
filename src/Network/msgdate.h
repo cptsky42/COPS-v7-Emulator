@@ -23,6 +23,8 @@ public:
     {
         /** Generic header of all msgs */
         Msg::Header Header;
+        /** Padding. */
+        int32_t Padding;
         /** Years since 1900 */
         int32_t Year;
         /** Months since January */

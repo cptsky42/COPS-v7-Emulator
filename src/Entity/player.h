@@ -46,7 +46,10 @@ public:
 
 public:
     void enterMap();
-    bool move(uint16_t aX, uint16_t aY, uint8_t);
+    void leaveMap();
+
+    bool move(uint32_t aMapId, uint16_t aX, uint16_t aY);
+    bool move(uint16_t aX, uint16_t aY, uint8_t aDir);
 
     /** Send the entity spawn msg. */
     virtual void sendShow(const Player& aPlayer) const;
@@ -105,6 +108,13 @@ public:
     uint8_t getEnergy() const { return mEnergy; }
     /** Get the XP of the player. */
     uint8_t getXP() const { return mXP; }
+
+    /** Get the previous map Id of the player. */
+    uint32_t getPrevMap() const { return mPrevMap; }
+    /** Get the previous X position of the player. */
+    uint16_t getPrevX() const { return mPrevX; }
+    /** Get the previous Y position of the player. */
+    uint16_t getPrevY() const { return mPrevY; }
 
 public:
     int32_t getMinAtk();

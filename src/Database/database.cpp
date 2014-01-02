@@ -70,7 +70,7 @@ Database :: connect(const char* aHost, const char* aDbName,
 }
 
 QString
-Database :: getSqlCommand(const QSqlQuery& aQuery)
+Database :: getSqlCommand(const QSqlQuery& aQuery) const
 {
     QString cmd = aQuery.lastQuery();
     QMapIterator<QString, QVariant> it(aQuery.boundValues());
@@ -90,7 +90,7 @@ Database :: authenticate(Client& aClient, const char* aAccount, const char* aPas
     ASSERT_ERR(aAccount != nullptr && aAccount[0] != '\0', ERROR_INVALID_PARAMETER);
     ASSERT_ERR(aPassword != nullptr && aPassword[0] != '\0', ERROR_INVALID_PARAMETER);
 
-    const char* cmd = "SELECT `id`, `password` FROM `account` WHERE `name` = :name";
+    static const char cmd[] = "SELECT `id`, `password` FROM `account` WHERE `name` = :name";
 
     err_t err = ERROR_SUCCESS;
 
@@ -144,10 +144,11 @@ Database :: createPlayer(Client& aClient, const char* aName,
     ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
     ASSERT_ERR(aName != nullptr && aName[0] != '\0', ERROR_INVALID_PARAMETER);
 
-    const char* cmd = "INSERT INTO `user` (`account_id`, `name`, `lookface`, `profession`, "
-                      "`force`, `dexterity`, `health`, `soul`, `life`, `mana`) VALUES "
-                      "(:account_id, :name, :lookface, :profession, :force, :dexterity, "
-                      ":health, :soul, :life, :mana)";
+    static const char cmd[] =
+            "INSERT INTO `user` (`account_id`, `name`, `lookface`, `profession`, "
+            "`force`, `dexterity`, `health`, `soul`, `life`, `mana`) VALUES "
+            "(:account_id, :name, :lookface, :profession, :force, :dexterity, "
+            ":health, :soul, :life, :mana)";
 
     err_t err = ERROR_SUCCESS;
 
@@ -189,10 +190,11 @@ Database :: getPlayerInfo(Client& aClient)
 {
     ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
 
-    const char* cmd = "SELECT `id`, `name`, `mate`, `lookface`, `hair`, `money`, `money_saved`, "
-                      "`level`, `exp`, `force`, `dexterity`, `health`, `soul`, `add_points`, `life`, "
-                      "`mana`, `profession`, `pk`, `virtue`, `metempsychosis`, `record_map`, "
-                      "`record_x`, `record_y` FROM `user` WHERE `account_id` = :account_id";
+    static const char cmd[] =
+            "SELECT `id`, `name`, `mate`, `lookface`, `hair`, `money`, `money_saved`, "
+            "`level`, `exp`, `force`, `dexterity`, `health`, `soul`, `add_points`, `life`, "
+            "`mana`, `profession`, `pk`, `virtue`, `metempsychosis`, `record_map`, "
+            "`record_x`, `record_y` FROM `user` WHERE `account_id` = :account_id";
 
     err_t err = ERROR_SUCCESS;
 
@@ -275,14 +277,15 @@ Database :: savePlayer(Client& aClient)
     ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
     ASSERT_ERR(aClient.getPlayer() != nullptr, ERROR_INVALID_POINTER);
 
-    const char* cmd = "UPDATE `user` SET `mate` = :mate, `lookface` = :lookface, `hair` = :hair, "
-                      "`money` = :money, `money_saved` = :money_saved, "
-                      "`level` = :level, `exp` = :exp, "
-                      "`force` = :force, `dexterity` = :dexterity, `health` = :health, "
-                      "`soul` = :soul, `add_points` = :add_points, `life` = :life, `mana` = :mana, "
-                      "`pk` = :pk, `virtue` = :virtue, `metempsychosis` = :metempsychosis, "
-                      "`record_map` = :record_map, `record_x` = :record_x, `record_y` = :record_y "
-                      "WHERE `account_id` = :account_id";
+    static const char cmd[] =
+            "UPDATE `user` SET `mate` = :mate, `lookface` = :lookface, `hair` = :hair, "
+            "`money` = :money, `money_saved` = :money_saved, "
+            "`level` = :level, `exp` = :exp, "
+            "`force` = :force, `dexterity` = :dexterity, `health` = :health, "
+            "`soul` = :soul, `add_points` = :add_points, `life` = :life, `mana` = :mana, "
+            "`pk` = :pk, `virtue` = :virtue, `metempsychosis` = :metempsychosis, "
+            "`record_map` = :record_map, `record_x` = :record_x, `record_y` = :record_y "
+            "WHERE `account_id` = :account_id";
 
     err_t err = ERROR_SUCCESS;
 
@@ -332,65 +335,9 @@ Database :: savePlayer(Client& aClient)
 }
 
 err_t
-Database :: loadAllNPCs()
-{
-    const char* cmd = "SELECT * FROM `npc`";
-
-    err_t err = ERROR_SUCCESS;
-
-    QSqlQuery query(mConnection);
-    query.prepare(cmd);
-
-    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
-
-    if (query.exec())
-    {
-        World& world = World::getInstance();
-        MapManager& mgr = MapManager::getInstance();
-        while (ERROR_SUCCESS == err && query.next())
-        {
-            Npc* npc = new Npc(
-                           (int32_t)query.value(0).toInt(),
-                           nullptr,
-                           (uint8_t)query.value(2).toInt(),
-                           (int16_t)query.value(3).toInt(),
-                           (uint32_t)query.value(4).toInt(),
-                           (uint16_t)query.value(5).toInt(),
-                           (uint16_t)query.value(6).toInt(),
-                           (uint8_t)query.value(9).toInt(),
-                           (uint8_t)query.value(10).toInt());
-
-            ASSERT(npc != nullptr);
-            ASSERT(world.AllNPCs.find(npc->getUID()) == world.AllNPCs.end());
-
-            GameMap* map = mgr.getMap(npc->getMapId());
-            if (map != nullptr)
-            {
-                world.AllNPCs[npc->getUID()] = npc;
-                map->enterRoom(*npc);
-            }
-        }
-
-        if (IS_SUCCESS(err))
-        {
-            fprintf(stdout, "Loaded all NPCs.\n");
-            LOG(INFO, "Loaded all NPCs.");
-        }
-    }
-    else
-    {
-        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
-            cmd, qPrintable(query.lastError().text()));
-        err = ERROR_EXEC_FAILED;
-    }
-
-    return err;
-}
-
-err_t
 Database :: loadAllMaps()
 {
-    const char* cmd = "SELECT `id`, `doc_id`, `type`, `weather`, `portal_x`, `portal_y`, `reborn_map`, `reborn_portal`, `light` FROM `map`";
+    static const char cmd[] = "SELECT `id`, `doc_id`, `type`, `weather`, `portal_x`, `portal_y`, `reborn_map`, `reborn_portal`, `light` FROM `map`";
 
     err_t err = ERROR_SUCCESS;
 
@@ -440,9 +387,83 @@ Database :: loadAllMaps()
 }
 
 err_t
+Database :: getPasswayInfo(uint32_t& aOutMapId, uint16_t& aOutPosX, uint16_t& aOutPosY,
+                           uint32_t aMapId, uint8_t aIndex) const
+{
+    static const char cmd1[] = "SELECT `portal_mapid`, `portal_idx` FROM `passway` WHERE `mapid` = :mapid AND `passway_idx` = :index";
+    static const char cmd2[] = "SELECT `portal_x`, `portal_y` FROM `portal` WHERE `mapid` = :mapid AND `idx` = :index";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd1);
+    query.bindValue(":mapid", aMapId);
+    query.bindValue(":index", aIndex);
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        if (query.size() == 1)
+        {
+            query.next(); // get the first result...
+
+            uint32_t mapId = (uint32_t)query.value(0).toInt();
+            uint8_t index = (uint8_t)query.value(1).toInt();
+
+            // prepare the new query
+            query.prepare(cmd2);
+            query.bindValue(":mapid", mapId);
+            query.bindValue(":index", index);
+
+            LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+            if (query.exec())
+            {
+                if (query.size() == 1)
+                {
+                    query.next(); // get the first result...
+
+                    aOutMapId = mapId;
+                    aOutPosX = (uint16_t)query.value(0).toInt();
+                    aOutPosY = (uint16_t)query.value(1).toInt();
+
+                    LOG(INFO, "Passway %u at %u will transport the player to %u (%u, %u).",
+                        aIndex, aMapId, aOutMapId, aOutPosX, aOutPosY);
+                }
+                else
+                {
+                    LOG(ERROR, "The cmd should return only one result, not %d", query.size());
+                    err = ERROR_BAD_LENGTH;
+                }
+            }
+            else
+            {
+                LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+                    cmd2, qPrintable(query.lastError().text()));
+                err = ERROR_EXEC_FAILED;
+            }
+        }
+        else
+        {
+            LOG(ERROR, "The cmd should return only one result, not %d", query.size());
+            err = ERROR_BAD_LENGTH;
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd1, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
 Database :: loadAllItems()
 {
-    const char* cmd = "SELECT * FROM `itemtype`";
+    static const char cmd[] = "SELECT * FROM `itemtype`";
 
     err_t err = ERROR_SUCCESS;
 
@@ -500,6 +521,62 @@ Database :: loadAllItems()
         {
             fprintf(stdout, "Loaded all items.\n");
             LOG(INFO, "Loaded all items.");
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: loadAllNPCs()
+{
+    static const char cmd[] = "SELECT * FROM `npc`";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        World& world = World::getInstance();
+        MapManager& mgr = MapManager::getInstance();
+        while (ERROR_SUCCESS == err && query.next())
+        {
+            Npc* npc = new Npc(
+                           (int32_t)query.value(0).toInt(),
+                           nullptr,
+                           (uint8_t)query.value(2).toInt(),
+                           (int16_t)query.value(3).toInt(),
+                           (uint32_t)query.value(4).toInt(),
+                           (uint16_t)query.value(5).toInt(),
+                           (uint16_t)query.value(6).toInt(),
+                           (uint8_t)query.value(9).toInt(),
+                           (uint8_t)query.value(10).toInt());
+
+            ASSERT(npc != nullptr);
+            ASSERT(world.AllNPCs.find(npc->getUID()) == world.AllNPCs.end());
+
+            GameMap* map = mgr.getMap(npc->getMapId());
+            if (map != nullptr)
+            {
+                world.AllNPCs[npc->getUID()] = npc;
+                map->enterRoom(*npc);
+            }
+        }
+
+        if (IS_SUCCESS(err))
+        {
+            fprintf(stdout, "Loaded all NPCs.\n");
+            LOG(INFO, "Loaded all NPCs.");
         }
     }
     else

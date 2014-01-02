@@ -468,3 +468,23 @@ MapData :: unpack()
 
     return err;
 }
+
+int
+MapData :: getPassage(uint16_t aPosX, uint16_t aPosY) const
+{
+    int passageId = -1;
+
+    for (vector<Passage*>::const_iterator
+            it = mPassages.begin(), end = mPassages.end();
+         it != end; ++it)
+    {
+        const Passage& passage = **it;
+        if (passage.PosX == aPosX && passage.PosY == aPosY)
+        {
+            passageId = passage.Index;
+            break;
+        }
+    }
+
+    return passageId;
+}

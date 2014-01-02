@@ -103,15 +103,6 @@ public:
     err_t savePlayer(Client& aClient);
 
     /**
-     * Load all NPCs in memory from the database.
-     *
-     * @retval ERROR_SUCCESS on success
-     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
-     * @returns Error code otherwise
-     */
-    err_t loadAllNPCs();
-
-    /**
      * Load all maps in memory from the database.
      *
      * @retval ERROR_SUCCESS on success
@@ -119,6 +110,22 @@ public:
      * @returns Error code otherwise
      */
     err_t loadAllMaps();
+
+    /**
+     * Get the passway information based on the map Id and the passway Id.
+     *
+     * @param[out]   aOutMapId     the new map Id
+     * @param[out]   aOutPosX      the new X position
+     * @param[out]   aOutPosY      the new Y position
+     * @param[in]    aMapId        the passway's map Id
+     * @param[in]    aIndex        the passway's index
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t getPasswayInfo(uint32_t& aOutMapId, uint16_t& aOutPosX, uint16_t& aOutPosY,
+                         uint32_t aMapId, uint8_t aIndex) const;
 
     /**
      * Load all items in memory from the database.
@@ -129,12 +136,21 @@ public:
      */
     err_t loadAllItems();
 
+    /**
+     * Load all NPCs in memory from the database.
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t loadAllNPCs();
+
 private:
     /* constructor */
     Database();
 
     /** Get the SQL command from the SQL query. */
-    QString getSqlCommand(const QSqlQuery& aQuery);
+    QString getSqlCommand(const QSqlQuery& aQuery) const;
 
 private:
     static Database* sInstance; //!< static instance of the singleton

@@ -10,6 +10,7 @@
 #include "client.h"
 #include "entity.h"
 #include "player.h"
+#include "database.h"
 #include "mapmanager.h"
 #include "gamemap.h"
 #include "msgplayer.h"
@@ -106,6 +107,61 @@ MsgAction :: process(Client* aClient)
                 }
 
                 player.broadcastRoomMsg(this, true);
+                break;
+            }
+        case ACTION_CHG_MAP:
+            {
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
+
+                const Database& db = Database::getInstance();
+                const MapManager& mgr = MapManager::getInstance();
+                const GameMap* map = mgr.getMap(player.getMapId());
+
+                if (map != nullptr)
+                {
+                    uint16_t passageX = (uint16_t)mInfo->Data;
+                    uint16_t passageY = (uint16_t)(mInfo->Data >> 16);
+
+                    // if requested with a big range, it's a hack, else we consider that it's a lag...
+                    if (GameMap::distance(player.getPosX(), player.getPosY(), passageX, passageY) > 5)
+                    {
+                         // TODO crime, send to jail
+                         // Database.Jail(Player.Name);
+
+                         // Player.JailC++;
+                         // Player.Move(6001, 28, 75);
+
+                         // Program.Log("[CRIME] " + Player.Name + " has been sent to jail for using a portal hack!");
+                         // World.BroadcastMsg(MsgTalk.Create("SYSTEM", "ALLUSERS", Player.Name + " has been sent to jail!", MsgTalk.Channel.GM, 0xFFFFFF));
+                         // return;
+                    }
+
+                    uint32_t mapId = 0;
+                    uint16_t posX = 0, posY = 0;
+
+                    int passageId = map->getPassage(passageX, passageY);
+                    if (passageId != -1 &&
+                        IS_SUCCESS(db.getPasswayInfo(mapId, posX, posY, player.getMapId(), (uint8_t)passageId)))
+                    {
+                        player.move(mapId, posX, posY);
+                    }
+                    else
+                    {
+                        player.move(player.getPrevX(), player.getPrevY(), player.getDirection());
+
+                        MsgAction msg(&player, player.getMapId(), MsgAction::ACTION_FLY_MAP);
+                        player.broadcastRoomMsg(&msg, true);
+                    }
+                }
+                else
+                {
+                    // invalid map...
+                    client.disconnect();
+                }
                 break;
             }
         case ACTION_ENTER_MAP:

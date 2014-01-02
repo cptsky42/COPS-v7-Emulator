@@ -370,6 +370,57 @@ Player :: enterMap()
     }
 }
 
+void
+Player :: leaveMap()
+{
+    const MapManager& mgr = MapManager::getInstance();
+    GameMap* map = mgr.getMap(mMapId);
+
+    if (map != nullptr)
+        map->leaveRoom(*this);
+
+    MsgAction msg(this, 0, MsgAction::ACTION_LEAVE_MAP);
+    broadcastRoomMsg(&msg, false);
+
+    clearBroadcastSet();
+}
+
+bool
+Player :: move(uint32_t aMapId, uint16_t aX, uint16_t aY)
+{
+    const MapManager& mgr = MapManager::getInstance();
+    GameMap* map = mgr.getMap(aMapId);
+
+    if (map != nullptr)
+    {
+        leaveMap();
+
+        // detach status STATUS_HIDDEN //TODO
+
+        // StandRestart()
+        // map->ChangeRegion()
+
+        mPrevMap = mMapId;
+        mPrevX = mPosX;
+        mPrevY = mPosY;
+
+        mMapId = aMapId;
+        mPosX = aX;
+        mPosY = aY;
+
+        mPose = POSE_STANDBY;
+        // IsInBattle = false, MagicIntone = false, Mining = false
+        // ProcessAfterMove()
+
+        MsgAction msg(this, mMapId, MsgAction::ACTION_FLY_MAP);
+        send(&msg);
+
+        enterMap();
+    }
+
+    return true;
+}
+
 bool
 Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
 {
@@ -396,7 +447,8 @@ Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
         mPosX = aX;
         mPosY = aY;
         mDirection = aDir;
-        // mAction = Action.StandBy; // TODO
+
+        mPose = POSE_STANDBY;
 
         updateBroadcastSet();
 

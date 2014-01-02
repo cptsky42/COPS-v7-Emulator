@@ -124,6 +124,9 @@ public:
     /** Determine whether or nor the cell altitude is accessible. */
     int16_t getFloorAlt(uint16_t aPosX, uint16_t aPosY) const;
 
+    /** Get the passage ID of the given coords. */
+    int getPassage(uint16_t aPosX, uint16_t aPosY) const { return mData.getPassage(aPosX, aPosY); }
+
     /** Get the map's document ID which corresponds to the UID of the MapData. */
     uint16_t getDocID() const { return mInfo->DocID; }
     /** Get the map's type flags. */

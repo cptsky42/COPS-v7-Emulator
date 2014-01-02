@@ -157,13 +157,7 @@ MsgTalk :: process(Client* aClient)
             int param;
             if (sscanf(words, "/mm %d %d %d", &mapId, &x, &y) == 3)
             {
-                player.setMapId(mapId);
-                player.setPosition(x, y);
-
-                MsgAction msg(&player, mapId, MsgAction::ACTION_FLY_MAP);
-                player.send(&msg);
-
-                player.enterMap();
+                player.move((uint32_t)mapId, (uint16_t)x, (uint16_t)y);
             }
             else if (sscanf(words, "/item %d %d", &type, &param))
             {

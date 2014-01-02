@@ -29,6 +29,7 @@ MsgDate :: create()
     time_t timestamp = time(NULL);
     struct tm* tm = localtime(&timestamp);
 
+    mInfo->Padding = 0;
     mInfo->Year = tm->tm_year;
     mInfo->Month = tm->tm_mon;
     mInfo->DayOfYear = tm->tm_yday;
@@ -45,6 +46,7 @@ MsgDate :: swap(uint8_t* aBuf) const
 
     MsgInfo* info = (MsgInfo*)aBuf;
 
+    info->Padding = bswap32(info->Padding);
     info->Year = bswap32(info->Year);
     info->Month = bswap32(info->Month);
     info->DayOfYear = bswap32(info->DayOfYear);
