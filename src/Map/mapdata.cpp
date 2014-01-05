@@ -30,11 +30,9 @@ MapData :: load(MapData** aOutData, const char* aPath)
     if (Finder::fileExists(aPath))
     {
         BinaryReader reader(aPath);
-        DOIF(err, reader.lock());
 
         DOIF(err, data->loadMapData(reader));
 
-        reader.unlock();
         reader.close();
     }
     else
@@ -277,7 +275,6 @@ MapData :: loadLayerData(BinaryReader& aReader)
                 if (Finder::fileExists(fileName))
                 {
                     BinaryReader reader(fileName);
-                    DOIF(err, reader.lock());
 
                     DOIF(err, reader.readInt32(count));
                     LOG(VRB, "Found %d parts.", count);
@@ -329,7 +326,6 @@ MapData :: loadLayerData(BinaryReader& aReader)
                         }
                     }
 
-                    reader.unlock();
                     reader.close();
                 }
                 else

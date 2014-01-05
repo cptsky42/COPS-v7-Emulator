@@ -11,9 +11,11 @@
  * sections in the LICENSE file.
  */
 
+#include "log.h"
 #include "binaryreader.h"
 #include "finder.h"
 #include <stdio.h>
+#include <string.h> // strerror
 
 using namespace std;
 
@@ -21,7 +23,13 @@ BinaryReader :: BinaryReader(const char* aPath)
 {
     mStream = nullptr;
     ASSERT(aPath != nullptr && aPath[0] != '\0');
-    ASSERT(ERROR_SUCCESS == Finder::fileOpen(&mStream, aPath, "r"));
+
+    mStream = fopen(aPath, "rb");
+    if (mStream == nullptr)
+    {
+        LOG(ERROR, "failed to open '%s' in '%s' : %s", aPath, "rb", strerror(errno));
+        ASSERT(false);
+    }
 }
 
 BinaryReader :: BinaryReader(const string& aPath)
@@ -29,7 +37,13 @@ BinaryReader :: BinaryReader(const string& aPath)
     mStream = nullptr;
     ASSERT(&aPath != nullptr);
     ASSERT(!aPath.empty());
-    ASSERT(ERROR_SUCCESS == Finder::fileOpen(&mStream, aPath.c_str(), "r"));
+
+    mStream = fopen(aPath.c_str(), "rb");
+    if (mStream == nullptr)
+    {
+        LOG(ERROR, "failed to open '%s' in '%s' : %s", aPath.c_str(), "rb", strerror(errno));
+        ASSERT(false);
+    }
 }
 
 BinaryReader :: ~BinaryReader()
@@ -37,17 +51,16 @@ BinaryReader :: ~BinaryReader()
     close();
 }
 
-int64_t
+long
 BinaryReader :: tell()
 {
-    return Finder::fileTell(mStream);
+    return ftell(mStream);
 }
 
-
 err_t
-BinaryReader :: seek(int64_t aOffset, int aWhence)
+BinaryReader :: seek(long aOffset, int aWhence)
 {
-    return Finder::fileSeek(mStream, aOffset, aWhence);
+    return fseek(mStream, aOffset, aWhence) == 0 ? ERROR_SUCCESS : ERROR_SEEK;
 }
 
 void
@@ -58,22 +71,6 @@ BinaryReader :: close()
         fclose(mStream);
         mStream = nullptr;
     }
-}
-
-err_t
-BinaryReader :: lock()
-{
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-
-    return Finder::fileLock(mStream);
-}
-
-err_t
-BinaryReader :: unlock()
-{
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-
-    return Finder::fileUnlock(mStream);
 }
 
 err_t
@@ -137,22 +134,6 @@ BinaryReader :: read(void* aBuf, size_t aLen)
     {
         err = ERROR_READ_FAULT;
     }
-
-    return err;
-}
-
-err_t
-BinaryReader :: readBoolean(bool& aOutVal)
-{
-    ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
-
-    err_t err = ERROR_SUCCESS;
-
-    int8_t val = 0;
-    DOIF(err, read<int8_t>(val));
-    aOutVal = val != 0 ? true : false;
 
     return err;
 }

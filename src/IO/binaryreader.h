@@ -45,18 +45,11 @@ public:
     ~BinaryReader();
 
     /**
-      * Gets a pointer to the base stream used by the BinaryReader.
-      *
-      * @returns a pointer to the base stream
-      */
-    const FILE* getBaseStream() const { return mStream; }
-
-    /**
       * Gets the current position of the stream used by the BinaryReader.
       *
       * @returns the current position of the stream
       */
-    int64_t tell();
+    long tell();
 
     /**
       * Changes the current position of the stream based on the seeking
@@ -72,7 +65,7 @@ public:
       * @retval BL_ERROR_FILE_SEEK on seeking error
       * @returns BL error code otherwise
       */
-    err_t seek(int64_t aOffset, int aWhence);
+    err_t seek(long aOffset, int aWhence);
 
     /**
       * Closes the current reader and the underlying stream.
@@ -80,16 +73,6 @@ public:
       * from it and flushed
       */
     void close();
-
-    /**
-      * Gets an exclusive lock on the file.
-      */
-    err_t lock();
-
-    /**
-      * Releases the exclusive lock on the file.
-      */
-    err_t unlock();
 
     /**
       * Reads the specified number of bytes from the stream.
@@ -102,19 +85,6 @@ public:
       * @returns BL error code otherwise
       */
     err_t read(void* aBuf, size_t aCount);
-
-    /**
-      * Reads a boolean value from the current stream and advances the
-      * current position of the stream by one byte.
-      *
-      * @param[out]    aOutVal    a reference to the boolean that will
-      *                           receive the value
-      *
-      * @retval BL_ERROR_SUCCESS on success
-      * @retval BL_ERROR_FILE_READ on reading error
-      * @returns BL error code otherwise
-      */
-    err_t readBoolean(bool& aOutVal);
 
     /**
       * Reads a 8-bit unsigned integer value from the current stream and

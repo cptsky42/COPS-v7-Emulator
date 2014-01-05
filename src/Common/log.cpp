@@ -153,7 +153,7 @@ void
 Logger :: run()
 {
     string path = mDestFolder + mFile;
-    if (!IS_SUCCESS(Finder::fileOpen(&mStream, path.c_str(), "at")))
+    if ((mStream = fopen(path.c_str(), "at")) == nullptr)
     {
         fprintf(stderr, "Failed to open the log file %s.", path.c_str());
         perror(NULL);
