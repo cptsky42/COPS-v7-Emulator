@@ -195,9 +195,25 @@ public:
     bool isActive() const { return mPlayerCount > 0; }
 
 public:
+    /**
+     * Send the map information to the player.
+     *
+     * @param[in]    aPlayer   the player to send the messages to
+     */
     void sendMapInfo(const Player& aPlayer) const;
+
+    /**
+     * Send the block information to the player.
+     *
+     * @param[in]    aPlayer   the player to send the messages to
+     */
     void sendBlockInfo(const Player& aPlayer) const;
 
+    /**
+     * Update the broadcast set of the entity.
+     *
+     * @param[in]    aEntity    the entity to udate the broadcast set
+     */
     void updateBroadcastSet(const Entity& aEntity) const;
 
     /**
@@ -237,27 +253,14 @@ private:
 ////	IMapData*	QueryMapData()							{ CHECKF(m_pMapData); return m_pMapData; }
 //	CWeatherRegion*	QueryWeatherRegion(OBJID id)		{ CHECKF(m_setWeather && id != ID_NONE); return m_setWeather->GetObj(id);}
 
-//public: // block
-//	CGameBlock&	QueryBlock(int nPosX, int nPosY)		{ return m_setBlock[Block(nPosX)][Block(nPosY)]; }
-//	IMapThing*	QueryThingByIndex(int x, int y, int z)	{ return BlockByIndex(x,y).QuerySet()->GetObjByIndex(z); }
-//	CGameBlock&	BlockByIndex(int x, int y)				{ return m_setBlock[x][y]; }		// call by FOR_9_xxx
-//protected:
-//	IRegionSet*	QueryRegionSet()						{ CHECKF(m_setRegion); return m_setRegion; }
-
 //public: // block info
 //	virtual void	SendBlockInfo(IRole* pRole);		// ²»°üº¬×Ô¼º
 //	virtual void	BroadcastBlockMsg(IMapThing* pThing, CNetMsg* pMsg, bool bSendSelf = false);
 //	virtual void	BroadcastBlockMsg(int nPosX, int nPosY, CNetMsg* pMsg);
 
-//public: // role
-//	void	MoveTo(IRole* pRole, int nNewPosX, int nNewPosY, BOOL bLeaveBlock=false, BOOL bEnterBlock=false);		// ÓÐ¿ÉÄÜÒÆ¶¯µ½ÏàÁÚµÄBLOCK
-//	void	IncRole(int x, int y)		{ m_pMapData->IncRole(x, y); }
-//	void	DecRole(int x, int y)		{ m_pMapData->DecRole(x, y); }		// normal use LeaveRoom or MoveTo but dead
-
 //public: // region info
 //	void	SendRegionInfo(CUser* pUser);
 //	void	ClearRegionInfo(CUser* pUser);
-//	void	ChangeRegion(CUser* pUser, int nNewPosX, int nNewPosY);
 
 //public: // region -----------------------------
 //	CRegionData*	QueryRegion(int nRegionType, int x, int y);
@@ -273,6 +276,3 @@ private:
 //	bool	SetStatus(int nStatus, bool flag);				// return false: no change
 //	void	SetSynID(OBJID idSyn, bool bWithAllNpc);				// true: set all syna npc syn id, yet.
 //	void	SetUserID(OBJID idUser, bool bWithAllNpc);				// true: set all syna npc syn id, yet.
-//	bool	EraseMap();
-//	bool	AddTerrainObj(OBJID idOwner, int x, int y, OBJID idTerrainObj);
-//	bool	DelTerrainObj(OBJID idOwner);

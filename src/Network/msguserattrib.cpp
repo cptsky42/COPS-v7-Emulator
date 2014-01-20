@@ -16,17 +16,6 @@ MsgUserAttrib :: MsgUserAttrib(Entity* aEntity, int32_t aData, UserAttrType aTyp
     create(aEntity, aData, aType);
 }
 
-MsgUserAttrib :: MsgUserAttrib(uint8_t** aBuf, size_t aLen)
-    : Msg(aBuf, aLen), mInfo((MsgInfo*)mBuf)
-{
-    ASSERT(aLen >= sizeof(MsgInfo));
-
-    #if BYTE_ORDER == BIG_ENDIAN
-    swap(mBuf);
-    #endif
-}
-
-
 MsgUserAttrib :: ~MsgUserAttrib()
 {
 

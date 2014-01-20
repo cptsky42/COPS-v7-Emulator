@@ -18,9 +18,6 @@
 #include "common.h"
 #include <stdio.h>
 
-/**
-  *
-  */
 class Finder
 {
 public:

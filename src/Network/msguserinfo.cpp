@@ -20,17 +20,6 @@ MsgUserInfo :: MsgUserInfo(const Player& aPlayer)
     create(aPlayer);
 }
 
-MsgUserInfo :: MsgUserInfo(uint8_t** aBuf, size_t aLen)
-    : Msg(aBuf, aLen), mInfo((MsgInfo*)mBuf)
-{
-    ASSERT(aLen >= sizeof(MsgInfo));
-
-    #if BYTE_ORDER == BIG_ENDIAN
-    swap(mBuf);
-    #endif
-}
-
-
 MsgUserInfo :: ~MsgUserInfo()
 {
 

@@ -12,7 +12,6 @@
 #include "msgaccount.h"
 #include "msgaction.h"
 #include "msgallot.h"
-#include "msgconnect.h"
 #include "msgconnectex.h"
 #include "msgdate.h"
 #include "msgdialog.h"

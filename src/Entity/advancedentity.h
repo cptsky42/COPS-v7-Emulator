@@ -59,8 +59,26 @@ public:
     /** Get the entity's current hit points. */
     uint16_t getCurHP() const { return mCurHP; }
     /** Get the entity's max hit points. */
-    uint16_t getMaxHP() const { return mMaxHP; }
+    virtual uint16_t getMaxHP() const { return mMaxHP; }
 
+public:
+    /** Get the entity's minimum physical attack. */
+    virtual int32_t getMinAtk() const = 0;
+    /** Get the entity's maximum physical attack. */
+    virtual int32_t getMaxAtk() const = 0;
+    /** Get the entity's physical defense. */
+    virtual int32_t getDefense() const = 0;
+    /** Get the entity's magic attack. */
+    virtual int32_t getMAtk() const = 0;
+    /** Get the entity's magic defense. */
+    virtual int32_t getMDef() const = 0;
+
+    /** Get the entity's dexterity. */
+    virtual uint8_t getDext() const = 0;
+    /** Get the entity's dodge. */
+    virtual uint8_t getDodge() const = 0;
+
+public:
     /** Get the entity's pose. */
     uint16_t getPose() const { return mPose; }
 
@@ -76,14 +94,6 @@ protected:
 
     uint16_t mCurHP; //!< Entity current HP
     uint16_t mMaxHP; //!< Entity max HP
-
-    int32_t mMinAtk; //!< Entity minimum attack
-    int32_t mMaxAtk; //!< Entity maximum attack
-    int32_t mDefense; //!< Entity defense
-    int32_t mMAtk; //!< Entity magic attack
-    int32_t mMDef; //!< Entity magic def
-    uint8_t mDexterity; //!< Entity dexterity
-    uint8_t mDodge; //!< Entity dodge
 
     uint16_t mPose; //!< Entity pose
 };

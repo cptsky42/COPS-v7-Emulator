@@ -22,47 +22,35 @@ Msg :: create(Msg** aOutMsg, uint8_t** aBuf, size_t aLen)
     Msg::Header* header = (Msg::Header*)(*aBuf);
     switch (header->Type)
     {
-        case MSG_ACCOUNT:
-            msg = new MsgAccount(aBuf, aLen);
-            break;
-        case MSG_CONNECT:
-            msg = new MsgConnect(aBuf, aLen);
-            break;
         case MSG_REGISTER:
             msg = new MsgRegister(aBuf, aLen);
             break;
         case MSG_TALK:
             msg = new MsgTalk(aBuf, aLen);
             break;
-        case MSG_TICK:
-            msg = new MsgTick(aBuf, aLen);
-            break;
         case MSG_WALK:
             msg = new MsgWalk(aBuf, aLen);
             break;
-        case MSG_USERINFO:
-            msg = new MsgUserInfo(aBuf, aLen);
+        case MSG_ITEM:
+            msg = new MsgItem(aBuf, aLen);
             break;
         case MSG_ACTION:
             msg = new MsgAction(aBuf, aLen);
             break;
-        case MSG_USERATTRIB:
-            msg = new MsgUserAttrib(aBuf, aLen);
-            break;
-        case MSG_ITEMINFO:
-            msg = new MsgItemInfo(aBuf, aLen);
-            break;
-        case MSG_DIALOG:
-            msg = new MsgDialog(aBuf, aLen);
-            break;
-        case MSG_NPC:
-            msg = new MsgNpc(aBuf, aLen);
+        case MSG_TICK:
+            msg = new MsgTick(aBuf, aLen);
             break;
         case MSG_ALLOT:
             msg = new MsgAllot(aBuf, aLen);
             break;
-        case MSG_ITEM:
-            msg = new MsgItem(aBuf, aLen);
+        case MSG_ACCOUNT:
+            msg = new MsgAccount(aBuf, aLen);
+            break;
+        case MSG_NPC:
+            msg = new MsgNpc(aBuf, aLen);
+            break;
+        case MSG_DIALOG:
+            msg = new MsgDialog(aBuf, aLen);
             break;
         default:
             msg = new Msg(aBuf, aLen);

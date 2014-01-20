@@ -14,17 +14,6 @@ MsgItemInfo :: MsgItemInfo(void* aItem, Action aAction)
     create(aItem, aAction);
 }
 
-MsgItemInfo :: MsgItemInfo(uint8_t** aBuf, size_t aLen)
-    : Msg(aBuf, aLen), mInfo((MsgInfo*)mBuf)
-{
-    ASSERT(aLen >= sizeof(MsgInfo));
-
-    #if BYTE_ORDER == BIG_ENDIAN
-    swap(mBuf);
-    #endif
-}
-
-
 MsgItemInfo :: ~MsgItemInfo()
 {
 

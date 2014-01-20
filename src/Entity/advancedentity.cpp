@@ -18,14 +18,6 @@ AdvancedEntity :: AdvancedEntity(uint32_t aUID)
     mCurHP = 0;
     mMaxHP = 0;
 
-    mMinAtk = 0;
-    mMaxAtk = 0;
-    mDefense = 0;
-    mMAtk = 0;
-    mMDef = 0;
-    mDexterity = 0;
-    mDodge = 0;
-
     mPose = POSE_STANDBY;
 }
 

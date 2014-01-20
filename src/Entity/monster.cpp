@@ -26,14 +26,6 @@ Monster :: Monster(uint32_t aUID, const Monster::Info& aInfo, Generator* aOwner)
     mCurHP = aInfo.Life;
     mMaxHP = aInfo.Life;
 
-    mMinAtk = aInfo.MinAtk;
-    mMaxAtk = aInfo.MaxAtk;
-    mDefense = aInfo.Defense;
-    mMAtk = aInfo.MinAtk;
-    mMDef = aInfo.MDef;
-    mDexterity = aInfo.Dexterity;
-    mDodge = aInfo.Dodge;
-
     mPose = AdvancedEntity::POSE_STANDBY;
 }
 

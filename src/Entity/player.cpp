@@ -82,7 +82,7 @@ Player :: ~Player()
 #define MAX_EQUIPMENT 0
 
 int32_t
-Player :: getMinAtk()
+Player :: getMinAtk() const
 {
     double atk = mForce;
 
@@ -96,7 +96,7 @@ Player :: getMinAtk()
 }
 
 int32_t
-Player :: getMaxAtk()
+Player :: getMaxAtk() const
 {
     double atk = mForce;
 
@@ -110,7 +110,7 @@ Player :: getMaxAtk()
 }
 
 int32_t
-Player :: getDefense()
+Player :: getDefense() const
 {
     double def = 0.0;
 
@@ -124,7 +124,7 @@ Player :: getDefense()
 }
 
 int32_t
-Player :: getMAtk()
+Player :: getMAtk() const
 {
     double atk = 0.0;
 
@@ -138,7 +138,7 @@ Player :: getMAtk()
 }
 
 int32_t
-Player :: getMDef()
+Player :: getMDef() const
 {
     double def = 0.0;
 
@@ -152,7 +152,7 @@ Player :: getMDef()
 }
 
 int32_t
-Player :: getAdditionAtk()
+Player :: getAdditionAtk() const
 {
     int32_t atk = 0;
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
@@ -177,7 +177,7 @@ Player :: getAdditionAtk()
 }
 
 int32_t
-Player :: getAdditionDef()
+Player :: getAdditionDef() const
 {
     int32_t def = 0;
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
@@ -203,7 +203,7 @@ Player :: getAdditionDef()
 }
 
 int32_t
-Player :: getAdditionMAtk()
+Player :: getAdditionMAtk() const
 {
     int32_t atk = 0;
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
@@ -228,7 +228,7 @@ Player :: getAdditionMAtk()
 }
 
 int32_t
-Player :: getAdditionMDef()
+Player :: getAdditionMDef() const
 {
     int32_t def = 0;
     for (uint8_t pos = 0; pos < MAX_EQUIPMENT; ++pos)
@@ -254,7 +254,7 @@ Player :: getAdditionMDef()
 }
 
 uint8_t
-Player :: getDext()
+Player :: getDext() const
 {
     uint8_t dext = mDexterity;
 
@@ -268,7 +268,7 @@ Player :: getDext()
 }
 
 uint16_t
-Player :: getMaxLife()
+Player :: getMaxHP()  const
 {
     int32_t life = (mForce * 3) + (mDexterity * 3) + (mHealth * 24) + (mSoul * 3);
 
@@ -301,7 +301,7 @@ Player :: getMaxLife()
 }
 
 uint16_t
-Player :: getMaxMana()
+Player :: getMaxMP() const
 {
     int32_t mana = (mSoul * 5);
 
@@ -318,13 +318,13 @@ Player :: getMaxMana()
 }
 
 uint8_t
-Player :: getMaxXP()
+Player :: getMaxXP() const
 {
     return 100;
 }
 
 uint8_t
-Player :: getMaxEnergy()
+Player :: getMaxEnergy() const
 {
     int32_t energy = 100;
     // TODO blessing
@@ -332,18 +332,10 @@ Player :: getMaxEnergy()
     return energy;
 }
 
-uint16_t
-Player :: getMaxWeight()
-{
-    int32_t weight = 0;
-
-    return weight;
-}
-
 void
 Player :: enterMap()
 {
-    const MapManager& mgr = MapManager::getInstance();
+    static const MapManager& mgr = MapManager::getInstance();
     GameMap* map = mgr.getMap(mMapId);
 
     if (map != nullptr)

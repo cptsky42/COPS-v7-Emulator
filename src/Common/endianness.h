@@ -11,10 +11,6 @@
 
 #include "types.h"
 
-#ifdef HAVE_ENDIAN_H
-#include <endian.h>
-#endif // HAVE_ENDIAN_H
-
 // Clang defines __has_builtin
 #ifndef __has_builtin
 #define __has_builtin
@@ -206,44 +202,6 @@ inline int64_t bswap64(int64_t x)
 inline uint64_t bswap64(uint64_t x)
 {
     return (uint64_t)bswap64((int64_t)x);
-}
-
-/*
- *****************************************************
- * Determine endian at runtime
- ****************************************************
- */
-
-/**
- * Determine whether the current program is running under a big endian
- * architecture. It is determined at runtime.
- *
- * @retval TRUE if the processor is running under a big endian architecture.
- * @returns FALSE otherwise
- */
-inline bool isBigEndian()
-{
-    int32_t dword = 0x11223344;
-    int8_t* ptr = (int8_t*)&dword;
-
-    return ptr[0] == 0x11 && ptr[1] == 0x22 &&
-            ptr[2] == 0x33 && ptr[3] == 0x44;
-}
-
-/**
- * Determine whether or not, the current program is running under a
- * little endian architecture. It is determined at runtime.
- *
- * @retval TRUE if the processor is running under a little endian architecture.
- * @returns FALSE otherwise
- */
-inline bool isLittleEndian()
-{
-    int32_t dword = 0x11223344;
-    int8_t* ptr = (int8_t*)&dword;
-
-    return ptr[0] == 0x44 && ptr[1] == 0x33 &&
-            ptr[2] == 0x22 && ptr[3] == 0x11;
 }
 
 #endif // _COPS_V7_EMULATOR_ENDIAN_H

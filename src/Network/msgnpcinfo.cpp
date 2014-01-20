@@ -18,16 +18,6 @@ MsgNpcInfo :: MsgNpcInfo(const Npc& aNpc)
     create(aNpc);
 }
 
-MsgNpcInfo :: MsgNpcInfo(uint8_t** aBuf, size_t aLen)
-    : Msg(aBuf, aLen), mInfo((MsgInfo*)mBuf)
-{
-    ASSERT(aLen >= sizeof(MsgInfo));
-
-    #if BYTE_ORDER == BIG_ENDIAN
-    swap(mBuf);
-    #endif
-}
-
 MsgNpcInfo :: ~MsgNpcInfo()
 {
 

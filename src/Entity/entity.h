@@ -115,12 +115,48 @@ public:
     /** Send the entity spawn msg. */
     virtual void sendShow(const Player& aPlayer) const = 0;
 
+    /**
+     * Update the broadcast set.
+     *
+     * @param[in]   aClearSet   (Optional) clear the set before updating
+     *                          Default is false.
+     */
     void updateBroadcastSet(bool aClearSet = false) const;
+
+    /**
+     * Clear the broadcast set.
+     */
     void clearBroadcastSet() const;
+
+    /**
+     * Add an entity to the broadcast set.
+     *
+     * @param[in]    aEntity    the entity to add
+     */
     void addEntityToBCSet(const Entity& aEntity) const;
+
+    /**
+     * Remove an entity from the broadcast set.
+     *
+     * @param[in]    aEntity    the entity to remove
+     */
     void removeEntityFromBCSet(const Entity& aEntity) const;
 
+    /**
+     * Broadcast a message to all entities of the broadcast set.
+     *
+     * @param[in]   aMsg           the message to broadcast
+     * @param[in]   aIncludeSelf   whether or not the message must be sent to self
+     */
     void broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const;
+
+    /**
+     * Broadcast a message to all entities of the broadcast set.
+     *
+     * @param[in]   aMsg           the buffer ot the message to broadcast
+     * @param[in]   aLen           the length of the message to broadcast
+     * @param[in]   aIncludeSelf   whether or not the message must be sent to self
+     */
     void broadcastRoomMsg(uint8_t* aBuf, size_t aLen, bool aIncludeSelf) const;
 
     /** Called when the timer elapse. */

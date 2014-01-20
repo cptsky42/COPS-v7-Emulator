@@ -18,6 +18,9 @@
 
 class MapData;
 
+/**
+ * Global map manager.
+ */
 class MapManager : public Environment::Global
 {
     // !!! class is a singleton !!!

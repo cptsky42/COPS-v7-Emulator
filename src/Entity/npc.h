@@ -14,51 +14,40 @@
 #include <string>
 
 class NpcTask;
+class NpcShop;
 class Client;
 class Player;
 
+/**
+ * Base class of all NPC (but not monsters).
+ */
 class Npc : public Entity
 {
     PROHIBIT_COPY(Npc); // constant UID, should be unique...
 
 public:
-    // type: 2, 6, 9, 21, 22, 23, 24
+    /** The type of the NPC. */
     enum Type
     {
+        /** No type (invalid). */
         TYPE_NONE = 0,
+        /** The NPC is a shop. */
         TYPE_SHOPKEEPER = 1,
+        /** The NPC is a task NPC (normal). */
         TYPE_TASK = 2,
+        /** The NPC is a storage NPC. */
         TYPE_STORAGE = 3,
+        /** The NPC is a trunck NPC. */
         TYPE_TRUNCK = 4,
+        /** The NPC can change the face. */
         TYPE_FACE = 5,
-        TYPE_FROGE = 6, // only used by the client
-        TYPE_EMBED = 7,
-
-        _STATUARY_NPC			= 9,			// µñÏñNPC
-        _SYNFLAG_NPC			= 10,			// °ïÅÉ±ê¼ÇNPC
-        _ROLE_PLAYER			= 11,			// ÆäËûÍæ¼Ò		(only use for client)
-        _ROLE_HERO				= 12,			// ×Ô¼º			(only use for client)
-        _ROLE_MONSTER			= 13,			// ¹ÖÎï			(only use for client)
-        _BOOTH_NPC				= 14,			// °ÚÌ¯NPC		(CBooth class)
-        _SYNTRANS_NPC			= 15,			// °ïÅÉ´«ËÍNPC, ¹Ì¶¨ÄÇ¸ö²»ÒªÓÃ´ËÀàÐÍ! (ÓÃÓÚ00:00ÊÕ·Ñ)(LINKIDÎª¹Ì¶¨NPCµÄID£¬ÓëÆäËüÊ¹ÓÃLINKIDµÄ»¥³â)
-        _ROLE_BOOTH_FLAG_NPC	= 16,			// Ì¯Î»±êÖ¾NPC	(only use for client)
-        _ROLE_MOUSE_NPC			= 17,			// Êó±êÉÏµÄNPC	(only use for client)
-        _ROLE_MAGICITEM			= 18,			// ÏÝÚå»ðÇ½		(only use for client)
-        _ROLE_DICE_NPC			= 19,			// ÷»×ÓNPC
-        _ROLE_SHELF_NPC			= 20,			// ÎïÆ·¼Ü
-        _WEAPONGOAL_NPC			= 21,			// ÎäÆ÷°Ð×ÓNPC
-        _MAGICGOAL_NPC			= 22,			// Ä§·¨°Ð×ÓNPC
-        _BOWGOAL_NPC			= 23,			// ¹­¼ý°Ð×ÓNPC
-        _ROLE_TARGET_NPC		= 24,			// °¤´ò£¬²»´¥·¢ÈÎÎñ	(only use for client)
-        _ROLE_FURNITURE_NPC		= 25,			// ¼Ò¾ßNPC	(only use for client)
-        _ROLE_CITY_GATE_NPC		= 26,			// ³ÇÃÅNPC	(only use for client)
-        _ROLE_NEIGHBOR_DOOR		= 27,			// ÁÚ¾ÓµÄÃÅ
-        _ROLE_CALL_PET			= 28,			// ÕÙ»½ÊÞ	(only use for client)
-        _EUDEMON_TRAINPLACE_NPC	= 29,			// »ÃÊÞÑ±ÑøËù
-         _AUCTION_NPC			= 30,			// ÅÄÂòNPC	ÎïÆ·ÁìÈ¡NPC  LW
-         _ROLE_MINE_NPC			= 31 			// ¿óÊ¯NPC
+        /** The NPC can forge items. */
+        TYPE_FORGE = 6, // only used by the client
+        /** The NPC can embed gems in items. */
+        TYPE_EMBED = 7
     };
 
+    /** The sort of the NPC. */
     enum Sort
     {
         SORT_NONE = 0,
@@ -101,7 +90,22 @@ public:
     virtual ~Npc();
 
 public:
+    /**
+     * Link a task to the NPC.
+     *
+     * @param[in]    aTask    the new task of the NPC.
+     */
     void linkTask(NpcTask* aTask) { ASSERT(aTask != nullptr); mTask = aTask; }
+
+    /**
+     * Try to active the NPC.
+     *
+     * @param[in]   aClient     the client requesting the activation
+     * @param[in]   aAction     the action
+     *
+     * @retval TRUE on success
+     * @returns FALSE otherwise
+     */
     bool activateNpc(Client& aClient, int32_t aAction);
 
     /** Send the entity spawn msg. */
@@ -111,26 +115,34 @@ public:
     virtual void timerElapsed(time_t aTime) { /* TODO */  }
 
 public:
+    /** Get the type of the NPC. */
     uint8_t getType() const { return mType; }
+    /** Get the base of the NPC. */
     uint8_t getBase() const { return mBase; }
+    /** Get the sort of the NPC. */
     uint8_t getSort() const { return mSort; }
 
 public:
+    /** Determine whether or not the NPC is a shop NPC. */
     bool isShopNpc() const { return mType == TYPE_SHOPKEEPER; }
-    // NpcShop* queryShop();
+    /** Get the shop linked to the NPC. */
+    const NpcShop& queryShop() const;
 
+    /** Determine whether or not the NPC is a task NPC. */
     bool isTaskNpc() const { return mType == TYPE_TASK || (mSort & SORT_TASK) != 0; }
+    /** Get the task linked to the NPC. */
     const NpcTask& queryTask() const { ASSERT(mTask != nullptr); return *mTask; }
 
+    /** Determine whether or not the NPC is a storage NPC. */
     bool isStorageNpc() const { return mType == TYPE_STORAGE; }
     // NpcStorage? queryStorage
 
 private:
-    uint8_t mType;
-    uint8_t mBase;
-    uint8_t mSort;
+    uint8_t mType; //!< the type of the NPC
+    uint8_t mBase; //!< the base of the NPC
+    uint8_t mSort; //!< the sort of the NPC
 
-    NpcTask* mTask;
+    NpcTask* mTask; //!< the task of the NPC
 };
 
 #endif // _COPS_V7_EMULATOR_NPC_H

@@ -154,9 +154,26 @@ public:
     /** Called when the timer elapse. */
     virtual void timerElapsed(time_t aTime) { /* TODO */  }
 
+public:
+    /** Get the minimum physical attack of the monster. */
+    virtual int32_t getMinAtk() const { return mInfo.MinAtk; }
+    /** Get the maximum physical attack of the monster. */
+    virtual int32_t getMaxAtk() const { return mInfo.MaxAtk; }
+    /** Get the physical defense of the monster. */
+    virtual int32_t getDefense() const { return mInfo.Defense; }
+    /** Get the magic attack of the monster. */
+    virtual int32_t getMAtk() const { return mInfo.MinAtk; }
+    /** Get the magic defense of the monster. */
+    virtual int32_t getMDef() const { return mInfo.MDef; }
+
+    /** Get the dexterity of the monster. */
+    virtual uint8_t getDext() const { return mInfo.Dexterity; }
+    /** Get the dodge of the monster. */
+    virtual uint8_t getDodge() const { return mInfo.Dodge; }
+
 private:
-    const Info& mInfo;
-    Generator* mOwner;
+    const Info& mInfo; //!< the shared information of the monster
+    Generator* mOwner; //!< the owner of the monster
 };
 
 #endif // _COPS_V7_EMULATOR_MONSTER_H
