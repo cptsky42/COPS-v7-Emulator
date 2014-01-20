@@ -52,12 +52,17 @@ interesting implementation.
   - Exposed accessors for the player informations
   - Exposed specialized functions (e.g. text(), link())
 
++ Generator module
+  - Based on TQ's one, using the official spawns will result in the same in-game spawns
+
 + Character creation
 + Character loading / saving
-+ Walking / Jumping
 + Direction / Emotion / Pk Mode
++ Walking / Jumping
 + Portals
 + Points allocation
++ Talking to NPCs [Incomplete]
++ Screen system [Incomplete]
 
 Documentation about the emulator can be generated with dOxygen.
 To generate the documentation, please in the root folder of the source,

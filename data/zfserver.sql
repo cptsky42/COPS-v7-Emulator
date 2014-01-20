@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost:3306
--- Généré le: Dim 05 Janvier 2014 à 23:00
+-- Généré le: Lun 20 Janvier 2014 à 14:18
 -- Version du serveur: 5.1.72
 -- Version de PHP: 5.3.28
 
@@ -10196,14 +10196,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `account_id` (`account_id`),
   KEY `index_account` (`account_id`) USING BTREE
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000004 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000005 ;
 
 --
 -- Contenu de la table `user`
 --
 
 INSERT INTO `user` (`account_id`, `id`, `name`, `mate`, `lookface`, `hair`, `money`, `money_saved`, `cps`, `level`, `exp`, `force`, `dexterity`, `health`, `soul`, `add_points`, `life`, `mana`, `profession`, `pk`, `virtue`, `nobility`, `metempsychosis`, `syndicate_id`, `record_map`, `record_x`, `record_y`, `last_login`) VALUES
-(1, 1000001, 'CptSky[PM]', 'None', 1011004, 310, 1000, 0, 0, 130, 1347234, 180, 45, 120, 0, 26, 150, 100, 15, 30, 0, 0, 2, 0000, 1002, 0440, 0442, 0);
+(1, 1000001, 'CptSky[PM]', 'None', 1011004, 310, 1000, 0, 0, 130, 1347234, 180, 45, 120, 0, 26, 150, 100, 15, 30, 0, 0, 2, 0000, 1002, 0445, 0446, 0),
+(2, 1000004, 'test', 'None', 0671003, 310, 1000, 0, 0, 1, 0, 2, 7, 1, 0, 0, 51, 0, 40, 0, 0, 0, 0, 0000, 1002, 0446, 0446, 20130101);
 
 -- --------------------------------------------------------
 
