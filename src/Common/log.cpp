@@ -21,10 +21,20 @@ Logger* Logger::sInstance = nullptr;
 Logger&
 Logger :: getInstance()
 {
-    // TODO? Thread-safe
+    static volatile long protect = 0;
+
     if (sInstance == nullptr)
     {
-        sInstance = new Logger();
+        if (1 == atomic_inc(&protect))
+        {
+            // create the instance
+            sInstance = new Logger();
+        }
+        else
+        {
+            while (sInstance == nullptr)
+                QThread::yieldCurrentThread();
+        }
     }
     return *sInstance;
 }
@@ -62,7 +72,7 @@ Logger :: willLog(LogLevel aLevel)
 {
     if (sInstance != nullptr)
     {
-        #ifdef DEBUG
+        #ifndef NDEBUG
         return aLevel >= LOG_LEVEL_DBG;
         #else
         return aLevel > LOG_LEVEL_DBG;

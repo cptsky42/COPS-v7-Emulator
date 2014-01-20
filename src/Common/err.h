@@ -131,7 +131,7 @@ const err_t ERROR_UNKNOWN = 0x7FFFFFFF;
  *****************************************************
  */
 
-#ifdef DEBUG
+#ifndef NDEBUG
 
 // Assert an expression and might abort
 #define ASSERT(exp)                          \

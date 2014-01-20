@@ -43,7 +43,7 @@ Client :: Client(NetworkClient* aSocket, ICipher::Algorithm aAlgorithm)
             {
                 static const char SEED[] = "DR654dt34trg4UI6";
                 static const size_t SEED_LEN = strlen(SEED);
-                static const uint8_t IV[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                static const uint8_t IV[Blowfish::BLOCK_SIZE] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
                 Blowfish* cipher = new Blowfish();
                 cipher->generateKey((const uint8_t*)SEED, SEED_LEN);
@@ -81,7 +81,6 @@ Client :: ~Client()
 void
 Client :: save()
 {
-    // TODO
     printf("Calling save for %p ... %s\n",
            this, mPlayer != nullptr ? mPlayer->getName() : "");
 
@@ -90,7 +89,7 @@ Client :: save()
 
     if (mPlayer != nullptr)
     {
-        Database& db = Database::getInstance();
+        static const Database& db = Database::getInstance(); // singleton
 
         do
         {
@@ -152,21 +151,23 @@ Client :: handleExchangeResponse(uint8_t** aBuf, size_t aLen)
     SAFE_DELETE_ARRAY(mDecryptIV);
 }
 
+/* TQ seal. */
+static const char SEAL[] = "TQServer";
+static const size_t SEAL_LEN = strlen(SEAL);
+
 void
 Client :: send(Msg* aMsg)
 {
     ASSERT(aMsg != nullptr);
 
-    // TODO move me
-    static const char SEAL[] = "TQServer";
-    static const size_t SEAL_LEN = strlen(SEAL);
+    const size_t len = aMsg->getLength() + SEAL_LEN;
+    uint8_t* data = new uint8_t[len];
 
-    uint8_t* data = new uint8_t[aMsg->getLength() + SEAL_LEN];
     memcpy(data, aMsg->getBuffer(), aMsg->getLength());
     memcpy(data + aMsg->getLength(), SEAL, SEAL_LEN);
 
-    mCipher->encrypt(data, aMsg->getLength() + SEAL_LEN);
-    mSocket->send(data, aMsg->getLength() + SEAL_LEN);
+    mCipher->encrypt(data, len);
+    mSocket->send(data, len);
 
     SAFE_DELETE_ARRAY(data);
 }
@@ -176,16 +177,14 @@ Client :: send(uint8_t* aBuf, size_t aLen)
 {
     ASSERT(aBuf != nullptr);
 
-    // TODO move me
-    static const char SEAL[] = "TQServer";
-    static const size_t SEAL_LEN = strlen(SEAL);
+    const size_t len = aLen + SEAL_LEN;
+    uint8_t* data = new uint8_t[len];
 
-    uint8_t* data = new uint8_t[aLen + SEAL_LEN];
     memcpy(data, aBuf, aLen);
     memcpy(data + aLen, SEAL, SEAL_LEN);
 
-    mCipher->encrypt(data, aLen + SEAL_LEN);
-    mSocket->send(data, aLen + SEAL_LEN);
+    mCipher->encrypt(data, len);
+    mSocket->send(data, len);
 
     SAFE_DELETE_ARRAY(data);
 }
@@ -193,6 +192,5 @@ Client :: send(uint8_t* aBuf, size_t aLen)
 void
 Client :: disconnect()
 {
-    // TODO
     mSocket->disconnect();
 }

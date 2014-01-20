@@ -53,7 +53,7 @@ MsgUserInfo :: create(const Player& aPlayer)
         mInfo->Look = aPlayer.getLook();
         mInfo->Hair = aPlayer.getHair();
         mInfo->Money = aPlayer.getMoney();
-        mInfo->ConquerPoints = 0; // TODO
+        mInfo->ConquerPoints = aPlayer.getCPs();
         mInfo->Exp = aPlayer.getExp();
         mInfo->Force = aPlayer.getForce();
         mInfo->Health = aPlayer.getHealth();
@@ -62,7 +62,7 @@ MsgUserInfo :: create(const Player& aPlayer)
         mInfo->AddPoints = aPlayer.getAddPoints();
         mInfo->CurHP = aPlayer.getCurHP();
         mInfo->CurMP = aPlayer.getCurMP();
-        mInfo->PkPoints = aPlayer.getPkPoints(); // ?
+        mInfo->PkPoints = aPlayer.getPkPoints();
         mInfo->Level = aPlayer.getLevel();
         mInfo->Profession = aPlayer.getProfession();
         mInfo->AutoAllot = 1; // not really used by the client...

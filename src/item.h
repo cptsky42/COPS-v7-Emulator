@@ -53,6 +53,44 @@ public:
         uint16_t AtkSpeed;
     };
 
+    /** Position of the SQL data in the result set. */
+    enum SqlData
+    {
+        SQLDATA_ID = 0,
+        SQLDATA_NAME,
+        SQLDATA_REQ_PROF,
+        SQLDATA_REQ_WEAPONSKILL,
+        SQLDATA_REQ_LEVEL,
+        SQLDATA_REQ_SEX,
+        SQLDATA_REQ_FORCE,
+        SQLDATA_REQ_SPEED,
+        SQLDATA_REQ_HEALTH,
+        SQLDATA_REQ_SOUL,
+        SQLDATA_MONOPOLY,
+        SQLDATA_WEIGHT,
+        SQLDATA_PRICE,
+        SQLDATA_TASK,
+        SQLDATA_MAX_ATK,
+        SQLDATA_MIN_ATK,
+        SQLDATA_DEFENSE,
+        SQLDATA_DEXTERITY,
+        SQLDATA_DODGE,
+        SQLDATA_LIFE,
+        SQLDATA_MANA,
+        SQLDATA_AMOUNT,
+        SQLDATA_AMOUNT_LIMIT,
+        SQLDATA_STATUS,
+        SQLDATA_GEM1,
+        SQLDATA_GEM2,
+        SQLDATA_MAGIC1,
+        SQLDATA_MAGIC2,
+        SQLDATA_MAGIC3,
+        SQLDATA_MAGIC_ATK,
+        SQLDATA_MAGIC_DEF,
+        SQLDATA_ATK_RANGE,
+        SQLDATA_ATK_SPEED
+    };
+
 public:
     Item(uint32_t aUID, Item::Info& aInfo);
     ~Item();

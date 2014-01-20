@@ -12,6 +12,7 @@
 #include "common.h"
 #include <time.h>
 #include <map>
+#include <QMutex>
 
 class Player;
 class Msg;
@@ -144,7 +145,7 @@ public:
     uint8_t getDirection() const { return mDirection; }
 
     /** Set the map UID of the entity. */
-    void setMapId(int32_t aMapId) { mMapId = aMapId; }
+    void setMapId(uint32_t aMapId) { mMapId = aMapId; }
     /** Set the position on the map of the entity. */
     void setPosition(uint16_t aPosX, uint16_t aPosY) { mPosX = aPosX; mPosY = aPosY; }
     /** Set the cardinal direction of the entity. */
@@ -165,7 +166,8 @@ protected:
     uint16_t mPosY; //!< Entity Y coord.
     uint8_t mDirection; //!< Entity cardinal direction
 
-    mutable std::map<uint32_t, const Entity*> mViewSet;
+    mutable std::map<uint32_t, const Entity*> mViewSet; //!< set including all entities on screen
+    mutable QMutex mViewSetMutex; //!< mutex for accessing the view set
 };
 
 #endif // _COPS_V7_EMULATOR_ENTITY_H

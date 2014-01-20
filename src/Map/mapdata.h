@@ -12,6 +12,7 @@
 #include "common.h"
 #include "mapbase.h"
 #include <vector>
+#include <set>
 
 class BinaryReader;
 
@@ -20,6 +21,9 @@ class BinaryReader;
  */
 class MapData
 {
+    // !!! class has pointer data members !!!
+    PROHIBIT_COPY(MapData);
+
 public:
     /**
      * Load a DMap as a MapData object containing cells and passages.
@@ -43,7 +47,7 @@ public:
      * @retval ERROR_SUCCESS on success
      * @returns An error code otherwise
      */
-    err_t pack();
+    err_t pack(void* aCaller = nullptr);
 
     /**
      * Decompress the map data in memory.
@@ -51,7 +55,7 @@ public:
      * @retval ERROR_SUCCESS on success
      * @returns An error code otherwise
      */
-    err_t unpack();
+    err_t unpack(void* aCaller = nullptr);
 
 public:
     /** Get the width of the map. */
@@ -121,6 +125,7 @@ private:
     Cell* mCells; //!< all the cells of the map
     std::vector<Passage*> mPassages; //!< all the passages of the map
 
+    std::set<void*> mRefs; //!< the pointers of active map using the data
     uint8_t* mPckData; //!< the packed data of the map (cells)
     size_t mPckLen; //!< the size of the packed data
 };

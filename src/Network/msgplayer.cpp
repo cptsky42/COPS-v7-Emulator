@@ -60,12 +60,17 @@ MsgPlayer :: create(const Player& aPlayer)
         mInfo->Status = 0; // TODO: Implement me
         mInfo->SynId_Rank = 0; // TODO: (aPlayer.getSynRank() << MASK_RANK_SHIFT) | (aPlayer.getSynId() & MASK_SYNID);
 
-        /*
-        mInfo->WeaponRType = 0; // TODO: Implement me
-        mInfo->WeaponLType = 0; // TODO: Implement me
-        mInfo->MountType = 0; // TODO: Implement me
-        mInfo->MantleType = 0; // TODO: Implement me
-        */
+        // TODO: Implement me
+        mInfo->GarmentType = 0;
+        mInfo->HeadType = 0;
+        mInfo->ArmorType = 0;
+        mInfo->WeaponRType = 0;
+        mInfo->WeaponLType = 0;
+
+        memset(mInfo->Padding1, 0, sizeof(mInfo->Padding1));
+
+        mInfo->Life = 0;
+        mInfo->Level = 0;
 
         mInfo->PosX = aPlayer.getPosX();
         mInfo->PosY = aPlayer.getPosY();
@@ -74,6 +79,18 @@ MsgPlayer :: create(const Player& aPlayer)
 
         mInfo->Direction = aPlayer.getDirection();
         mInfo->Pose = aPlayer.getPose();
+
+        mInfo->Metempsychosis = aPlayer.getMetempsychosis();
+        mInfo->PlayerLevel = aPlayer.getLevel();
+
+        memset(mInfo->Padding2, 0, sizeof(mInfo->Padding2));
+        mInfo->NobilityRank = 0; // TODO implement me
+        mInfo->NobilityUID = aPlayer.getUID();
+        mInfo->NobilityPos = 0; // TODO implement me
+        memset(mInfo->Padding3, 0, sizeof(mInfo->Padding3));
+        mInfo->HelmetColor = 0; // TODO implement me
+        mInfo->ArmorColor = 0; // TODO implement me
+        memset(mInfo->Padding4, 0, sizeof(mInfo->Padding4));
 
         StringPacker packer(mInfo->Buf);
         packer.addString(aPlayer.getName());
@@ -102,12 +119,13 @@ MsgPlayer :: create(const Monster& aMonster)
         mInfo->Status = 0; // TODO: Implement me
         mInfo->OwnerUID = 0; // TODO: Pet
 
-        /* TODO
+        mInfo->GarmentType = 0;
+        mInfo->HeadType = 0;
+        mInfo->ArmorType = 0;
         mInfo->WeaponRType = 0;
         mInfo->WeaponLType = 0;
-        mInfo->MountType = 0;
-        mInfo->MantleType = 0;
-        */
+
+        memset(mInfo->Padding1, 0, sizeof(mInfo->Padding1));
 
         mInfo->Life = aMonster.getCurHP();
         mInfo->Level = aMonster.getLevel();
@@ -119,6 +137,18 @@ MsgPlayer :: create(const Monster& aMonster)
 
         mInfo->Direction = aMonster.getDirection();
         mInfo->Pose = aMonster.getPose();
+
+        mInfo->Metempsychosis = 0;
+        mInfo->PlayerLevel = 0;
+
+        memset(mInfo->Padding2, 0, sizeof(mInfo->Padding2));
+        mInfo->NobilityRank = 0;
+        mInfo->NobilityUID = 0;
+        mInfo->NobilityPos = 0;
+        memset(mInfo->Padding3, 0, sizeof(mInfo->Padding3));
+        mInfo->HelmetColor = 0;
+        mInfo->ArmorColor = 0;
+        memset(mInfo->Padding4, 0, sizeof(mInfo->Padding4));
 
         StringPacker packer(mInfo->Buf);
         packer.addString(aMonster.getName());
@@ -152,7 +182,17 @@ MsgPlayer :: swap(uint8_t* aBuf) const
     info->PosX = bswap16(info->PosX);
     info->PosY = bswap16(info->PosY);
     info->Hair = bswap16(info->Hair);
-    info->Pose = bswap16(info->Pose);
+
+    info->Metempsychosis = bswap16(info->Metempsychosis);
+    info->PlayerLevel = bswap16(info->PlayerLevel);
+
+    info->NobilityRank = bswap32(info->NobilityRank);
+    info->NobilityUID = bswap32(info->NobilityUID);
+    info->NobilityPos = bswap32(info->NobilityPos);
+
+    info->HelmetColor = bswap16(info->HelmetColor);
+    info->ArmorColor = bswap16(info->ArmorColor);
+
     if (Entity::isPlayer(uid))
     {
         info->SynId_Rank = bswap32(info->SynId_Rank);

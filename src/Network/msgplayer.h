@@ -68,11 +68,11 @@ public:
         /** Left hand weapon Id. */
         int32_t WeaponLType;
 
-        int32_t Padding1;
+        int8_t Padding1[4];
 
         /** Current life of the monster. */
         uint16_t Life;
-        /** Level of the monstre. */
+        /** Level of the monster. */
         uint16_t Level;
 
         /** The X coord of the entity. */
@@ -82,18 +82,25 @@ public:
         /** The hair of the player. */
         uint16_t Hair;
         /** The cardinal direction of the entity. */
-        int8_t Direction;
+        uint8_t Direction;
         /**  The pose of the entity. */
-        uint16_t Pose;
+        uint8_t Pose;
+        /** The metempsychosis of the player. */
+        uint16_t Metempsychosis;
+        /** The level of the player */
+        uint16_t PlayerLevel;
 
-        // TODO names ?
-        uint8_t Metempsychosis;
-        uint16_t Padding2;
-        uint8_t Nobility;
+        // TODO names
+        int8_t Padding2[4];
+
         uint32_t NobilityRank;
-        uint16_t Padding3;
-        uint8_t HeadColor;
-        uint8_t ArmorColor;
+        uint32_t NobilityUID; // entity UID
+        uint32_t NobilityPos;
+
+        int8_t Padding3[4];
+        uint16_t HelmetColor;
+        uint16_t ArmorColor;
+        uint8_t Padding4[2];
 
         /** The name of the entity */
         uint8_t Buf[1];

@@ -20,6 +20,9 @@ class Msg;
 class Player;
 class NpcTask;
 
+/**
+ * Assossiated client to a NetworkClient.
+ */
 class Client
 {
     friend class Database; // the database can manipulate the data
@@ -28,6 +31,7 @@ class Client
     PROHIBIT_COPY(Client);
 
 public:
+    /** The status of the client. */
     enum Status
     {
         /** The client is still not authenticated */

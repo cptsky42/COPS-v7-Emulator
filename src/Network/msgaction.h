@@ -90,19 +90,6 @@ public:
         ACTION_OPEN_DIALOG = 126 // to client only, open a dialog, dwData is id of dialog
     };
 
-    /** List of all PK modes. */
-    enum PkMode
-    {
-        /** Can attack any player and monster. */
-        PKMODE_FREE = 0,
-        /** Can only attack monsters. */
-        PKMODE_SAFE = 1,
-        /** Can attack any monster and enemies. */
-        PKMODE_TEAM = 2,
-        /** Can attack any monster and PKers. */
-        PKMODE_ARRESTMENT = 3
-    };
-
 public:
     #pragma pack(push, 1)
     typedef struct

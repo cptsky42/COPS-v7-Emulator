@@ -32,6 +32,7 @@ Player :: Player(Client& aClient, uint32_t aUID)
     mHair = 0;
 
     mMoney = 0;
+    mCPs = 0;
 
     mProfession = 0;
     mLevel = 0;
@@ -70,7 +71,11 @@ Player :: Player(Client& aClient, uint32_t aUID)
 
 Player :: ~Player()
 {
+    static const MapManager& mgr = MapManager::getInstance();
+    GameMap* map = mgr.getMap(mMapId);
 
+    if (map != nullptr)
+        map->leaveRoom(*this);
 }
 
 /// TODO real...
@@ -373,7 +378,7 @@ Player :: enterMap()
 void
 Player :: leaveMap()
 {
-    const MapManager& mgr = MapManager::getInstance();
+    static const MapManager& mgr = MapManager::getInstance();
     GameMap* map = mgr.getMap(mMapId);
 
     if (map != nullptr)
@@ -388,7 +393,7 @@ Player :: leaveMap()
 bool
 Player :: move(uint32_t aMapId, uint16_t aX, uint16_t aY)
 {
-    const MapManager& mgr = MapManager::getInstance();
+    static const MapManager& mgr = MapManager::getInstance();
     GameMap* map = mgr.getMap(aMapId);
 
     if (map != nullptr)
@@ -424,7 +429,7 @@ Player :: move(uint32_t aMapId, uint16_t aX, uint16_t aY)
 bool
 Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
 {
-    const MapManager& mgr = MapManager::getInstance();
+    static const MapManager& mgr = MapManager::getInstance();
     GameMap* map = mgr.getMap(mMapId);
 
     if (map != nullptr)
@@ -432,7 +437,16 @@ Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
         if (!map->isValidPoint(aX, aY) || !map->isStandEnable(aX, aY))
         {
             sendSysMsg(STR_INVALID_COORDINATE);
-            //kickBack(); // TODO
+            kickBack();
+            return false;
+        }
+
+        // the maximum elevation difference (between the character's initial
+        // position and the check tile's position) is 210
+        if (map->getFloorAlt(aX, aY) - map->getFloorAlt(mPosX, mPosY) > 210)
+        {
+            // TODO ? Jail with wall jump hack ?
+            kickBack();
             return false;
         }
 
@@ -457,6 +471,15 @@ Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
     }
 
     return true;
+}
+
+void
+Player :: kickBack()
+{
+    move(mPrevX, mPrevY, mDirection);
+
+    MsgAction msg(this, mMapId, MsgAction::ACTION_FLY_MAP);
+    broadcastRoomMsg(&msg, true);
 }
 
 void

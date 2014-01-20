@@ -38,9 +38,9 @@ MsgAccount :: process(Client* aClient)
 {
     ASSERT(aClient != nullptr);
 
-    Client& client = *aClient;
-    Database& db = Database::getInstance();
+    static const Database& db = Database::getInstance(); // singleton
 
+    Client& client = *aClient;
     client.setAccount(mInfo->Account);
 
     uint8_t seed[RC5::KEY_SIZE] =

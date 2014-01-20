@@ -32,9 +32,9 @@ public:
         /** The hair of the player */
         uint16_t Hair;
         /** The money of the player */
-        int32_t Money;
+        uint32_t Money;
         /** The Conquer Points of the player */
-        int32_t ConquerPoints;
+        uint32_t ConquerPoints;
         /** The experience of the player */
         uint64_t Exp;
         /** Unknown bytes (padding ?) */

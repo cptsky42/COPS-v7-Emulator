@@ -22,23 +22,68 @@ class Player : public AdvancedEntity
     PROHIBIT_COPY(Player); // constant UID, should be unique...
 
 public:
-    static const uint16_t LOOK_HUMAN_MALE       = 1;
-    static const uint16_t LOOK_HUMAN_FEMALE     = 2;
-    static const uint16_t LOOK_ELF_MALE         = 3;
-    static const uint16_t LOOK_ELF_FEMALE       = 4;
-    static const uint16_t LOOK_DARKELF_MALE     = 5;
-    static const uint16_t LOOK_DARKELF_FEMALE   = 6;
+    static const uint8_t SEX_MALE               = 1;
+    static const uint8_t SEX_FEMALE             = 2;
 
-    static const uint16_t FACE_INTERN   = 1;
-    static const uint16_t FACE_NORMAL   = 101;
-    static const uint16_t FACE_VETERAN  = 201;
+    static const uint16_t LOOK_SMALL_MALE       = 1003;
+    static const uint16_t LOOK_BIG_MALE         = 1004;
+    static const uint16_t LOOK_SMALL_FEMALE     = 2001;
+    static const uint16_t LOOK_BIG_FEMALE       = 2002;
 
-    static const uint16_t HAIR_FIRST     = 101;
-    static const uint16_t HAIR_LAST      = 101; // 107 (XY)
+    static const uint16_t FACE_MALE     = 67;
+    static const uint16_t FACE_FEMALE   = 201;
+
+    static const uint16_t HAIR_DEFAULT   = 310;
 
     static const uint8_t PROFESSION_MAGE    = 10;
     static const uint8_t PROFESSION_WARRIOR = 20;
     static const uint8_t PROFESSION_ARCHER  = 30;
+
+    /** List of all PK modes. */
+    enum PkMode
+    {
+        /** Can attack any player and monster. */
+        PKMODE_FREE = 0,
+        /** Can only attack monsters. */
+        PKMODE_SAFE = 1,
+        /** Can attack any monster and enemies. */
+        PKMODE_TEAM = 2,
+        /** Can attack any monster and PKers. */
+        PKMODE_ARRESTMENT = 3
+    };
+
+    /** Position of the SQL data in the result set. */
+    enum SqlData
+    {
+        SQLDATA_ACCOUNT_ID = 0,
+        SQLDATA_ID,
+        SQLDATA_NAME,
+        SQLDATA_MATE,
+        SQLDATA_LOOKFACE,
+        SQLDATA_HAIR,
+        SQLDATA_MONEY,
+        SQLDATA_MONEY_SAVED,
+        SQLDATA_CONQUER_POINTS,
+        SQLDATA_LEVEL,
+        SQLDATA_EXP,
+        SQLDATA_FORCE,
+        SQLDATA_DEXTERITY,
+        SQLDATA_HEALTH,
+        SQLDATA_SOUL,
+        SQLDATA_ADD_POINTS,
+        SQLDATA_LIFE,
+        SQLDATA_MANA,
+        SQLDATA_PROFESSION,
+        SQLDATA_PK_POINTS,
+        SQLDATA_VIRTUE,
+        SQLDATA_NOBILITY,
+        SQLDATA_METEMPSYCHOSIS,
+        SQLDATA_SYNDICATE_ID,
+        SQLDATA_RECORD_MAP,
+        SQLDATA_RECORD_X,
+        SQLDATA_RECORD_Y,
+        SQLDATA_LAST_LOGIN
+    };
 
 public:
     Player(Client& aClient, uint32_t aUID);
@@ -50,6 +95,7 @@ public:
 
     bool move(uint32_t aMapId, uint16_t aX, uint16_t aY);
     bool move(uint16_t aX, uint16_t aY, uint8_t aDir);
+    void kickBack();
 
     /** Send the entity spawn msg. */
     virtual void sendShow(const Player& aPlayer) const;
@@ -79,7 +125,7 @@ public:
     /** Get the metempsychosis (reborn) of the player. */
     uint8_t getMetempsychosis() const { return mMetempsychosis; }
     /** Get the experience points of the player. */
-    int32_t getExp() const { return mExp; }
+    uint64_t getExp() const { return mExp; }
 
     /** Get the force of the player. */
     uint16_t getForce() const { return mForce; }
@@ -98,7 +144,9 @@ public:
     uint16_t getMaxMP() const { return mMaxMP; }
 
     /** Get the money of the player. */
-    int32_t getMoney() const { return mMoney; }
+    uint32_t getMoney() const { return mMoney; }
+    /** Get the CPs of the player. */
+    uint32_t getCPs() const { return mCPs; }
     /** Get the Pk points of the player. */
     int16_t getPkPoints() const { return mPkPoints; }
     /** Get the virtue points of the player. */
@@ -115,6 +163,12 @@ public:
     uint16_t getPrevX() const { return mPrevX; }
     /** Get the previous Y position of the player. */
     uint16_t getPrevY() const { return mPrevY; }
+
+    /** Get the PK mode of the player. */
+    PkMode getPkMode() const { return mPkMode; }
+
+    /** Set the PK mode of the player. */
+    void setPkMode(PkMode aPkMode) { mPkMode = aPkMode; }
 
 public:
     int32_t getMinAtk();
@@ -145,7 +199,7 @@ private:
 
     uint8_t mProfession;
     uint8_t mMetempsychosis;
-    uint32_t mExp;
+    uint64_t mExp;
 
     uint16_t mForce;
     uint16_t mDexterity;
@@ -156,7 +210,8 @@ private:
     uint16_t mCurMP;
     uint16_t mMaxMP;
 
-    int32_t mMoney;
+    uint32_t mMoney;
+    uint32_t mCPs;
     int16_t mPkPoints;
     int32_t mVirtue;
 
@@ -168,6 +223,7 @@ private:
     uint16_t mPrevX;
     uint16_t mPrevY;
 
+    PkMode mPkMode;
 
     // MsgTick protection
     uint32_t mMsgCount;

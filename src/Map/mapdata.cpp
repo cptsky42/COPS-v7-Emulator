@@ -372,11 +372,17 @@ MapData :: loadLayerData(BinaryReader& aReader)
 }
 
 err_t
-MapData :: pack()
+MapData :: pack(void* aCaller)
 {
     err_t err = ERROR_SUCCESS;
 
-    if (mPckData == nullptr)
+    // TODO must fix the issue with the itinial spawning...
+    return err;
+
+    if (aCaller != nullptr)
+        mRefs.erase(aCaller);
+
+    if (mPckData == nullptr && mRefs.size() == 0)
     {
         ASSERT(mCells != nullptr);
 
@@ -423,11 +429,17 @@ MapData :: pack()
 }
 
 err_t
-MapData :: unpack()
+MapData :: unpack(void* aCaller)
 {
     err_t err = ERROR_SUCCESS;
 
-    if (mPckData != nullptr)
+    // TODO must fix the issue with the itinial spawning...
+    return err;
+
+    if (aCaller != nullptr)
+        mRefs.insert(aCaller);
+
+    if (mPckData != nullptr && mRefs.size() != 0)
     {
         ASSERT(mCells == nullptr);
 

@@ -7,51 +7,19 @@
  */
 
 #include "world.h"
+#include "database.h"
 #include "player.h"
 #include "npc.h"
 #include "npctask.h"
+#include "generator.h"
 #include <QThread>
+#include <QtConcurrentRun>
 
 using namespace std;
 
-class Worker : public QThread
-{
-public:
-    Worker() : mTerminate(false) { }
-    virtual ~Worker() { }
-
-public slots:
-    virtual void terminate()
-    {
-        mTerminate = true;
-        QThread::terminate();
-    }
-
-private:
-    virtual void run()
-    {
-        World& world = World::getInstance();
-
-        // TODO: with all entities... maps, items, magics
-//        while (!mTerminate)
-//        {
-//            for (map<uint32_t, Player*>::const_iterator
-//                    it = world.AllPlayers.begin(), end = world.AllPlayers.end();
-//                 !mTerminate && it != end; ++it)
-//            {
-//                Player* player = it->second;
-//                player->timerElapsed(0); // TODO pass time ?
-
-//                yieldCurrentThread();
-//            }
-
-//            usleep(250);
-//        }
-    }
-
-private:
-    bool mTerminate;
-};
+///////////////////////////////////////////////////////////////
+////// World
+///////////////////////////////////////////////////////////////
 
 /* static */
 World* World::sInstance = nullptr;
@@ -60,27 +28,43 @@ World* World::sInstance = nullptr;
 World&
 World :: getInstance()
 {
-    // TODO? Thread-safe
+    static volatile long protect = 0;
+
     if (sInstance == nullptr)
     {
-        sInstance = new World();
+        if (1 == atomic_inc(&protect))
+        {
+            // create the instance
+            sInstance = new World();
+        }
+        else
+        {
+            while (sInstance == nullptr)
+                QThread::yieldCurrentThread();
+        }
     }
     return *sInstance;
 }
 
 World :: World()
-    : AllPlayers(mAllPlayers), AllPlayerNames(mAllPlayerNames),
-      AllNPCs(mAllNPCs), AllTasks(mAllTasks)
+    : mLastMonsterUID(Entity::MONSTERID_FIRST - 1),
+      mStopping(false)
 {
-    mWorker = new Worker();
-    mWorker->start(QThread::LowPriority);
+    mWorkers.push_back(QtConcurrent::run(&World::regenerateMonsters));
+    mWorkers.push_back(QtConcurrent::run(&World::processPlayers));
 }
 
 World :: ~World()
 {
-    mWorker->terminate();
-    mWorker->wait(10000); // wait 10s...
-    SAFE_DELETE(mWorker);
+    mStopping = true;
+    for (vector< QFuture<void> >::iterator
+            it = mWorkers.begin(), end = mWorkers.end();
+         it != end; ++it)
+    {
+        QFuture<void>& future = *it;
+        future.waitForFinished();
+    }
+    mWorkers.clear();
 
     // clients will free the players...
     mAllPlayers.clear();
@@ -103,6 +87,15 @@ World :: ~World()
         SAFE_DELETE(task);
     }
     mAllTasks.clear();
+
+    for (vector<Generator*>::iterator
+            it = mAllGenerators.begin(), end = mAllGenerators.end();
+         it != end; ++it)
+    {
+        Generator* generator = *it;
+        SAFE_DELETE(generator);
+    }
+    mAllGenerators.clear();
 }
 
 bool
@@ -114,15 +107,16 @@ World :: addPlayer(Player& aPlayer)
 
     string name = aPlayer.getName();
 
-    // TODO thread-safe
-    if (AllPlayers.end() == AllPlayers.find(aPlayer.getUID()) &&
-        AllPlayerNames.end() == AllPlayerNames.find(name))
+    mPlayerMutex.lock();
+    if (mAllPlayers.end() == mAllPlayers.find(aPlayer.getUID()) &&
+        mAllPlayerNames.end() == mAllPlayerNames.find(name))
     {
-        AllPlayers[aPlayer.getUID()] = &aPlayer;
-        AllPlayerNames[name] = &aPlayer;
+        mAllPlayers[aPlayer.getUID()] = &aPlayer;
+        mAllPlayerNames[name] = &aPlayer;
 
         success = true;
     }
+    mPlayerMutex.unlock();
 
     return success;
 }
@@ -136,20 +130,23 @@ World :: removePlayer(Player& aPlayer)
 
     string name = aPlayer.getName();
 
-    // TODO thread-safe
-    map<uint32_t, Player*>::iterator first_it =
-            AllPlayers.find(aPlayer.getUID());
-    map<string, Player*>::iterator second_it =
-            AllPlayerNames.find(name);
+    mPlayerMutex.lock();
 
-    if (AllPlayers.end() != first_it &&
-        AllPlayerNames.end() != second_it)
+    map<uint32_t, Player*>::iterator first_it =
+            mAllPlayers.find(aPlayer.getUID());
+    map<string, Player*>::iterator second_it =
+            mAllPlayerNames.find(name);
+
+    if (mAllPlayers.end() != first_it &&
+        mAllPlayerNames.end() != second_it)
     {
-        AllPlayers.erase(first_it);
-        AllPlayerNames.erase(second_it);
+        mAllPlayers.erase(first_it);
+        mAllPlayerNames.erase(second_it);
 
         success = true;
     }
+
+    mPlayerMutex.unlock();
 
     return success;
 }
@@ -188,16 +185,16 @@ World :: queryPlayer(Player** aOutPlayer, uint32_t aUID) const
     ASSERT_ERR(aOutPlayer != nullptr && *aOutPlayer == nullptr, false);
     ASSERT_ERR(Entity::isPlayer(aUID), false);
 
-    // TODO: Thread-safe ?
-
     bool found = false;
     map<uint32_t, Player*>::const_iterator it;
 
+    mPlayerMutex.lock();
     if ((it = mAllPlayers.find(aUID)) != mAllPlayers.end())
     {
         *aOutPlayer = it->second;
         found = true;
     }
+    mPlayerMutex.unlock();
 
     return found;
 }
@@ -216,16 +213,16 @@ World :: queryPlayer(Player** aOutPlayer, const std::string& aName) const
     ASSERT_ERR(aOutPlayer != nullptr && *aOutPlayer == nullptr, false);
     ASSERT_ERR(!aName.empty(), false);
 
-    // TODO: Thread-safe ?
-
     bool found = false;
     map<string, Player*>::const_iterator it;
 
+    mPlayerMutex.lock();
     if ((it = mAllPlayerNames.find(aName)) != mAllPlayerNames.end())
     {
         *aOutPlayer = it->second;
         found = true;
     }
+    mPlayerMutex.unlock();
 
     return found;
 }
@@ -248,4 +245,128 @@ World :: queryNpc(Npc** aOutNpc, uint32_t aUID) const
     }
 
     return found;
+}
+
+Monster*
+World :: generateMonster(uint32_t aId, Generator* aGenerator)
+{
+    static const Database& db = Database::getInstance(); // singleton
+
+    Monster* monster = nullptr;
+    const Monster::Info* info = nullptr;
+
+    if (IS_SUCCESS(db.getMonsterInfo(&info, aId)))
+    {
+        uint32_t uid = 0;
+
+        if (mLastMonsterUID < Entity::MONSTERID_LAST)
+        {
+            uid = ++mLastMonsterUID;
+        }
+        else if (!mRecycledMonsterUIDs.empty())
+        {
+            mUIDMutex.lock();
+
+            uid = mRecycledMonsterUIDs.front();
+            mRecycledMonsterUIDs.pop();
+
+            mUIDMutex.unlock();
+        }
+        else
+        {
+            LOG(ERROR, "Using all monster UIDs !");
+            fprintf(stderr, "Using all monster UIDs !\n");
+            abort();
+        }
+
+        monster = new Monster(uid, *info, aGenerator);
+    }
+
+    return monster;
+}
+
+void
+World :: recycleMonsterUID(uint32_t aUID)
+{
+    mUIDMutex.lock();
+
+    mRecycledMonsterUIDs.push(aUID);
+
+    mUIDMutex.unlock();
+}
+
+///////////////////////////////////////////////////////////////
+////// Workers
+///////////////////////////////////////////////////////////////
+
+/* static */
+void
+World :: regenerateMonsters()
+{
+    const int32_t MAXNPC_PER_ONTIMER = 20;
+
+    World& world = World::getInstance();
+    int32_t maxNpc = MAXNPC_PER_ONTIMER;
+    size_t index = 0;
+
+    LOG(INFO, "Worker %u starting for handling generators.",
+        QThread::currentThreadId());
+
+    index = 0;
+    while (!world.mStopping)
+    {
+        world.mGeneratorMutex.lock();
+
+        maxNpc = MAXNPC_PER_ONTIMER;
+        if (index >= world.mAllGenerators.size())
+            index = 0;
+
+        Generator* generator = nullptr;
+        for (size_t i = 0, count = world.mAllGenerators.size();
+             !world.mStopping && i < count; ++i)
+        {
+            generator = world.mAllGenerators[index];
+
+            maxNpc -= generator->generate(maxNpc);
+            if (maxNpc <= 0)
+                break;
+
+            ++index;
+            if (index >= world.mAllGenerators.size())
+                index = 0;
+
+            QThread::yieldCurrentThread();
+        }
+        world.mGeneratorMutex.unlock();
+
+        usleep(100000);
+    }
+}
+
+/* static */
+void
+World :: processPlayers()
+{
+    World& world = World::getInstance();
+
+    LOG(INFO, "Worker %u starting for processing players.",
+        QThread::currentThreadId());
+
+    while (!world.mStopping)
+    {
+        // TODO : limit the number of player to process
+        world.mPlayerMutex.lock();
+        for (map<uint32_t, Player*>::const_iterator
+             it = world.mAllPlayers.begin(), end = world.mAllPlayers.end();
+             !world.mStopping && it != end; ++it)
+        {
+            Player* player = it->second;
+            player->timerElapsed(0);
+
+            QThread::yieldCurrentThread();
+        }
+        world.mPlayerMutex.unlock();
+
+        usleep(100000);
+    }
 }

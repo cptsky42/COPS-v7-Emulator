@@ -76,9 +76,10 @@ MsgConnect :: process(Client* aClient)
 {
     ASSERT(aClient != nullptr);
 
+    static const Database& db = Database::getInstance(); // singleton
+
     Client& client = *aClient;
     Client::Status status = client.getStatus();
-    Database& db = Database::getInstance();
 
     // set the account UID
     client.setAccountID(mInfo->AccountUID);

@@ -15,6 +15,7 @@
 #include <math.h>
 #include <map>
 #include <algorithm>
+#include <QMutex>
 
 class Client;
 class Entity;
@@ -27,6 +28,10 @@ class Player;
 class GameMap
 {
     friend class MapManager;
+    friend class Generator; // generator must control the MapData...
+
+    // !!! class has a unique ID !!!
+    PROHIBIT_COPY(GameMap);
 
 public:
     /**
@@ -60,10 +65,12 @@ public:
         TYPE_FAMILY             = 0x0400,
         /** The map is a mine field. */
         TYPE_MINE_FIELD         = 0x0800,
-        // TODO
-        TYPE_PK_GAME            = 0x1000, // or CALLNEWBIE_DISABLE ?
-        TYPE_NEVER_WOUND        = 0x2000, // or REBORN_NOW_ENABLE ?
-        TYPE_DEAD_ISLAND        = 0x4000  // or NEWBIE_PROTECT ?
+        /** */
+        TYPE_CALLNEWBIE_DISABLE = 0x1000,
+        /** Reborn here is enabled. */
+        TYPE_REBORN_NOW_ENABLE  = 0x2000,
+        /** Newbie protection (e.g. TC). */
+        TYPE_NEWBIE_PROTECT     = 0x4000
     };
 
 public:
@@ -94,13 +101,18 @@ public:
 
 public:
     /** The unique ID of the prison map. */
-    static const uint32_t PRISON_MAP_UID = 10000; // TODO
+    static const uint32_t PRISON_MAP_UID = 6002;
     /** The unique ID of the newbie map. */
-    static const uint32_t NEWBIE_MAP_UID = 10001; // TODO
+    static const uint32_t NEWBIE_MAP_UID = 1010;
     /** The first valid unique ID for dynamic maps. */
     static const uint32_t DYNAMIC_MAP_UID = 1000000;
 
 public:
+    /**
+     * Get the distance between two points.
+     *
+     * @returns the distance between the two points
+     */
     static inline int distance(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
     { return std::max(abs((int)x1 - (int)x2), abs((int)y1 - (int)y2)); }
 
@@ -134,13 +146,9 @@ public:
     /** Get the map's light in ARGB code. */
     uint32_t getLight() const { return mInfo->Light; }
 
-    //	int		GetWidthOfBlock()				{ return (m_pMapData->GetMapWidth()-1) / CELLS_PER_BLOCK + 1; }
-    //	int		GetHeightOfBlock()				{ return (m_pMapData->GetMapHeight()-1) / CELLS_PER_BLOCK + 1; }
-
     //	OBJID	GetSynID()						{ if(GetOwnerType() == OWNER_SYN) return GetOwnerID(); return ID_NONE; }
     //	DWORD	GetStatus()						{ return m_nStatus; }
     //	DWORD	GetType()						{ return m_pData->GetInt(GAMEMAPDATA_TYPE); }
-    //	POINT	GetPortal()						{ POINT pos; pos.x=m_pData->GetInt(GAMEMAPDATA_PORTAL0_X); pos.y=m_pData->GetInt(GAMEMAPDATA_PORTAL0_Y); return pos;}
 
 public:
     /** Determine whether or not the cell is valid for laying an item. */
@@ -175,8 +183,6 @@ public:
     bool isWingDisabled() const { return (mInfo->Type & TYPE_WING_DISABLE) != 0; }
     /** Determine whether or not the map is a mine map. */
     bool isMineField() const { return (mInfo->Type & TYPE_MINE_FIELD) != 0; }
-    /** Determine whether or not the map is a game map. */
-    bool isPkGameMap() const { return (mInfo->Type & TYPE_PK_GAME) != 0; }
     /** Determine whether or not the map is a family map. */
     bool isFamilyMap() const { return (mInfo->Type & TYPE_FAMILY) != 0; }
     /** Determine whether or not booths are enabled. */
@@ -184,6 +190,9 @@ public:
     /** Determine whether or not the a war is active on the map. */
     bool isWarTime() const { return false; /* (getStatus() & STATUS_WAR) != 0 */ } // TODO
 
+public:
+    /** Determine whether a player is on the map or not. */
+    bool isActive() const { return mPlayerCount > 0; }
 
 public:
     void sendMapInfo(const Player& aPlayer) const;
@@ -216,6 +225,7 @@ private:
 
     std::map<uint32_t, Entity*> mEntities; //!< the entities on the map
     uint64_t mPlayerCount; //!< the number of players on the map
+    mutable QMutex mEntitiesMutex; //!< mutex to access the entities map
 };
 
 #endif // _COPS_V7_EMULATOR_GAMEMAP_H_

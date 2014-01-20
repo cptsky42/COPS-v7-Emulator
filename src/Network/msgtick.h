@@ -25,11 +25,13 @@ public:
     {
         /** Generic header of all msgs */
         Msg::Header Header;
-        /** The unique Id of the entity */
+        /** Unique Id of the entity */
         uint32_t UniqId;
-        /** The timestamp of the creation of the packet */
+        /** Timestamp of the creation of the packet */
         int32_t Timestamp;
-        /** The number of message  */
+        /** Random values. */
+        int32_t Junk[4];
+        /** Hash of the name  */
         uint32_t CheckData;
     }MsgInfo;
     #pragma pack(pop)

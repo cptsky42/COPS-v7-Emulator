@@ -99,7 +99,7 @@ MsgAction :: process(Client* aClient)
                 player.setPose((uint16_t)mInfo->Data);
                 if (AdvancedEntity::POSE_COOL == player.getPose())
                 {
-                    // TODO
+                    // TODO cool effect
                     // if (TickCount - LastCoolShow > 3000)
                     // if (isAllNonsuchEquip()) mInfo->Data |= (player.getProfession() * 0x00010000 + 0x01000000);
                     // else if (% 10 == 9) mInfo->Data |= (player.getProfession() * 0x010000);
@@ -130,14 +130,7 @@ MsgAction :: process(Client* aClient)
                     if (GameMap::distance(player.getPosX(), player.getPosY(), passageX, passageY) > 5)
                     {
                          // TODO crime, send to jail
-                         // Database.Jail(Player.Name);
-
-                         // Player.JailC++;
-                         // Player.Move(6001, 28, 75);
-
-                         // Program.Log("[CRIME] " + Player.Name + " has been sent to jail for using a portal hack!");
-                         // World.BroadcastMsg(MsgTalk.Create("SYSTEM", "ALLUSERS", Player.Name + " has been sent to jail!", MsgTalk.Channel.GM, 0xFFFFFF));
-                         // return;
+                         return;
                     }
 
                     uint32_t mapId = 0;
@@ -151,10 +144,7 @@ MsgAction :: process(Client* aClient)
                     }
                     else
                     {
-                        player.move(player.getPrevX(), player.getPrevY(), player.getDirection());
-
-                        MsgAction msg(&player, player.getMapId(), MsgAction::ACTION_FLY_MAP);
-                        player.broadcastRoomMsg(&msg, true);
+                        player.kickBack();
                     }
                 }
                 else
@@ -216,34 +206,43 @@ MsgAction :: process(Client* aClient)
             }
         case ACTION_SET_PKMODE:
             {
-                const char* msg = nullptr;
-                switch ((PkMode)mInfo->Data)
+                if (player.getUID() != mInfo->UniqId)
                 {
-                    case PKMODE_FREE:
+                    client.disconnect();
+                    return;
+                }
+
+                const char* msg = nullptr;
+                switch ((Player::PkMode)mInfo->Data)
+                {
+                    case Player::PKMODE_FREE:
                         {
                             msg = STR_FREE_PK_MODE;
                             break;
                         }
-                    case PKMODE_SAFE:
+                    case Player::PKMODE_SAFE:
                         {
                             msg = STR_SAFE_PK_MODE;
                             break;
                         }
-                    case PKMODE_TEAM:
+                    case Player::PKMODE_TEAM:
                         {
                             msg = STR_TEAM_PK_MODE;
                             break;
                         }
-                    case PKMODE_ARRESTMENT:
+                    case Player::PKMODE_ARRESTMENT:
                         {
                             msg = STR_ARRESTMENT_PK_MODE;
                             break;
                         }
                     default:
-                        break; // TODO: Invalid mode
+                        {
+                            client.disconnect();
+                            return;
+                        }
                 }
 
-                //role.pkmode = data;
+                player.setPkMode((Player::PkMode)mInfo->Data);
                 //role. isinbattle = false
 
                 client.send(this);
@@ -264,12 +263,49 @@ MsgAction :: process(Client* aClient)
             }
         case ACTION_JUMP:
             {
-                uint16_t newX = (uint16_t)mInfo->Data;
-                uint16_t newY = (uint16_t)(mInfo->Data >> 16);
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
 
-                player.sendSysMsg("Jump to (%u, %u)", newX, newY);
+                static const MapManager& mgr = MapManager::getInstance(); // singleton
+                const GameMap* map = mgr.getMap(player.getMapId());
 
-                // TODO
+                if (player.getPosX() != mInfo->PosX || player.getPosY() != mInfo->PosY)
+                {
+                    player.kickBack();
+                    return;
+                }
+
+                // TODO implement isAlive()
+//                if (!Player.IsAlive())
+//                {
+//                    Player.SendSysMsg(Client.GetStr("STR_DIE"));
+//                    Player.KickBack();
+//                    return;
+//                }
+
+                if (map != nullptr)
+                {
+                    uint16_t newX = (uint16_t)mInfo->Data;
+                    uint16_t newY = (uint16_t)(mInfo->Data >> 16);
+                    uint8_t dir = (uint8_t)mInfo->Direction;
+
+                    // if requested with a big range, it's a hack, else we consider that it's a lag...
+                    if (GameMap::distance(player.getPosX(), player.getPosY(), newX, newY) > 17)
+                    {
+                         // TODO crime, send to jail
+                         return;
+                    }
+
+                    player.send(this); // send back
+                    if (player.move(newX, newY, dir))
+                    {
+                        // broadcast the message to everyone
+                        player.broadcastRoomMsg(this, false);
+                    }
+                }
 
                 break;
             }

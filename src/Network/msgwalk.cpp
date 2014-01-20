@@ -94,7 +94,7 @@ MsgWalk :: process(Client* aClient)
         }
     }
 
-    // TODO: Implement
+    // TODO implement isAlive()
     //if (!Player.IsAlive() && !Player.IsGhost())
     //{
     //    Player.SendSysMsg(Client.GetStr("STR_DIE"));

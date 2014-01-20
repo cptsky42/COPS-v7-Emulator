@@ -56,7 +56,7 @@ public:
         _ROLE_CALL_PET			= 28,			// ÕÙ»½ÊÞ	(only use for client)
         _EUDEMON_TRAINPLACE_NPC	= 29,			// »ÃÊÞÑ±ÑøËù
          _AUCTION_NPC			= 30,			// ÅÄÂòNPC	ÎïÆ·ÁìÈ¡NPC  LW
-         _ROLE_MINE_NPC			= 31,			// ¿óÊ¯NPC
+         _ROLE_MINE_NPC			= 31 			// ¿óÊ¯NPC
     };
 
     enum Sort
@@ -74,10 +74,26 @@ public:
         SORT_USELINKID = SORT_LINKMAP | SORT_DIEACTION | SORT_EVENT
     };
 
+    /** Position of the SQL data in the result set. */
+    enum SqlData
+    {
+        SQLDATA_ID = 0,
+        SQLDATA_NAME,
+        SQLDATA_TYPE,
+        SQLDATA_LOOKFACE,
+        SQLDATA_MAPID,
+        SQLDATA_CELLX,
+        SQLDATA_CELLY,
+        SQLDATA_LIFE,
+        SQLDATA_MAX_LIFE,
+        SQLDATA_BASE,
+        SQLDATA_SORT
+    };
+
 public:
     /* constructor */
     Npc(uint32_t aUID, const char* aName,
-        uint8_t aType, int16_t aLook,
+        uint8_t aType, uint16_t aLook,
         uint32_t aMapId, uint16_t aPosX, uint16_t aPosY,
         uint8_t aBase, uint8_t aSort);
 

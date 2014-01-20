@@ -12,11 +12,17 @@
 #include "common.h"
 #include "env.h"
 #include <map>
+#include <set>
+#include <queue>
+#include <vector>
+#include <QMutex>
+#include <QFuture>
 
 class Entity;
 class AdvancedEntity;
 class Player;
 class Monster;
+class Generator;
 class Npc;
 class NpcTask;
 class Worker;
@@ -115,28 +121,42 @@ public:
      */
     bool queryNpc(Npc** aOutNpc, uint32_t aUID) const;
 
+    /** Generate a monster with the next available UID. */
+    Monster* generateMonster(uint32_t aId, Generator* aGenerator = nullptr);
+
+    /** Recycle a monster UID. */
+    void recycleMonsterUID(uint32_t aUID);
+
 private:
     /* constructor */
     World();
 
+    /* worker handling generators */
+    static void regenerateMonsters();
+
+    /* worker processing palyers */
+    static void processPlayers();
+
 private:
     static World* sInstance; //!< static instance of the singleton
-
-private: // aliases
-    std::map<uint32_t, Player*>& AllPlayers;
-    std::map<std::string, Player*>& AllPlayerNames;
-
-    std::map<uint32_t, Npc*>& AllNPCs;
-    std::map<uint32_t, NpcTask*>& AllTasks;
 
 private:
     std::map<uint32_t, Player*> mAllPlayers; //!< internal map
     std::map<std::string, Player*> mAllPlayerNames; //!< internal map
+    mutable QMutex mPlayerMutex; //!< mutex to access the players
 
     std::map<uint32_t, Npc*> mAllNPCs; //!< internal map
     std::map<uint32_t, NpcTask*> mAllTasks; //!< internal map
 
-    Worker* mWorker; //!< separate thread for timer
+    std::vector<Generator*> mAllGenerators; //!< interval vector
+    mutable QMutex mGeneratorMutex; //!< mutex to access the generators
+
+    uint32_t mLastMonsterUID; //!< latest used monster's UID
+    std::queue<uint32_t> mRecycledMonsterUIDs; //!< queue with all monster's UIDs to recycle
+    mutable QMutex mUIDMutex; //!< mutex to access the recycled UIDs
+
+    std::vector< QFuture<void> > mWorkers; //!< all workers
+    bool mStopping; //!< if the workers must stop
 };
 
 #endif // _COPS_V7_EMULATOR_WORLD_H_

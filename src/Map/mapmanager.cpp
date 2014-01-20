@@ -25,10 +25,20 @@ MapManager* MapManager::sInstance = nullptr;
 MapManager&
 MapManager :: getInstance()
 {
-    // TODO? Thread-safe
+    static volatile long protect = 0;
+
     if (sInstance == nullptr)
     {
-        sInstance = new MapManager();
+        if (1 == atomic_inc(&protect))
+        {
+            // create the instance
+            sInstance = new MapManager();
+        }
+        else
+        {
+            while (sInstance == nullptr)
+                QThread::yieldCurrentThread();
+        }
     }
     return *sInstance;
 }

@@ -28,6 +28,7 @@ UI_DIR = tmp
 SOURCES += \
     src/basefunc.cpp \
     src/client.cpp \
+    src/generator.cpp \
     src/inifile.cpp \
     src/item.cpp \
     src/program.cpp \
@@ -53,7 +54,10 @@ SOURCES += \
     src/Network/msgaction.cpp \
     src/Network/msgallot.cpp \
     src/Network/msgconnect.cpp \
+    src/Network/msgconnectex.cpp \
+    src/Network/msgdate.cpp \
     src/Network/msgdialog.cpp \
+    src/Network/msgitem.cpp \
     src/Network/msgiteminfo.cpp \
     src/Network/msgloginchallenges.cpp \
     src/Network/msgloginproofa.cpp \
@@ -109,18 +113,17 @@ SOURCES += \
     src/third_party/lua-5.2.2/src/lbaselib.c \
     src/third_party/lua-5.2.2/src/lauxlib.c \
     src/third_party/lua-5.2.2/src/lapi.c \
-    src/third_party/minilzo-2.06/minilzo.c \
-    src/Network/msgconnectex.cpp \
-    src/Network/msgdate.cpp \
-    src/Network/msgitem.cpp
+    src/third_party/minilzo-2.06/minilzo.c
 
 HEADERS += \
     src/basefunc.h \
     src/client.h \
+    src/generator.h \
     src/inifile.h \
     src/item.h \
     src/server.h \
     src/strres.h \
+    src/timer.h \
     src/world.h \
     src/Common/arch.h \
     src/Common/common.h \
@@ -149,8 +152,11 @@ HEADERS += \
     src/Network/msgaction.h \
     src/Network/msgallot.h \
     src/Network/msgconnect.h \
+    src/Network/msgconnectex.h \
+    src/Network/msgdate.h \
     src/Network/msgdialog.h \
     src/Network/msgiteminfo.h \
+    src/Network/msgitem.h \
     src/Network/msgloginchallenges.h \
     src/Network/msgloginproofa.h \
     src/Network/msgmapinfo.h \
@@ -201,10 +207,7 @@ HEADERS += \
     src/third_party/lua-5.2.2/src/lapi.h \
     src/third_party/minilzo-2.06/minilzo.h \
     src/third_party/minilzo-2.06/lzodefs.h \
-    src/third_party/minilzo-2.06/lzoconf.h \
-    src/Network/msgconnectex.h \
-    src/Network/msgdate.h \
-    src/Network/msgitem.h
+    src/third_party/minilzo-2.06/lzoconf.h
 
 INCLUDEPATH += \
     src \
@@ -222,7 +225,9 @@ INCLUDEPATH += \
     src/third_party/minilzo-2.06
 
 OTHER_FILES += \
-    data/settings.cfg
+    data/settings.cfg \
+    LICENSE \
+    README
 
 # WIN32 stuff
 win32 {

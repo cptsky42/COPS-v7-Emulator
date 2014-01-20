@@ -40,10 +40,25 @@ MsgTick :: create(const Player& aPlayer)
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_TICK;
 
-    // Official servers use the UID, without XORing... The client doesn't care...
-    mInfo->UniqId = (aPlayer.getUID() ^ UINT16_C(0x9864));
+    mInfo->UniqId = aPlayer.getUID();
     mInfo->Timestamp = 0;
+    memset(mInfo->Junk, 0, sizeof(mInfo->Junk));
     mInfo->CheckData = 0;
+}
+
+static uint32_t checksum(const char* aName)
+{
+    if (aName == nullptr || aName[0] == '\0' || strlen(aName) < 4)
+        return UINT32_C(0x9D4B5703);
+    else
+    {
+        uint16_t val = ((uint16_t*)aName)[0];
+        #if BYTE_ORDER == BIG_ENDIAN
+        val = bswap16(val);
+        #endif // BYTE_ORDER == BIG_ENDIAN
+
+        return val ^ UINT16_C(0x9823);
+    }
 }
 
 void
@@ -55,11 +70,9 @@ MsgTick :: process(Client* aClient)
     Client& client = *aClient;
     Player& player = *aClient->getPlayer();
 
-    uint32_t uid = mInfo->UniqId ^ UINT16_C(0x9864);
-    int32_t time = mInfo->Timestamp ^ (mInfo->UniqId * mInfo->UniqId + 9527);
-
-    // getMsgCount() will XOR the count... EoF directly use the value instead of the function
-    uint32_t msgCount = mInfo->CheckData;// ^ player.getUID();
+    uint32_t uid = mInfo->UniqId;
+    int32_t time = mInfo->Timestamp ^ mInfo->UniqId;
+    uint32_t checkData = mInfo->CheckData;
 
     if (uid != player.getUID())
     {
@@ -67,7 +80,13 @@ MsgTick :: process(Client* aClient)
         return;
     }
 
-    player.processTick(time, msgCount);
+    if (checkData != checksum(player.getName()))
+    {
+        client.disconnect();
+        return;
+    }
+
+    player.processTick(time, 1);
 }
 
 void

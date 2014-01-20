@@ -95,6 +95,9 @@ private:
      */
     class State : public Environment::Global
     {
+        // !!! class is a singleton !!!
+        PROHIBIT_COPY(State);
+
     public:
         /**
          * Get the Lua VM singleton. If the object does not exist yet,

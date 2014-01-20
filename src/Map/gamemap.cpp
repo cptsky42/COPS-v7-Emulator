@@ -45,12 +45,16 @@ GameMap :: sendMapInfo(const Player& aPlayer) const
 {
     ASSERT(&aPlayer != nullptr);
 
+    mEntitiesMutex.lock();
+
     // the player must be on the map...
     if (mEntities.end() != mEntities.find(aPlayer.getUID()))
     {
         MsgMapInfo msg(*this);
         aPlayer.send(&msg);
     }
+
+    mEntitiesMutex.unlock();
 }
 
 void
@@ -58,10 +62,11 @@ GameMap :: sendBlockInfo(const Player& aPlayer) const
 {
     ASSERT(&aPlayer != nullptr);
 
+    mEntitiesMutex.lock();
+
     // the player must be on the map...
     if (mEntities.end() != mEntities.find(aPlayer.getUID()))
     {
-        // TODO: thread-safe
         for (map<uint32_t, Entity*>::const_iterator
                 it = mEntities.begin(), end = mEntities.end();
              it != end; ++it)
@@ -79,6 +84,8 @@ GameMap :: sendBlockInfo(const Player& aPlayer) const
             }
         }
     }
+
+    mEntitiesMutex.unlock();
 }
 
 void
@@ -86,11 +93,12 @@ GameMap :: updateBroadcastSet(const Entity& aEntity) const
 {
     ASSERT(&aEntity != nullptr);
 
+    mEntitiesMutex.lock();
+
     // the entity must be on the map...
     if (mEntities.end() != mEntities.find(aEntity.getUID()))
     {
         // TODO: items
-        // TODO: thread-safe
         for (map<uint32_t, Entity*>::const_iterator
                 it = mEntities.begin(), end = mEntities.end();
              it != end; ++it)
@@ -115,13 +123,14 @@ GameMap :: updateBroadcastSet(const Entity& aEntity) const
             }
         }
     }
+
+    mEntitiesMutex.unlock();
 }
 
 void
 GameMap :: enterRoom(Entity& aEntity)
 {
-    // TODO
-    // TODO: thread-safe
+    mEntitiesMutex.lock();
 
     map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
     if (mEntities.end() == it)
@@ -130,19 +139,20 @@ GameMap :: enterRoom(Entity& aEntity)
         if (aEntity.isPlayer())
         {
             if (mPlayerCount == 0)
-                mData.unpack();
+                mData.unpack(this);
             ++mPlayerCount;
         }
 
         mEntities[aEntity.getUID()] = &aEntity;
     }
+
+    mEntitiesMutex.unlock();
 }
 
 void
 GameMap :: leaveRoom(Entity& aEntity)
 {
-    // TODO
-    // TODO: thread-safe
+    mEntitiesMutex.lock();
 
     map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
     if (mEntities.end() != it)
@@ -154,7 +164,9 @@ GameMap :: leaveRoom(Entity& aEntity)
         {
             --mPlayerCount;
             if (mPlayerCount == 0)
-                mData.pack();
+                mData.pack(this);
         }
     }
+
+    mEntitiesMutex.unlock();
 }

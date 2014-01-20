@@ -129,11 +129,14 @@ MsgDialog :: process(Client* aClient)
     StringPacker packer(mInfo->Buf);
     packer.getString(text, sizeof(text), 0);
 
+    fprintf(stderr, "MsgDialog(action=%u, idx=%u, data=%u, str='%s'\n",
+            mInfo->Action, mInfo->IdxTask, mInfo->Data, text);
+
     switch (mInfo->Action)
     {
     case ACTION_ANSWER:
         {
-        //player.processTask(info->IdxTask, text);
+            //player.processTask(info->IdxTask, text);
             break;
         }
     case ACTION_TASKID:

@@ -29,20 +29,26 @@
 using namespace std;
 
 /* static */
-const uint16_t Server::ACCSERVER_PORT = 9958;
-const uint16_t Server::MSGSERVER_PORT = 5816;
-
-/* static */
 Server* Server::sInstance = nullptr;
 
 /* static */
 Server&
 Server :: getInstance()
 {
-    // TODO? Thread-safe
+    static volatile long protect = 0;
+
     if (sInstance == nullptr)
     {
-        sInstance = new Server();
+        if (1 == atomic_inc(&protect))
+        {
+            // create the instance
+            sInstance = new Server();
+        }
+        else
+        {
+            while (sInstance == nullptr)
+                QThread::yieldCurrentThread();
+        }
     }
     return *sInstance;
 }
@@ -58,7 +64,7 @@ Server :: Server()
     IniFile settings;
     DOIF(err, settings.open("./settings.cfg"));
 
-    string name = settings.readString("COPS_EMULATOR/NAME", "COPS"); // TODO it
+    mServerName = settings.readString("COPS_EMULATOR/NAME", "COPS"); // TODO it
     mServerIP = settings.readString("COPS_EMULATOR/SERVER_IP", "127.0.0.1");
 
     string sql_host = settings.readString("COPS_EMULATOR/SQL_HOST", "localhost");
@@ -67,10 +73,11 @@ Server :: Server()
     string sql_pwd = settings.readString("COPS_EMULATOR/SQL_PWD", "");
 
     // try to connect to the database...
-    Database& db = Database::getInstance();
+    Database& db = const_cast<Database&>(Database::getInstance());
     if (!db.connect(sql_host.c_str(), sql_db.c_str(),
                     sql_user.c_str(), sql_pwd.c_str()))
     {
+        fprintf(stderr, "Failed to connect to the database...\n");
         LOG(ERROR, "Failed to connect to the database...");
         err = ERROR_INVALID_PASSWORD;
     }
@@ -88,22 +95,25 @@ Server :: Server()
     DOIF(err, db.loadAllMaps());
     DOIF(err, db.loadAllItems());
     DOIF(err, db.loadAllNPCs());
+    DOIF(err, db.loadAllTasks());
+    DOIF(err, db.loadAllMonsters());
+    DOIF(err, db.loadAllGenerators());
 
     fprintf(stdout, "\n");
 
-    mAccServer.listen(ACCSERVER_PORT);
+    mAccServer.listen(Server::ACCSERVER_PORT);
     mAccServer.onConnect = &Server::connectionHandler;
     mAccServer.onReceive = &Server::receiveHandler;
     mAccServer.onDisconnect = &Server::disconnectionHandler;
     mAccServer.accept();
-    fprintf(stdout, "AccServer listening on port %u...\n", ACCSERVER_PORT);
+    fprintf(stdout, "AccServer listening on port %u...\n", Server::ACCSERVER_PORT);
 
-    mMsgServer.listen(MSGSERVER_PORT);
+    mMsgServer.listen(Server::MSGSERVER_PORT);
     mMsgServer.onConnect = &Server::connectionHandler;
     mMsgServer.onReceive = &Server::receiveHandler;
     mMsgServer.onDisconnect = &Server::disconnectionHandler;
     mMsgServer.accept();
-    fprintf(stdout, "MsgServer listening on port %u...\n", MSGSERVER_PORT);
+    fprintf(stdout, "MsgServer listening on port %u...\n", Server::MSGSERVER_PORT);
 
     fprintf(stdout, "Waiting for connections...\n");
 
@@ -127,14 +137,14 @@ Server :: connectionHandler(NetworkClient* aClient)
         Client* client = nullptr;
         switch (port)
         {
-            case ACCSERVER_PORT:
+            case Server::ACCSERVER_PORT:
                 {
                     client = new Client(aClient, ICipher::TQ_CIPHER);
                     client->setStatus(Client::NOT_AUTHENTICATED);
 
                     break;
                 }
-            case MSGSERVER_PORT:
+            case Server::MSGSERVER_PORT:
                 {
                     client = new Client(aClient, ICipher::BLOWFISH);
                     client->setStatus(Client::KEY_EXCHANGE);
@@ -215,10 +225,11 @@ Server :: receiveHandler(NetworkClient* aClient, uint8_t* aBuf, size_t aLen)
                         size = ((Msg::Header*)(received + i))->Length;
                         #endif
 
-                        if (size == 20820) // TQ seal...
+                        if (size == 20820) // HACK! TQ to uint16_t...
                         {
-                            // FIXME: HACK ! Should be changed...
-                            size = 8;
+                            static const size_t SEAL_LEN = strlen("TQClient");
+                            size = SEAL_LEN;
+
                             continue;
                         }
 

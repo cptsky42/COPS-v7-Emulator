@@ -143,8 +143,16 @@ inline unsigned int timeGetTime()
 {
     struct timeval now;
     gettimeofday(&now, nullptr);
-    return now.tv_usec / 1000;
+    return (now.tv_sec * 1000) + (now.tv_usec / 1000);
 }
+#endif
+
+#if defined(__GNUC__)
+#define atomic_inc(ptr) (__sync_fetch_and_add((ptr), 1) + 1)
+#elif defined (_WIN32)
+#define atomic_inc(ptr) InterlockedIncrement((ptr))
+#else
+#error "Need some more porting work for atomic_inc."
 #endif
 
 
