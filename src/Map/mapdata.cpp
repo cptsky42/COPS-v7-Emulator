@@ -314,7 +314,7 @@ MapData :: loadLayerData(BinaryReader& aReader)
                                 if (posX < UINT16_MAX && posX < UINT16_MAX)
                                 {
                                     Cell& cell = mCells[pos2idx((uint16_t)posX, (uint16_t)posY)];
-                                    cell.Accessible = mask != FALSE;
+                                    cell.Accessible = mask != false;
                                     cell.Altitude = altitude;
                                 }
                                 else
@@ -396,7 +396,7 @@ MapData :: pack(void* aCaller)
             {
                 const Cell& cell = mCells[pos2idx(x, y)];
 
-                *(ptr++) = cell.Accessible ? TRUE : FALSE;
+                *(ptr++) = cell.Accessible ? true : false;
                 *(ptr++) = cell.Altitude & INT16_C(0xFF);
                 *(ptr++) = (cell.Altitude >> 8) & INT16_C(0xFF);
             }
@@ -457,7 +457,7 @@ MapData :: unpack(void* aCaller)
             for (uint16_t x = 0; ERROR_SUCCESS == err && x < mWidth; ++x)
             {
                 Cell& cell = mCells[pos2idx(x, y)];
-                cell.Accessible = *(ptr++) != FALSE;
+                cell.Accessible = *(ptr++) != false;
                 cell.Altitude = (int16_t)((*(ptr++) << 8) | *(ptr++));
             }
         }

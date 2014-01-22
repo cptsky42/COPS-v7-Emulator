@@ -16,8 +16,19 @@ QT_VERSION = $$split(QT_VERSION, ".")
 QT_VER_MAJ = $$member(QT_VERSION, 0)
 QT_VER_MIN = $$member(QT_VERSION, 1)
 
-lessThan(QT_VER_MAJ, 4) | lessThan(QT_VER_MIN, 7) {
-   error(Faith Emulator requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+if(lessThan(QT_VER_MAJ, 4)) {
+   error(COPS v7 Emulator requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+}
+
+if(equals(QT_VER_MAJ, 4)) {
+   if(lessThan(QT_VER_MIN, 7)) {
+      error(COPS v7 Emulator requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+   }
+}
+
+# Qt5 and onwards are more modular... Must link extra libraries...
+if(greaterThan(QT_VER_MAJ, 4)) {
+    QT += concurrent
 }
 
 OBJECTS_DIR = tmp
