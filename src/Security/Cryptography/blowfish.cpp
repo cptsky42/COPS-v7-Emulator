@@ -10,6 +10,7 @@
 
 #include "blowfish.h"
 #include <string.h>
+#include <stdio.h>
 
 // Blowfish P-Array
 const uint32_t Blowfish::P[Blowfish::ROUNDS + 2] = {

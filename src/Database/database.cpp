@@ -337,7 +337,7 @@ Database :: savePlayer(Client& aClient) const
     query.bindValue(":cps", player.getCPs());
 
     query.bindValue(":level", player.getLevel());
-    query.bindValue(":exp", player.getExp());
+    query.bindValue(":exp", (qulonglong)player.getExp());
     query.bindValue(":metempsychosis", player.getMetempsychosis());
 
     query.bindValue(":force", player.getForce());

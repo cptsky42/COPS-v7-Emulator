@@ -12,6 +12,8 @@
 #include "common.h"
 #include <string>
 
+class Monster;
+
 class Item
 {
 public:
@@ -92,12 +94,32 @@ public:
     };
 
 public:
-    Item(uint32_t aUID, Item::Info& aInfo);
+    static bool createItem(Item** aOutItem, uint32_t aValue, Monster& aMonster, uint8_t aQuality = 0);
+
+public:
+    Item(uint32_t aUID, const Item::Info& aInfo);
     ~Item();
 
 private:
     const uint32_t mUID;
-    Item::Info& mInfo;
+    const Item::Info& mInfo;
+
+    uint16_t mAmount;
+    uint16_t mAmountLimit;
+    uint8_t mIdent;
+    // uint8_t mPosition;
+
+    uint8_t mGem1;
+    uint8_t mGem2;
+    uint8_t mMagic1; // Attr
+    uint8_t mMagic2; // ???
+    uint8_t mMagic3; // Plus
+    uint8_t mBless;
+    uint8_t mEnchant;
+    uint32_t mRestrain;
+    bool mLocked;
+    bool mSuspicious;
+    //uint32_t Color;
 };
 
 #endif // _COPS_V7_EMULATOR_ITEM_H_

@@ -171,6 +171,22 @@ public:
     /** Get the dodge of the monster. */
     virtual uint8_t getDodge() const { return mInfo.Dodge; }
 
+public:
+    /** Get the armet dropped by the monster. */
+    uint8_t getDropArmet() { return mInfo.DropArmet; }
+    /** Get the necklace dropped by the monster. */
+    uint8_t getDropNecklace() { return mInfo.DropNecklace; }
+    /** Get the armor dropped by the monster. */
+    uint8_t getDropArmor() { return mInfo.DropArmor; }
+    /** Get the ring dropped by the monster. */
+    uint8_t getDropRing() { return mInfo.DropRing; }
+    /** Get the weapon dropped by the monster. */
+    uint8_t getDropWeapon() { return mInfo.DropWeapon; }
+    /** Get the shield dropped by the monster. */
+    uint8_t getDropShield() { return mInfo.DropShield; }
+    /** Get the shoes dropped by the monster. */
+    uint8_t getDropShoes() { return mInfo.DropShoes; }
+
 private:
     const Info& mInfo; //!< the shared information of the monster
     Generator* mOwner; //!< the owner of the monster
