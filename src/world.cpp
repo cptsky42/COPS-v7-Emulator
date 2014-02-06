@@ -8,6 +8,7 @@
 
 #include "world.h"
 #include "database.h"
+#include "mapmanager.h"
 #include "player.h"
 #include "npc.h"
 #include "npctask.h"
@@ -47,10 +48,10 @@ World :: getInstance()
 }
 
 World :: World()
-    : mLastMonsterUID(Entity::MONSTERID_FIRST - 1),
+    : mGenWorkerRunning(false),
+      mLastMonsterUID(Entity::MONSTERID_FIRST - 1),
       mStopping(false)
 {
-    mWorkers.push_back(QtConcurrent::run(&World::regenerateMonsters));
     mWorkers.push_back(QtConcurrent::run(&World::processPlayers));
 }
 
@@ -299,6 +300,15 @@ World :: recycleMonsterUID(uint32_t aUID)
 ////// Workers
 ///////////////////////////////////////////////////////////////
 
+void
+World :: startMonstersRegeneration()
+{
+    ASSERT(!mGenWorkerRunning);
+
+    mGenWorkerRunning = true;
+    mWorkers.push_back(QtConcurrent::run(&World::regenerateMonsters));
+}
+
 /* static */
 void
 World :: regenerateMonsters()
@@ -306,11 +316,16 @@ World :: regenerateMonsters()
     const int32_t MAXNPC_PER_ONTIMER = 20;
 
     World& world = World::getInstance();
+    MapManager& mgr = MapManager::getInstance();
     int32_t maxNpc = MAXNPC_PER_ONTIMER;
     size_t index = 0;
+    bool initializing = true;
 
     LOG(INFO, "Worker %u starting for handling generators.",
         QThread::currentThreadId());
+
+    // unpack all data for initial spawning !!!
+    mgr.unpackAll();
 
     index = 0;
     while (!world.mStopping)
@@ -339,7 +354,17 @@ World :: regenerateMonsters()
         }
         world.mGeneratorMutex.unlock();
 
-        usleep(100000);
+        if (initializing &&
+            MAXNPC_PER_ONTIMER == maxNpc) // SQL done and finished the initial spawning
+        {
+            initializing = false;
+            mgr.packAll(); // done intial spawning... repack everything
+
+            LOG(INFO, "Initial spawning of monsters completed...");
+            fprintf(stdout, "Initial spawning of monsters completed...\n");
+        }
+
+        mssleep(100);
     }
 }
 
@@ -367,6 +392,6 @@ World :: processPlayers()
         }
         world.mPlayerMutex.unlock();
 
-        usleep(100000);
+        mssleep(100);
     }
 }

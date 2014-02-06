@@ -64,6 +64,7 @@ SOURCES += \
     src/Network/msgaccount.cpp \
     src/Network/msgaction.cpp \
     src/Network/msgallot.cpp \
+    src/Network/msgconnect.cpp \
     src/Network/msgconnectex.cpp \
     src/Network/msgdate.cpp \
     src/Network/msgdialog.cpp \
@@ -161,6 +162,7 @@ HEADERS += \
     src/Network/msgaccount.h \
     src/Network/msgaction.h \
     src/Network/msgallot.h \
+    src/Network/msgconnect.h \
     src/Network/msgconnectex.h \
     src/Network/msgdate.h \
     src/Network/msgdialog.h \

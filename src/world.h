@@ -131,6 +131,9 @@ private:
     /* constructor */
     World();
 
+    /* start the worker handling generators */
+    void startMonstersRegeneration();
+
     /* worker handling generators */
     static void regenerateMonsters();
 
@@ -150,6 +153,7 @@ private:
 
     std::vector<Generator*> mAllGenerators; //!< interval vector
     mutable QMutex mGeneratorMutex; //!< mutex to access the generators
+    bool mGenWorkerRunning;
 
     uint32_t mLastMonsterUID; //!< latest used monster's UID
     std::queue<uint32_t> mRecycledMonsterUIDs; //!< queue with all monster's UIDs to recycle

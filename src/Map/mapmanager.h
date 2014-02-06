@@ -23,6 +23,8 @@ class MapData;
  */
 class MapManager : public Environment::Global
 {
+    friend class World; // World must handle DMap packing for initial spawning...
+
     // !!! class is a singleton !!!
     PROHIBIT_COPY(MapManager);
 
@@ -84,6 +86,12 @@ private:
     /* constructor */
     MapManager();
 
+    /** MUST NOT BE USED ! Pack all the data and resume the automatic packing. */
+    void packAll();
+    /** MUST NOT BE USED ! Unpack all the data and suspend the automatic packing. */
+    void unpackAll();
+
+private:
     /**
      * Concurrent load of data maps.
      *

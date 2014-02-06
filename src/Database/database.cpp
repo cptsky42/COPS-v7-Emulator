@@ -937,6 +937,7 @@ Database :: loadAllGenerators()
 
             SAFE_DELETE(generator);
         }
+        world.startMonstersRegeneration();
 
         if (IS_SUCCESS(err))
         {

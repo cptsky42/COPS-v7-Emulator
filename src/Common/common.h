@@ -155,5 +155,10 @@ inline unsigned int timeGetTime()
 #error "Need some more porting work for atomic_inc."
 #endif
 
+#ifndef _WIN32
+#define mssleep(ms) usleep(ms * 1000)
+#else
+#define mssleep(ms) Sleep(ms)
+#endif // _WIN32
 
 #endif // _COPS_V7_EMULATOR_COMMON_H_

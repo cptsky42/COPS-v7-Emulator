@@ -46,6 +46,9 @@ Msg :: create(Msg** aOutMsg, uint8_t** aBuf, size_t aLen)
         case MSG_ACCOUNT:
             msg = new MsgAccount(aBuf, aLen);
             break;
+        case MSG_CONNECT:
+            msg = new MsgConnect(aBuf, aLen);
+            break;
         case MSG_NPC:
             msg = new MsgNpc(aBuf, aLen);
             break;

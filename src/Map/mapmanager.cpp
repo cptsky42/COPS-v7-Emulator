@@ -296,3 +296,37 @@ MapManager :: getMap(uint32_t aUID) const
 
     return gameMap;
 }
+
+void
+MapManager :: packAll()
+{
+    mDataMutex.lock();
+
+    for (map<string, MapData*>::iterator
+            it = mData.begin(), end = mData.end();
+         it != end; ++it)
+    {
+        MapData* map = it->second;
+        map->resumePacking();
+        map->pack(nullptr);
+    }
+
+    mDataMutex.unlock();
+}
+
+void
+MapManager :: unpackAll()
+{
+    mDataMutex.lock();
+
+    for (map<string, MapData*>::iterator
+            it = mData.begin(), end = mData.end();
+         it != end; ++it)
+    {
+        MapData* map = it->second;
+        map->unpack(nullptr);
+        map->suspendPacking();
+    }
+
+    mDataMutex.unlock();
+}

@@ -128,7 +128,7 @@ MsgDialog :: process(Client* aClient)
     StringPacker packer(mInfo->Buf);
     packer.getString(text, sizeof(text), 0);
 
-    fprintf(stderr, "MsgDialog(action=%u, idx=%u, data=%u, str='%s'\n",
+    fprintf(stderr, "MsgDialog(action=%u, idx=%u, data=%u, str='%s')\n",
             mInfo->Action, mInfo->IdxTask, mInfo->Data, text);
 
     switch (mInfo->Action)

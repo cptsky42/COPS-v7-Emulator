@@ -54,7 +54,7 @@ MapData :: load(MapData** aOutData, const char* aPath)
 
 MapData :: MapData()
     : mWidth(0), mHeight(0), mCells(nullptr),
-      mPckData(nullptr), mPckLen(0)
+      mIsPacking(true), mPckData(nullptr), mPckLen(0)
 {
 
 }
@@ -376,13 +376,12 @@ MapData :: pack(void* aCaller)
 {
     err_t err = ERROR_SUCCESS;
 
-    // TODO must fix the issue with the itinial spawning...
-    return err;
+    mPckMutex.lock();
 
     if (aCaller != nullptr)
         mRefs.erase(aCaller);
 
-    if (mPckData == nullptr && mRefs.size() == 0)
+    if (mIsPacking && mPckData == nullptr && mRefs.size() == 0)
     {
         ASSERT(mCells != nullptr);
 
@@ -425,6 +424,7 @@ MapData :: pack(void* aCaller)
         }
     }
 
+    mPckMutex.unlock();
     return err;
 }
 
@@ -433,13 +433,12 @@ MapData :: unpack(void* aCaller)
 {
     err_t err = ERROR_SUCCESS;
 
-    // TODO must fix the issue with the itinial spawning...
-    return err;
+    mPckMutex.lock();
 
     if (aCaller != nullptr)
         mRefs.insert(aCaller);
 
-    if (mPckData != nullptr && mRefs.size() != 0)
+    if (mIsPacking && mPckData != nullptr)
     {
         ASSERT(mCells == nullptr);
 
@@ -474,6 +473,7 @@ MapData :: unpack(void* aCaller)
         }
     }
 
+    mPckMutex.unlock();
     return err;
 }
 
