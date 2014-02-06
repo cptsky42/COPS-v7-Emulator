@@ -9,13 +9,6 @@
 
 #include "lua.h"
 
-
-/*
-** WARNING: the functions defined here do not necessarily correspond
-** to the similar functions in the standard C ctype.h. They are
-** optimized for the specific needs of Lua
-*/
-
 #if !defined(LUA_USE_CTYPE)
 
 #if 'A' == 65 && '0' == 48

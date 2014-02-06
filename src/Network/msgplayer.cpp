@@ -50,12 +50,12 @@ MsgPlayer :: create(const Player& aPlayer)
         mInfo->Status = 0; // TODO: Implement me
         mInfo->SynId_Rank = 0; // TODO: (aPlayer.getSynRank() << MASK_RANK_SHIFT) | (aPlayer.getSynId() & MASK_SYNID);
 
-        // TODO: Implement me
-        mInfo->GarmentType = 0;
-        mInfo->HeadType = 0;
-        mInfo->ArmorType = 0;
-        mInfo->WeaponRType = 0;
-        mInfo->WeaponLType = 0;
+        Item* equip = nullptr;
+        mInfo->GarmentType = (equip = aPlayer.getEquipByPos(Item::POS_GARMENT)) != nullptr ? equip->getType() : 0;
+        mInfo->ArmetType = (equip = aPlayer.getEquipByPos(Item::POS_ARMET)) != nullptr ? equip->getType() : 0;
+        mInfo->ArmorType = (equip = aPlayer.getEquipByPos(Item::POS_ARMOR)) != nullptr ? equip->getType() : 0;
+        mInfo->WeaponRType = (equip = aPlayer.getEquipByPos(Item::POS_RWEAPON)) != nullptr ? equip->getType() : 0;
+        mInfo->WeaponLType = (equip = aPlayer.getEquipByPos(Item::POS_LWEAPON)) != nullptr ? equip->getType() : 0;
 
         memset(mInfo->Padding1, 0, sizeof(mInfo->Padding1));
 
@@ -74,12 +74,16 @@ MsgPlayer :: create(const Player& aPlayer)
         mInfo->PlayerLevel = aPlayer.getLevel();
 
         memset(mInfo->Padding2, 0, sizeof(mInfo->Padding2));
+
         mInfo->NobilityRank = 0; // TODO implement me
         mInfo->NobilityUID = aPlayer.getUID();
         mInfo->NobilityPos = 0; // TODO implement me
+
         memset(mInfo->Padding3, 0, sizeof(mInfo->Padding3));
-        mInfo->HelmetColor = 0; // TODO implement me
-        mInfo->ArmorColor = 0; // TODO implement me
+
+        mInfo->ArmetColor = (equip = aPlayer.getEquipByPos(Item::POS_ARMET)) != nullptr ? equip->getColor() : 0;
+        mInfo->ArmorColor = (equip = aPlayer.getEquipByPos(Item::POS_ARMOR)) != nullptr ? equip->getColor() : 0;
+
         memset(mInfo->Padding4, 0, sizeof(mInfo->Padding4));
 
         StringPacker packer(mInfo->Buf);
@@ -110,7 +114,7 @@ MsgPlayer :: create(const Monster& aMonster)
         mInfo->OwnerUID = 0; // TODO: Pet
 
         mInfo->GarmentType = 0;
-        mInfo->HeadType = 0;
+        mInfo->ArmetType = 0;
         mInfo->ArmorType = 0;
         mInfo->WeaponRType = 0;
         mInfo->WeaponLType = 0;
@@ -136,7 +140,7 @@ MsgPlayer :: create(const Monster& aMonster)
         mInfo->NobilityUID = 0;
         mInfo->NobilityPos = 0;
         memset(mInfo->Padding3, 0, sizeof(mInfo->Padding3));
-        mInfo->HelmetColor = 0;
+        mInfo->ArmetColor = 0;
         mInfo->ArmorColor = 0;
         memset(mInfo->Padding4, 0, sizeof(mInfo->Padding4));
 
@@ -164,7 +168,7 @@ MsgPlayer :: swap(uint8_t* aBuf) const
     info->Status = bswap64(info->Status);
 
     info->GarmentType = bswap32(info->GarmentType);
-    info->HeadType = bswap32(info->HeadType);
+    info->ArmetType = bswap32(info->ArmetType);
     info->ArmorType = bswap32(info->ArmorType);
     info->WeaponRType = bswap32(info->WeaponRType);
     info->WeaponLType = bswap32(info->WeaponLType);
@@ -180,7 +184,7 @@ MsgPlayer :: swap(uint8_t* aBuf) const
     info->NobilityUID = bswap32(info->NobilityUID);
     info->NobilityPos = bswap32(info->NobilityPos);
 
-    info->HelmetColor = bswap16(info->HelmetColor);
+    info->ArmetColor = bswap16(info->ArmetColor);
     info->ArmorColor = bswap16(info->ArmorColor);
 
     if (Entity::isPlayer(uid))

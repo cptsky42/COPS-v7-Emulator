@@ -99,11 +99,16 @@ MsgAction :: process(Client* aClient)
                 player.setPose((uint16_t)mInfo->Data);
                 if (AdvancedEntity::POSE_COOL == player.getPose())
                 {
-                    // TODO cool effect
-                    // if (TickCount - LastCoolShow > 3000)
-                    // if (isAllNonsuchEquip()) mInfo->Data |= (player.getProfession() * 0x00010000 + 0x01000000);
-                    // else if (% 10 == 9) mInfo->Data |= (player.getProfession() * 0x010000);
-                    // LastCoolShow = TickCount;
+                    if (timeGetTime() - player.getLastCoolShow() > 3000) // 3s
+                    {
+                        // TODO: cool effect
+                        if (true)//(isAllNonsuchEquip())
+                            mInfo->Data |= (player.getProfession() * 0x00010000 + 0x01000000);
+                        else if (true)//(% 10 == 9)
+                            mInfo->Data |= (player.getProfession() * 0x010000);
+
+                        player.setLastCoolShow(timeGetTime());
+                    }
                 }
 
                 player.broadcastRoomMsg(this, true);
@@ -278,13 +283,12 @@ MsgAction :: process(Client* aClient)
                     return;
                 }
 
-                // TODO implement isAlive()
-//                if (!Player.IsAlive())
-//                {
-//                    Player.SendSysMsg(Client.GetStr("STR_DIE"));
-//                    Player.KickBack();
-//                    return;
-//                }
+                if (!player.isAlive())
+                {
+                    player.sendSysMsg(STR_DIE);
+                    player.kickBack();
+                    return;
+                }
 
                 if (map != nullptr)
                 {

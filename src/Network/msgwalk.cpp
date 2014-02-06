@@ -94,12 +94,11 @@ MsgWalk :: process(Client* aClient)
         }
     }
 
-    // TODO implement isAlive()
-    //if (!Player.IsAlive() && !Player.IsGhost())
-    //{
-    //    Player.SendSysMsg(Client.GetStr("STR_DIE"));
-    //    return;
-    //}
+    if (!player.isAlive() && !player.isGhost())
+    {
+        player.sendSysMsg(STR_DIE);
+        return;
+    }
 
     player.send(this); // send back...
     if (player.move(newX, newY, dir))

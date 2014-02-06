@@ -152,7 +152,7 @@ public:
     virtual void sendShow(const Player& aPlayer) const;
 
     /** Called when the timer elapse. */
-    virtual void timerElapsed(time_t aTime) { /* TODO */  }
+    virtual void timerElapsed(time_t aTime) { /* TODO monster timerElapsed */  }
 
 public:
     /** Get the minimum physical attack of the monster. */

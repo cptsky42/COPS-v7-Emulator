@@ -64,7 +64,7 @@ Server :: Server()
     IniFile settings;
     DOIF(err, settings.open("./settings.cfg"));
 
-    mServerName = settings.readString("COPS_EMULATOR/NAME", "COPS"); // TODO it
+    mServerName = settings.readString("COPS_EMULATOR/NAME", "COPS");
     mServerIP = settings.readString("COPS_EMULATOR/SERVER_IP", "127.0.0.1");
 
     string sql_host = settings.readString("COPS_EMULATOR/SQL_HOST", "localhost");

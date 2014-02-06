@@ -117,12 +117,11 @@ MsgDialog :: process(Client* aClient)
     Client& client = *aClient;
     Player& player = *aClient->getPlayer();
 
-    // TODO finish implementation
-//    if (!player.isAlive())
-//    {
-//        player.sendSysMsg(STR_DIE);
-//        return;
-//    }
+    if (!player.isAlive())
+    {
+        player.sendSysMsg(STR_DIE);
+        return;
+    }
 
     char text[MAX_PARAMSIZE];
 

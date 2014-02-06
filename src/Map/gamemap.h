@@ -87,6 +87,8 @@ public:
         uint32_t Type;
         /** The owner UID of the map. */
         uint32_t OwnerUID;
+        /** The weather of the map. */
+        uint32_t Weather;
         /** The main portal X-coord. It is used for reborn. */
         uint16_t PortalX;
         /** The main portal Y-coord. It is used for reborn. */
@@ -188,7 +190,7 @@ public:
     /** Determine whether or not booths are enabled. */
     bool isBoothEnabled() const { return (mInfo->Type & TYPE_BOOTH_ENABLE) != 0; }
     /** Determine whether or not the a war is active on the map. */
-    bool isWarTime() const { return false; /* (getStatus() & STATUS_WAR) != 0 */ } // TODO
+    bool isWarTime() const { return false; /* TODO (getStatus() & STATUS_WAR) != 0 */ }
 
 public:
     /** Determine whether a player is on the map or not. */

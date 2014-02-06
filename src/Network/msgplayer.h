@@ -58,16 +58,18 @@ public:
             int32_t OwnerUID;
         };
 
-        // TODO names ?
+        /** Garment Id. */
         int32_t GarmentType;
-        int32_t HeadType;
+        /** Armet Id. */
+        int32_t ArmetType;
+        /** Armor Id. */
         int32_t ArmorType;
-
         /** Right hand weapon Id. */
         int32_t WeaponRType;
         /** Left hand weapon Id. */
         int32_t WeaponLType;
 
+        /** Unknown padding. */
         int8_t Padding1[4];
 
         /** Current life of the monster. */
@@ -90,16 +92,23 @@ public:
         /** The level of the player */
         uint16_t PlayerLevel;
 
-        // TODO names
+        /** Unknown padding. */
         int8_t Padding2[4];
 
+        /** Nobility rank of the entity. */
         uint32_t NobilityRank;
+        /** Nobility UID of the entity (UID). */
         uint32_t NobilityUID; // entity UID
+        /** Nobility position of the enity. */
         uint32_t NobilityPos;
 
+        /** Unknown padding. */
         int8_t Padding3[4];
-        uint16_t HelmetColor;
+
+        uint16_t ArmetColor;
         uint16_t ArmorColor;
+
+        /** Unknown padding. */
         uint8_t Padding4[2];
 
         /** The name of the entity */

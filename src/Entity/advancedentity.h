@@ -61,6 +61,9 @@ public:
     /** Get the entity's max hit points. */
     virtual uint16_t getMaxHP() const { return mMaxHP; }
 
+    /** Determine whether the entity is alive or not. */
+    bool isAlive() const { return mCurHP > 0; }
+
 public:
     /** Get the entity's minimum physical attack. */
     virtual int32_t getMinAtk() const = 0;

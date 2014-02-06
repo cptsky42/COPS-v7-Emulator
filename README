@@ -63,6 +63,7 @@ interesting implementation.
 + Points allocation
 + Talking to NPCs [Incomplete]
 + Screen system [Incomplete]
++ Real item ID generation for monsters [Incomplete]
 
 Documentation about the emulator can be generated with dOxygen.
 To generate the documentation, please in the root folder of the source,

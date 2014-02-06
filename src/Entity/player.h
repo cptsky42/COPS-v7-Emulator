@@ -12,6 +12,7 @@
 #include "common.h"
 #include "advancedentity.h"
 #include "client.h"
+#include "item.h"
 #include <string>
 #include <deque>
 
@@ -287,6 +288,21 @@ public:
     /** Get the maximum energy of the player. */
     uint8_t getMaxEnergy() const;
 
+    /** Determine whether or not the player is transformed in ghost. */
+    bool isGhost() const { return false; } // TODO implement ghost
+
+public:
+    /** Get the equipment by its position. */
+    Item* getEquipByPos(uint8_t aPos) const
+    { ASSERT(aPos < Item::MAX_EQUIPMENT); return mEquipment[aPos]; }
+
+public:
+    /** Get the tick of the latest cool effect */
+    time_t getLastCoolShow() const { return mLastCoolShow; }
+
+    /** Set the tick of the latest cool effect */
+    void setLastCoolShow(time_t aTick) { mLastCoolShow = aTick; }
+
 private:
     Client& mClient; //!< the client
 
@@ -320,6 +336,9 @@ private:
 
     PkMode mPkMode; //!< the Pk mode of the player
 
+    Item* mEquipment[Item::MAX_EQUIPMENT]; //!< the equipment of the player
+
+
     // MsgTick protection
     uint32_t mMsgCount; //!< the last msg count
     int32_t mFirstClientTick; //!< the tick of first client response
@@ -328,6 +347,8 @@ private:
     int32_t mFirstServerTick; //!< the tick of first server request
     int32_t mLastServerTick; //!< the tick of the latest server request
     std::deque<int32_t> mServerTicks; //!< the server ticks
+
+    time_t mLastCoolShow; //!< the tick of the latest cool effect
 };
 
 #endif // _COPS_V7_EMULATOR_PLAYER_H

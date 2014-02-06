@@ -50,8 +50,7 @@ Npc :: activateNpc(Client& aClient, int32_t aAction)
 
     bool result = false;
 
-    // TODO: isAlive()
-    if (isTaskNpc() && /* isAlive() && */ mTask != nullptr)
+    if (isTaskNpc() /*&& isAlive()*/ && mTask != nullptr)
     {
         const NpcTask& task = queryTask();
 

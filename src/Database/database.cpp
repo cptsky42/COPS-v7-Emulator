@@ -507,7 +507,7 @@ Database :: loadAllMaps()
             info->OwnerUID = 0;
             info->DocID = (uint16_t)query.value(1).toUInt();
             info->Type = (uint32_t)query.value(2).toUInt();
-            // TODO: weather
+            info->Weather = (uint32_t)query.value(3).toUInt();
             info->PortalX = (uint16_t)query.value(4).toUInt();
             info->PortalY = (uint16_t)query.value(5).toUInt();
             info->RebornMap = (uint32_t)query.value(6).toUInt();

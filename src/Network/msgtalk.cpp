@@ -24,7 +24,7 @@ MsgTalk :: MsgTalk(const char* aSpeaker, const char* aHearer, const char* aWords
           (aWords != nullptr ? strlen(aWords) : 0) + 1),
       mInfo((MsgInfo*)mBuf)
 {
-    create(aSpeaker, aHearer, "", aWords, aChannel, aColor); // HACK !
+    create(aSpeaker, aHearer, "", aWords, aChannel, aColor);
 }
 
 MsgTalk :: MsgTalk(const Player& aSpeaker, const Player& aHearer, const char* aWords,
@@ -36,7 +36,7 @@ MsgTalk :: MsgTalk(const Player& aSpeaker, const Player& aHearer, const char* aW
           (aWords != nullptr ? strlen(aWords) : 0) + 1),
       mInfo((MsgInfo*)mBuf)
 {
-    create(aSpeaker, aHearer, "", aWords, aChannel, aColor); // HACK !
+    create(aSpeaker, aHearer, "", aWords, aChannel, aColor);
 }
 
 MsgTalk :: MsgTalk(uint8_t** aBuf, size_t aLen)
@@ -150,7 +150,7 @@ MsgTalk :: process(Client* aClient)
     // commands
     if (words[0] == '/')
     {
-        if (true) // TODO: Real substring check
+        if (true)
         {
             int mapId, x, y;
             int type;
