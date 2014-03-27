@@ -11,6 +11,7 @@
 #include "finder.h"
 #include "binaryreader.h"
 #include "minilzo.h"
+#include <stdlib.h>
 
 using namespace std;
 

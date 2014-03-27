@@ -17,12 +17,12 @@ QT_VER_MAJ = $$member(QT_VERSION, 0)
 QT_VER_MIN = $$member(QT_VERSION, 1)
 
 if(lessThan(QT_VER_MAJ, 4)) {
-   error(COPS v7 Emulator requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+   error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
 }
 
 if(equals(QT_VER_MAJ, 4)) {
-   if(lessThan(QT_VER_MIN, 7)) {
-      error(COPS v7 Emulator requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+   if(lessThan(QT_VER_MIN, 5)) {
+      error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
    }
 }
 

@@ -312,7 +312,7 @@ Database :: savePlayer(Client& aClient) const
 
     static const char cmd[] =
             "UPDATE `user` SET `mate` = :mate, `lookface` = :lookface, `hair` = :hair, "
-            "`money` = :money, `money_saved` = :money_saved, `cps` = :cps,"
+            "`money` = :money, `cps` = :cps, "
             "`level` = :level, `exp` = :exp, "
             "`force` = :force, `dexterity` = :dexterity, `health` = :health, "
             "`soul` = :soul, `add_points` = :add_points, `life` = :life, `mana` = :mana, "
@@ -333,7 +333,7 @@ Database :: savePlayer(Client& aClient) const
     query.bindValue(":hair", player.getHair());
 
     query.bindValue(":money", player.getMoney());
-    query.bindValue(":money_saved", 0); // TODO add saved money
+    // TODO add saved money
     query.bindValue(":cps", player.getCPs());
 
     query.bindValue(":level", player.getLevel());

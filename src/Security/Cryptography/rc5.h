@@ -84,8 +84,8 @@ private:
     static const uint32_t RC5_QW32 = 0x61C88647;
 
     /* internal key sizes for uint32_t arrays */
-    static const size_t RC5_SUB = ((ROUNDS * 2) + 2);
-    static const size_t RC5_KEY = (KEY_SIZE / 4);
+    static const size_t RC5_SUB = ((RC5::ROUNDS * 2) + 2);
+    static const size_t RC5_KEY = (RC5::KEY_SIZE / 4);
 
 private:
     /* left rotation of the bits */
@@ -105,8 +105,8 @@ private:
     }
 
 private:
-    uint32_t mKey[RC5_KEY]; //!< the generated key used to generate the sub key
-    uint32_t mSub[RC5_SUB]; //!< the generated key used to encrypt/decrypt the data
+    uint32_t mKey[RC5::RC5_KEY]; //!< the generated key used to generate the sub key
+    uint32_t mSub[RC5::RC5_SUB]; //!< the generated key used to encrypt/decrypt the data
 };
 
 #endif // _COPS_V7_EMULATOR_RC5_H

@@ -29,6 +29,10 @@
 #include <sys/time.h> // for timeGetTime()
 #endif
 
+#ifdef __APPLE__
+#include <libkern/OSAtomic.h>
+#endif // atomics
+
 /*
  *****************************************************
  * Safe delete macros
@@ -147,12 +151,18 @@ inline unsigned int timeGetTime()
 }
 #endif
 
-#if defined(__GNUC__)
-#define atomic_inc(ptr) (__sync_fetch_and_add((ptr), 1) + 1)
+#if defined(__APPLE__)
+#   if defined(TARGET_INSTR_X86_64) || defined(TARGET_INSTR_PPC64)
+#       define atomic_inc(ptr) OSAtomicIncrement64Barrier(((volatile int64_t*)ptr))
+#   else
+#       define atomic_inc(ptr) OSAtomicIncrement32Barrier(((volatile int32_t*)ptr))
+#   endif
 #elif defined (_WIN32)
-#define atomic_inc(ptr) InterlockedIncrement((ptr))
+#   define atomic_inc(ptr) InterlockedIncrement((ptr))
+#elif defined(__GNUC__)
+#   define atomic_inc(ptr) (__sync_fetch_and_add((ptr), 1) + 1)
 #else
-#error "Need some more porting work for atomic_inc."
+#   error "Need some more porting work for atomic_inc."
 #endif
 
 #ifndef _WIN32

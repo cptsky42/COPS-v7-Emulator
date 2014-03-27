@@ -8,6 +8,7 @@
 
 #include "tcpserver.h"
 #include "networkclient.h"
+#include <algorithm> // find...
 
 using namespace std;
 
