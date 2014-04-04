@@ -15,11 +15,11 @@
 static const char STR_CREATOR_INFO[] =      "COPS v7 Emulator by Jean-Philippe Boivin (alias CptSky)...";
 static const char STR_BUILD_INFO[] =        "Build for " TARGET_SYSTEM " (" TARGET_ARCH "), using Qt " QT_VERSION_STR ", the " __TIMESTAMP__;
 
-#define	STR_SYSTEM_NAME                     "SYSTEM"
-#define STR_ALLUSERS_NAME                   "ALLUSERS"
-#define	STR_REPLY_OK                        "ANSWER_OK"
-#define	STR_REPLY_AGAIN                     "ANSWER_AGAIN"
-#define STR_REPLY_NEW_ROLE                  "NEW_ROLE"
+static const char STR_SYSTEM_NAME[] =       "SYSTEM";
+static const char STR_ALLUSERS_NAME[] =     "ALLUSERS";
+static const char STR_REPLY_OK[] =          "ANSWER_OK";
+static const char STR_REPLY_AGAIN[] =       "ANSWER_AGAIN";
+static const char STR_REPLY_NEW_ROLE[] =    "NEW_ROLE";
 
 #define STR_EMBED_SUCC                      "Ç¶Èë³É¹¦£¡"
 #define STR_EMBED_FAIL                      "Ç¶ÈëÊ§°Ü£¡"

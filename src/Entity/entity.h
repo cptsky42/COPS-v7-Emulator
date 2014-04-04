@@ -148,16 +148,7 @@ public:
      * @param[in]   aMsg           the message to broadcast
      * @param[in]   aIncludeSelf   whether or not the message must be sent to self
      */
-    void broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const;
-
-    /**
-     * Broadcast a message to all entities of the broadcast set.
-     *
-     * @param[in]   aMsg           the buffer ot the message to broadcast
-     * @param[in]   aLen           the length of the message to broadcast
-     * @param[in]   aIncludeSelf   whether or not the message must be sent to self
-     */
-    void broadcastRoomMsg(uint8_t* aBuf, size_t aLen, bool aIncludeSelf) const;
+    void broadcastRoomMsg(const Msg* aMsg, bool aIncludeSelf) const;
 
     /** Called when the timer elapse. */
     virtual void timerElapsed(time_t aTime) = 0;

@@ -156,7 +156,7 @@ static const char SEAL[] = "TQServer";
 static const size_t SEAL_LEN = strlen(SEAL);
 
 void
-Client :: send(Msg* aMsg)
+Client :: send(const Msg* aMsg)
 {
     ASSERT(aMsg != nullptr);
 
@@ -165,23 +165,6 @@ Client :: send(Msg* aMsg)
 
     memcpy(data, aMsg->getBuffer(), aMsg->getLength());
     memcpy(data + aMsg->getLength(), SEAL, SEAL_LEN);
-
-    mCipher->encrypt(data, len);
-    mSocket->send(data, len);
-
-    SAFE_DELETE_ARRAY(data);
-}
-
-void
-Client :: send(uint8_t* aBuf, size_t aLen)
-{
-    ASSERT(aBuf != nullptr);
-
-    const size_t len = aLen + SEAL_LEN;
-    uint8_t* data = new uint8_t[len];
-
-    memcpy(data, aBuf, aLen);
-    memcpy(data + aLen, SEAL, SEAL_LEN);
 
     mCipher->encrypt(data, len);
     mSocket->send(data, len);

@@ -33,6 +33,11 @@
 #include <libkern/OSAtomic.h>
 #endif // atomics
 
+// Clang defines __has_feature
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif // __has_feature
+
 /*
  *****************************************************
  * Safe delete macros
@@ -70,6 +75,13 @@
 // Quote strings in macro */
 #define STRINGIFY_(str) #str
 #define STRINGIFY(str) STRINGIFY_(str)
+
+// GCC 4.3+, MSVC 2010+ or Clang feature-detection
+#if !(defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) && \
+    !(defined(__clang__) && __has_feature(cxx_rvalue_references)) && \
+    !(defined(_MSC_VER) && (_MSC_VER >= 1600))
+#define HAS_CXX_RVALUE_REF
+#endif
 
 /*
  *****************************************************

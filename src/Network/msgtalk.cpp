@@ -8,11 +8,10 @@
 
 #include "msgtalk.h"
 #include "stringpacker.h"
-#include "msgaction.h"
-#include "msguserattrib.h"
-#include "msgiteminfo.h"
+#include "allmsg.h"
 #include "client.h"
 #include "player.h"
+#include "world.h"
 #include <string.h>
 
 MsgTalk :: MsgTalk(const char* aSpeaker, const char* aHearer, const char* aWords,
@@ -147,44 +146,91 @@ MsgTalk :: process(Client* aClient)
     packer.getString(hearer, sizeof(hearer), 1);
     packer.getString(words, sizeof(words), 3);
 
-    // commands
-    if (words[0] == '/')
+    ASSERT(strlen(words) < MAX_WORDSSIZE);
+
+    if (strncmp(player.getName(), speaker, MAX_NAMESIZE) != 0)
     {
-        if (true)
-        {
-            int mapId, x, y;
-            int type;
-            int param;
-            if (sscanf(words, "/mm %d %d %d", &mapId, &x, &y) == 3)
-            {
-                player.move((uint32_t)mapId, (uint16_t)x, (uint16_t)y);
-            }
-            else if (sscanf(words, "/item %d %d", &type, &param))
-            {
-                int data[2];
-                data[0] = type;
-                data[1] = param;
-                MsgItemInfo msg(data, MsgItemInfo::ACTION_ADD_ITEM);
-                client.send(&msg);
-            }
-            else if (strcmp(words, "/break") == 0)
-            {
-                client.disconnect();
-            }
-            else
-            {
-                player.sendSysMsg("Unknown command or invalid syntax.");
-            }
-        }
+        //if (!player.isGM())
+        // TODO: Cheat not same speaker...
         return;
     }
 
-    // TODO...
+    // TODO isTalkEnable
+//    if (!player.isTalkEnable())
+//    {
+//        player.sendSysMsg(STR_CAN_NOT_TALK);
+//        return;
+//    }
+
+    // TODO isGM / isPM
+//    if (player.isGM()) // log GM msgs
+//    {
+//        LOG(INFO, "--TALK-- %s said '%s' to %s.",
+//            speaker, words, hearer);
+//    }
+
+    // commands
+    if (words[0] == '/')
+    {
+        char cmd[MAX_WORDSSIZE] = "NO_CMD";
+        char param[MAX_WORDSSIZE] = "";
+        sscanf(words, "/%s %s", cmd, param);
+
+        if (strncmp(cmd, "break", MAX_WORDSSIZE) == 0)
+        {
+            client.disconnect();
+        }
+        else if (strncmp(cmd, "mm", MAX_WORDSSIZE) == 0)
+        {
+            int mapId, x, y;
+            if (sscanf(param, "%d %d %d", &mapId, &x, &y) == 3)
+            {
+                player.move((uint32_t)mapId, (uint16_t)x, (uint16_t)y);
+            }
+            else
+                player.sendSysMsg("USAGE: /mm id x y");
+        }
+        else if (strncmp(cmd, "money", MAX_WORDSSIZE) == 0)
+        {
+            unsigned int money;
+            if (sscanf(param, "%u", &money) == 1)
+            {
+
+            }
+            else
+                player.sendSysMsg("USAGE: /money amount");
+        }
+        #ifndef NDEBUG
+
+        #endif // not NDEBUG
+        else
+        {
+            player.sendSysMsg("Unknown command '%s'.", cmd);
+        }
+
+        return;
+    }
+
+    if (player.isGhost() && mInfo->Channel != MsgTalk::CHANNEL_TEAM)
+    {
+        mInfo->Channel = MsgTalk::CHANNEL_GHOST;
+        player.broadcastRoomMsg(this, false);
+        return;
+    }
+
+    static const World& world = World::getInstance();
     switch (mInfo->Channel)
     {
-    default:
-        fprintf(stdout, "%s said %s to %s\n", speaker, words, hearer);
-        break;
+        case MsgTalk::CHANNEL_PRIVATE:
+            {
+                Player* target = nullptr;
+                if (world.queryPlayer(&target, hearer))
+                    target->send(this);
+            }
+        default:
+            fprintf(stdout, "%s said %s to %s on %u\n",
+                    speaker, words, hearer, mInfo->Channel);
+            break;
     }
 }
 

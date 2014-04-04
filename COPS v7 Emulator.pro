@@ -132,6 +132,7 @@ HEADERS += \
     src/generator.h \
     src/inifile.h \
     src/item.h \
+    src/mstimer.h \
     src/server.h \
     src/strres.h \
     src/timer.h \

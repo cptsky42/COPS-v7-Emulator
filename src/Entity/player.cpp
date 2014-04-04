@@ -24,42 +24,17 @@
 using namespace std;
 
 Player :: Player(Client& aClient, uint32_t aUID)
-    : AdvancedEntity(aUID), mClient(aClient)
+    : AdvancedEntity(aUID), mClient(aClient),
+      mMate("None"),
+      mHair(0),
+      mProfession(0), mMetempsychosis(0), mExp(0),
+      mForce(0), mDexterity(0), mHealth(0), mSoul(0), mAddPoints(0),
+      mCurMP(0),
+      mMoney(0), mCPs(0), mPkPoints(0), mVirtue(0),
+      mEnergy(0), mXP(0),
+      mPrevMap(0), mPrevX(0), mPrevY(0),
+      mPkMode(Player::PKMODE_FREE)
 {
-    mName = "Unknown";
-    mMate = "None";
-    mLook = 0;
-    mHair = 0;
-
-    mMoney = 0;
-    mCPs = 0;
-
-    mProfession = 0;
-    mLevel = 0;
-    mExp = 0;
-    mMetempsychosis = 0;
-
-    mForce = 0;
-    mDexterity = 0;
-    mHealth = 0;
-    mSoul = 0;
-    mAddPoints = 0;
-
-    mCurHP = 0;
-    mCurMP = 0;
-
-    mPkPoints = 0;
-    mVirtue = 0;
-
-    mMapId = 0;
-    mPosX = 0;
-    mPosY = 0;
-    mDirection = 1;
-
-    mPrevMap = 0;
-    mPrevX = 0;
-    mPrevY = 0;
-
     // no equipment...
     for (uint8_t pos = 0; pos < Item::MAX_EQUIPMENT; ++pos)
         mEquipment[pos] = nullptr;

@@ -6,29 +6,29 @@
  * sections in the LICENSE file.
  */
 
-#ifndef _COPS_V7_EMULATOR_TIMER_H_
-#define _COPS_V7_EMULATOR_TIMER_H_
+#ifndef _COPS_V7_EMULATOR_MS_TIMER_H_
+#define _COPS_V7_EMULATOR_MS_TIMER_H_
 
 #include "common.h"
 #include <time.h>
 
 /**
- * Timer (in seconds) to determine whether an interval is passed...
+ * Timer (in milliseconds) to determine whether an interval is passed...
  */
-class Timer
+class MSTimer
 {
 public:
-    Timer(uint32_t aInterval = 0) : mLastClock(0), mInterval(aInterval) { }
+    MSTimer(uint32_t aInterval = 0) : mLastClock(0), mInterval(aInterval) { }
 
     /* destructor */
-    ~Timer() { }
+    ~MSTimer() { }
 
 public:
     /** Start the timer. */
     void start(uint32_t aInterval) { mInterval = aInterval; update(); }
 
     /** Update the last clock for the start of the timer. */
-    void update() { mLastClock = (clock() / CLOCKS_PER_SEC); }
+    void update() { mLastClock = (clock() * CLOCK_MULTIPLIER); }
 
     /** Clear the timer. */
     void clear() { mLastClock = 0; mInterval = 0; }
@@ -58,11 +58,15 @@ public:
     /** Determine whether or not the timer is active. */
     bool isActive() { return mLastClock != 0; }
     /** Determine whether or not the interval passed. */
-    bool isTimeOut() { return (clock() / CLOCKS_PER_SEC) >= mLastClock + mInterval; }
+    bool isTimeOut() { return (clock() * CLOCK_MULTIPLIER) >= mLastClock + mInterval; }
+
+private:
+    /* Multiplier to get the clock time in milliseconds instead of seconds. */
+    static const double CLOCK_MULTIPLIER = 1000.00 / CLOCKS_PER_SEC;
 
 private:
     clock_t mLastClock; //!< the last clock
     uint32_t mInterval; //!< the interval of the event
 };
 
-#endif // _COPS_V7_EMULATOR_TIMER_H_
+#endif // _COPS_V7_EMULATOR_MS_TIMER_H_

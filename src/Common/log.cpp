@@ -209,7 +209,7 @@ Logger :: run()
             LogData* data = *it;
 
             char time[32];
-            if (strftime(time, sizeof(time), "[%Y-%m-%d %H:%M:%S %Z]", &data->first) != 0)
+            if (strftime(time, sizeof(time), "[%Y-%m-%d %H:%M:%S]", &data->first) != 0)
             {
                 if (fprintf(mStream, "%s ", time) < 0)
                 {
@@ -218,7 +218,7 @@ Logger :: run()
                 }
             }
 
-            if (fprintf(mStream, "%s ", data->second) < 0)
+            if (fprintf(mStream, "%s", data->second) < 0)
             {
                 perror("Failed to write log ");
                 break;

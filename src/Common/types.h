@@ -12,6 +12,11 @@
 #include <stddef.h> // Define NULL, size_t
 #include <limits.h> // Define UCHAR_MAX, etc
 
+// Clang defines __has_feature
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif // __has_feature
+
 /*
  *****************************************************
  * Fixed-width integer definitions
@@ -27,8 +32,11 @@
  ****************************************************
  */
 
-#if __cplusplus < 201103L // C++11 defines nullptr
+// GCC 4.6+, MSVC 2010+ or Clang feature-detection
+#if !(defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 460)) && \
+    !(defined(__clang__) && __has_feature(cxx_nullptr)) && \
+    !(defined(_MSC_VER) && (_MSC_VER >= 1600))
 #define nullptr NULL
-#endif // __cplusplus < 201103L
+#endif
 
 #endif // _COPS_V7_EMULATOR_TYPES_H

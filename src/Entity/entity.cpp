@@ -15,13 +15,11 @@
 using namespace std;
 
 Entity :: Entity(uint32_t aUID)
-    : mUID(aUID)
+    : mUID(aUID),
+      mName("Unknown"), mLook(0),
+      mMapId(0), mPosX(0), mPosY(0), mDirection(0)
 {
-    mLook = 0;
-    mMapId = 0;
-    mPosX = 0;
-    mPosY = 0;
-    mDirection = 0;
+
 }
 
 Entity :: ~Entity()
@@ -128,7 +126,7 @@ Entity :: removeEntityFromBCSet(const Entity& aEntity) const
 }
 
 void
-Entity :: broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const
+Entity :: broadcastRoomMsg(const Msg* aMsg, bool aIncludeSelf) const
 {
     ASSERT(aMsg != nullptr);
 
@@ -149,34 +147,6 @@ Entity :: broadcastRoomMsg(Msg* aMsg, bool aIncludeSelf) const
         {
             const Player* player = (const Player*)&entity;
             player->send(aMsg);
-        }
-    }
-
-    mViewSetMutex.unlock();
-}
-
-void
-Entity :: broadcastRoomMsg(uint8_t* aBuf, size_t aLen, bool aIncludeSelf) const
-{
-    ASSERT(aBuf != nullptr);
-
-    if (aIncludeSelf && isPlayer())
-    {
-        Player* player = (Player*)this;
-        player->send(aBuf, aLen);
-    }
-
-    mViewSetMutex.lock();
-
-    for (map<uint32_t, const Entity*>::const_iterator
-            it = mViewSet.begin(), end = mViewSet.end();
-         it != end; ++it)
-    {
-        const Entity& entity = *it->second;
-        if (entity.isPlayer())
-        {
-            const Player* player = (const Player*)&entity;
-            player->send(aBuf, aLen);
         }
     }
 

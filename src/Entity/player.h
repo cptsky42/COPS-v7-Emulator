@@ -180,16 +180,7 @@ public:
      *
      * @param[in]  aMsg     the message to send
      */
-    inline void send(Msg* aMsg) const { mClient.send(aMsg); }
-
-    /**
-     * Send a message to the client.
-     * The TQ seal will be appended at the end.
-     *
-     * @param[in]   aBuf    the message to send
-     * @param[in]   aLen    the length of the message
-     */
-    inline void send(uint8_t* aBuf, size_t aLen) const { mClient.send(aBuf, aLen); }
+    inline void send(const Msg* aMsg) const { mClient.send(aMsg); }
 
     /**
      * Disconnect the client from the server.
