@@ -9,6 +9,7 @@
 #include "msgconnect.h"
 #include "client.h"
 #include "player.h"
+#include "server.h"
 #include "database.h"
 #include "world.h"
 #include "msgtalk.h"
@@ -102,6 +103,10 @@ MsgConnect :: process(Client* aClient)
                     SAFE_DELETE(msg);
 
                     msg = new MsgTalk("SYSTEM", "ALLUSERS", STR_BUILD_INFO, MsgTalk::CHANNEL_TALK);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
+
+                    msg = new MsgTalk("SYSTEM", "ALLUSERS", Server::getServerInfo(), MsgTalk::CHANNEL_TALK);
                     client.send(msg);
                     SAFE_DELETE(msg);
 

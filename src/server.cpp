@@ -34,7 +34,15 @@ extern "C" {
 #include <time.h>
 
 #ifdef _WIN32
+#define NOMINMAX // want std::min() & std::max() defined...
 #include <windows.h>
+
+#ifdef _MSC_VER // Visual Studio will complain for linking...
+#pragma comment(lib,"version.lib") //
+#endif // _MSC_VER
+
+#else
+#include <sys/utsname.h> // uname()
 #endif // _WIN32
 
 using namespace std;
@@ -47,6 +55,91 @@ Server :: getInstance()
 
     ASSERT(instance != nullptr);
     return *instance;
+}
+
+/* static */
+const char*
+Server :: getServerInfo()
+{
+    static volatile long protect = 0;
+    static char* SERVER_INFO = nullptr;
+
+    if (SERVER_INFO == nullptr)
+    {
+        if (1 == atomic_inc(&protect))
+        {
+            #ifndef _WIN32
+            struct utsname info;
+            if (uname(&info) != -1)
+            {
+                size_t len =
+                        strlen(info.sysname) + 1 +
+                        strlen(info.nodename) + 1 +
+                        strlen(info.release) + 1 +
+                        strlen(info.version) + 1 +
+                        strlen(info.machine) + 1;
+
+                char* str = new char[len];
+                snprintf(str, len, "%s %s %s %s %s",
+                         info.sysname, info.nodename, info.release, info.version, info.machine);
+
+                SERVER_INFO = str;
+            }
+            else
+            {
+                SERVER_INFO = new char[1];
+                SERVER_INFO[0] = '\0';
+            }
+            #else
+            char nodename[32] = { '\0' }; // max len = 15
+            DWORD bufLen = (DWORD)sizeof(nodename);
+            GetComputerNameA(nodename, &bufLen);
+
+            char release[128] = { '\0' };
+            if (GetFileVersionInfoA("kernel32.dll", 0, sizeof(release), release) != 0)
+            {
+                VS_FIXEDFILEINFO* fileInfo;
+                UINT bufLen = 0;
+
+                if (VerQueryValueA(release, "\\", (LPVOID*)&fileInfo, (PUINT)&bufLen))
+                {
+                    snprintf(release, sizeof(release), "%d.%d.%d.%d",
+                             HIWORD(fileInfo->dwFileVersionMS), LOWORD(fileInfo->dwFileVersionMS),
+                             HIWORD(fileInfo->dwFileVersionLS), LOWORD(fileInfo->dwFileVersionLS));
+                }
+            }
+
+            char version[256] = { '\0' };
+            snprintf(version, sizeof(version), "NT Kernel Version %s",
+                     release);
+
+            bool is64bit = GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process") != NULL;
+            char machine[16] = { '\0' };
+            snprintf(machine, sizeof(machine), "%s",
+                     is64bit ? "x86_64" : "x86");
+
+            size_t len =
+                    strlen("Windows") + 1 +
+                    strlen(nodename) + 1 +
+                    strlen(release) + 1 +
+                    strlen(version) + 1 +
+                    strlen(machine) + 1;
+
+            char* str = new char[len];
+            snprintf(str, len, "Windows %s %s %s %s",
+                     nodename, release, version, machine);
+
+            SERVER_INFO = str;
+            #endif // ! _WIN32
+        }
+        else
+        {
+            while (SERVER_INFO == nullptr)
+                QThread::yieldCurrentThread();
+        }
+    }
+
+    return SERVER_INFO;
 }
 
 Server :: Server(int argc, char* argv[])

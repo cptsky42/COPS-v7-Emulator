@@ -40,8 +40,11 @@ public:
 
     /** Get the IPv4 address of the MsgServer. */
     static const char* getServerIP() { return getInstance().mServerIP.c_str(); }
-    /*** Get the name of the MsgServer. */
+    /** Get the name of the MsgServer. */
     static const char* getServerName() { return getInstance().mServerName.c_str(); }
+
+    /** Get the server information. */
+    static const char* getServerInfo();
 
     Q_OBJECT
 public:

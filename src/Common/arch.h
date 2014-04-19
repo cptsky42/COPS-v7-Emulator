@@ -71,7 +71,7 @@
 
 #elif defined(__x86_64__) || defined(__amd64__) || defined(__x86_64) || \
     defined(__amd64) || defined(_M_X64) || defined(_M_AMD64)
-#define TARGET_INSTR "x86_x64"
+#define TARGET_INSTR "x86_64"
 #define TARGET_ARCH "Intel 64-bit"
 #define TARGET_INSTR_X86_64
 
