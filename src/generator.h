@@ -59,7 +59,7 @@ public:
      *
      * @returns the number of generated monsters
      */
-    uint32_t generate(uint32_t aAmount);
+    uint32_t generate(uint32_t aAmount, bool aInitializing = false);
 
 public:
     /* destructor */

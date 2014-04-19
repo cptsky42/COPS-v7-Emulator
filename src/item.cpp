@@ -9,10 +9,44 @@
 #include "item.h"
 #include "monster.h"
 #include "basefunc.h"
+#include "world.h"
 #include "database.h"
 #include <algorithm> // min, max
+#include <math.h>
+#include <QSqlQuery>
+#include <QVariant>
 
 using namespace std;
+
+/* static */
+bool
+Item :: createItem(Item** aOutItem, const Item::Info& aInfo,
+                   const Player& aPlayer)
+{
+    static const Database& db = Database::getInstance(); // singleton...
+
+    uint8_t ident = 0;
+    ident &= ~(uint8_t)IDENT_NOT_IDENT;
+
+    Item* item = nullptr;
+    err_t err = db.createItem(&item, aInfo, aPlayer,
+                              aInfo.AmountLimit, aInfo.AmountLimit,
+                              ident, Item::POS_INVENTORY);
+
+    if (IS_SUCCESS(err))
+    {
+        item->mAmount = aInfo.AmountLimit;
+        item->mAmountLimit = aInfo.AmountLimit;
+        item->mIdent = ident;
+        item->mPosition = Item::POS_INVENTORY;
+
+        *aOutItem = item;
+        item = nullptr;
+    }
+
+    SAFE_DELETE(item);
+    return err == ERROR_SUCCESS;
+}
 
 /* static */
 bool
@@ -209,12 +243,73 @@ Item :: createItem(Item** aOutItem, uint32_t aValue, Monster& aMonster, uint8_t 
     return true;
 }
 
+/* static */
+err_t
+Item :: createItem(Item** aOutItem, const QSqlQuery& aQuery)
+{
+    ASSERT_ERR(aOutItem != nullptr && *aOutItem == nullptr, ERROR_INVALID_POINTER);
+    ASSERT_ERR(&aQuery != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const World& world = World::getInstance(); // singleton
+    static const Database& db = Database::getInstance(); // singleton
+
+    err_t err = ERROR_SUCCESS;
+
+    uint32_t id = (uint32_t)aQuery.value(SQLDATA_ID).toUInt();
+    uint32_t type = (uint32_t)aQuery.value(SQLDATA_TYPE).toUInt();
+
+    const Item::Info* info = nullptr;
+    DOIF(err, db.getItemInfo(&info, type));
+
+    if (IS_SUCCESS(err))
+    {
+        Item* item = new Item(id, *info);
+
+        item->mAmount = (uint16_t)aQuery.value(SQLDATA_AMOUNT).toUInt();
+        item->mAmountLimit = (uint16_t)aQuery.value(SQLDATA_AMOUNT_LIMIT).toUInt();
+        item->mIdent = (uint8_t)aQuery.value(SQLDATA_IDENT).toUInt();
+        item->mPosition = (Item::Position)aQuery.value(SQLDATA_POSITION).toUInt();
+
+        Entity* owner = nullptr;
+        if (world.queryEntity(&owner, (uint32_t)aQuery.value(SQLDATA_OWNER_ID).toUInt()))
+            item->mOwner = owner;
+
+        Player* player = nullptr;
+        if (world.queryPlayer(&player, (uint32_t)aQuery.value(SQLDATA_PLAYER_ID).toUInt()))
+            item->mPlayer = player;
+
+        item->mGem1 = (uint8_t)aQuery.value(SQLDATA_GEM1).toUInt();
+        item->mGem2 = (uint8_t)aQuery.value(SQLDATA_GEM2).toUInt();
+        item->mMagic1 = (uint8_t)aQuery.value(SQLDATA_MAGIC1).toUInt();
+        item->mMagic2 = (uint8_t)aQuery.value(SQLDATA_MAGIC2).toUInt();
+        item->mMagic3 = (uint8_t)aQuery.value(SQLDATA_MAGIC3).toUInt();
+        item->mBless = (uint8_t)aQuery.value(SQLDATA_BLESS).toUInt();
+        item->mEnchant = (uint8_t)aQuery.value(SQLDATA_ENCHANT).toUInt();
+        item->mRestrain = (uint32_t)aQuery.value(SQLDATA_RESTRAIN).toUInt();
+
+        item->mSuspicious = aQuery.value(SQLDATA_SUSPICIOUS).toBool();
+        item->mLocked = aQuery.value(SQLDATA_LOCKED).toBool();
+
+        item->mColor = (uint8_t)aQuery.value(SQLDATA_COLOR).toUInt();
+
+        if (IS_SUCCESS(err))
+        {
+            *aOutItem = item;
+            item = nullptr;
+        }
+        SAFE_DELETE(item);
+    }
+
+    return err;
+}
+
 Item :: Item(uint32_t aUID, const Item::Info& aInfo)
     : mUID(aUID), mInfo(aInfo),
+      mOwner(nullptr), mPlayer(nullptr),
       mAmount(0), mAmountLimit(0),
-      mIdent(0),
-      mGem1(0), mGem2(0), mMagic1(0), mMagic2(0), mBless(0), mEnchant(0), mRestrain(0),
-      mLocked(false), mSuspicious(false)
+      mIdent(0), mPosition(POS_INVENTORY),
+      mGem1(0), mGem2(0), mMagic1(0), mMagic2(0), mMagic3(0), mBless(0), mEnchant(0), mRestrain(0),
+      mSuspicious(false), mLocked(false), mColor(3)
 {
 
 }
@@ -222,6 +317,67 @@ Item :: Item(uint32_t aUID, const Item::Info& aInfo)
 Item :: ~Item()
 {
 
+}
+
+err_t
+Item :: save() const
+{
+    static const Database& db = Database::getInstance(); // singleton
+    return db.saveItem(*this);
+}
+
+err_t
+Item :: erase() const
+{
+    static const Database& db = Database::getInstance(); // singleton
+    return db.eraseItem(*this);
+}
+
+uint32_t
+Item :: getSellPrice() const
+{
+    const uint32_t UNIDENT_SALE_FEE = 1;
+
+    if (mAmountLimit == 0)
+        return 0;
+
+    uint16_t amount = mAmount;
+    if (amount > mAmountLimit)
+        amount = mAmountLimit;
+
+    uint32_t price = (mInfo.Price / 3) * ((double)amount / (double)mAmountLimit);
+
+    if (isNeedIdent())
+        price = UNIDENT_SALE_FEE;
+
+    if (isArrow())
+        price = 0;
+
+    return price;
+}
+
+uint32_t
+Item :: getRepairCost() const
+{
+    uint16_t recover = (uint16_t)max(0, mAmountLimit - mAmount);
+
+    if (recover == 0)
+        return 0;
+
+    double repairCost = 0;
+    if (mAmountLimit > 0)
+        repairCost = (double)(mInfo.Price * recover / mAmountLimit);
+
+    switch (mInfo.Id % 10)
+    {
+        case 9: repairCost *= 1.125; break;
+        case 8: repairCost *= 0.975; break;
+        case 7: repairCost *= 0.900; break;
+        case 6: repairCost *= 0.825; break;
+        default: repairCost *= 0.750; break;
+    }
+
+    return (uint32_t)max(1.00, floor(repairCost));
 }
 
 //int CItem::GetRecoverDurCost	(void)

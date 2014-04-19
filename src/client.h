@@ -103,6 +103,9 @@ public:
     /** Get the status of the account */
     Status getStatus() const { return mStatus; }
 
+    /** Get the current Npc task. */
+    const NpcTask* getCurTask() const { return mCurTask; }
+
     /** Get the player object linked to this client */
     Player* getPlayer() const { return mPlayer; }
 

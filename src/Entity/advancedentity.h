@@ -50,7 +50,7 @@ public:
     virtual void sendShow(const Player& aPlayer) const = 0;
 
     /** Called when the timer elapse. */
-    virtual void timerElapsed(time_t aTime) = 0;
+    virtual void timerElapsed() = 0;
 
 public:
     /** Get the entity's level. */

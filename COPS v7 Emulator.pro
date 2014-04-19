@@ -2,6 +2,8 @@ QT += core
 QT += network sql
 QT -= gui
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += concurrent
+
 TARGET = "COPS v7 Emulator"
 TEMPLATE = app
 CONFIG   += console
@@ -10,26 +12,15 @@ macx {
 CONFIG -= app_bundle
 }
 
-# Check Qt version
-QT_VERSION = $$[QT_VERSION]
-QT_VERSION = $$split(QT_VERSION, ".")
-QT_VER_MAJ = $$member(QT_VERSION, 0)
-QT_VER_MIN = $$member(QT_VERSION, 1)
+lessThan(QT_MAJOR_VERSION, 4): \
+    error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
 
-if(lessThan(QT_VER_MAJ, 4)) {
-   error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
-}
+equals(QT_MAJOR_VERSION, 4): \
+    lessThan(QT_MINOR_VERSION, 5): \
+        error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
 
-if(equals(QT_VER_MAJ, 4)) {
-   if(lessThan(QT_VER_MIN, 5)) {
-      error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
-   }
-}
-
-# Qt5 and onwards are more modular... Must link extra libraries...
-if(greaterThan(QT_VER_MAJ, 4)) {
-    QT += concurrent
-}
+QMAKE_CFLAGS_RELEASE += -DNDEBUG
+QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
 
 OBJECTS_DIR = tmp
 MOC_DIR = tmp
@@ -265,8 +256,8 @@ unix:!macx {
 
 # UNIX-like stuff...
 unix {
-QMAKE_CFLAGS += -Wextra
-QMAKE_CXXFLAGS += -Wextra
+QMAKE_CFLAGS += -Wextra -Wno-deprecated-register
+QMAKE_CXXFLAGS += -Wextra -Wno-deprecated-register
 }
 
 

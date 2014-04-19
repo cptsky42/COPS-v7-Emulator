@@ -93,7 +93,7 @@ Client :: save()
 
         do
         {
-            err = db.savePlayer(*this);
+            DOIF(err, db.savePlayer(*this));
             ++tries;
 
             if (!IS_SUCCESS(err))

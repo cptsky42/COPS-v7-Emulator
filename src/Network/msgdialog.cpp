@@ -10,6 +10,7 @@
 #include "stringpacker.h"
 #include "client.h"
 #include "player.h"
+#include "npctask.h"
 #include <string.h>
 
 MsgDialog :: MsgDialog(const char* aText, uint16_t aData,
@@ -38,9 +39,9 @@ MsgDialog :: MsgDialog(uint8_t** aBuf, size_t aLen)
 {
     ASSERT(aLen >= sizeof(MsgInfo));
 
-    #if BYTE_ORDER == BIG_ENDIAN
+#if BYTE_ORDER == BIG_ENDIAN
     swap(mBuf);
-    #endif
+#endif
 }
 
 MsgDialog :: ~MsgDialog()
@@ -133,25 +134,34 @@ MsgDialog :: process(Client* aClient)
 
     switch (mInfo->Action)
     {
-    case ACTION_ANSWER:
-        {
-            //player.processTask(info->IdxTask, text);
-            break;
-        }
-    case ACTION_TASKID:
-        {
-            //player.processClientTask(info->TaskId, text);
-            break;
-        }
-    default:
-        {
-            fprintf(stdout, "Unknown event[%04u], data=[%d]\n",
-                    mInfo->Action, mInfo->IdxTask);
-            break;
-        }
-//    default:
-//        ASSERT(false);
-//        break;
+        case ACTION_ANSWER:
+            {
+                // TODO /player.processTask(info->IdxTask, text);
+                const NpcTask* task = client.getCurTask();
+
+                if (task != nullptr)
+                {
+                    LOG(DBG, "Executing task %u for idx=%u...",
+                        task->getUID(), mInfo->IdxTask);
+                    task->execute(client, mInfo->IdxTask);
+                }
+
+                break;
+            }
+        case ACTION_TASKID:
+            {
+                //player.processClientTask(info->TaskId, text);
+                break;
+            }
+        default:
+            {
+                fprintf(stdout, "Unknown event[%04u], data=[%d]\n",
+                        mInfo->Action, mInfo->IdxTask);
+                break;
+            }
+            //    default:
+            //        ASSERT(false);
+            //        break;
     }
 }
 

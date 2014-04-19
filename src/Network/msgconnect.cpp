@@ -23,9 +23,9 @@ MsgConnect :: MsgConnect(uint8_t** aBuf, size_t aLen)
 {
     ASSERT(aLen >= sizeof(MsgInfo));
 
-    #if BYTE_ORDER == BIG_ENDIAN
+#if BYTE_ORDER == BIG_ENDIAN
     swap(mBuf);
-    #endif
+#endif
 }
 
 
@@ -50,71 +50,71 @@ MsgConnect :: process(Client* aClient)
     switch (status)
     {
         case Client::NOT_AUTHENTICATED: // Sent to the AccServer
-        {
-            fprintf(stderr, "MsgConnect::process() [AccServer]\n");
-            client.disconnect();
-            break;
-        }
-        case Client::NORMAL: // Sent to the MsgServer
-        {
-            if (!IS_SUCCESS(db.getPlayerInfo(client)))
             {
+                fprintf(stderr, "MsgConnect::process() [AccServer]\n");
                 client.disconnect();
                 break;
             }
-
-            Msg* msg = nullptr;
-            if (client.getPlayer() == nullptr)
+        case Client::NORMAL: // Sent to the MsgServer
             {
-                msg = new MsgTalk(STR_SYSTEM_NAME, STR_ALLUSERS_NAME, STR_REPLY_NEW_ROLE, MsgTalk::CHANNEL_ENTRANCE);
-                client.send(msg);
-                SAFE_DELETE(msg);
-            }
-            else
-            {
-                Player& player = *client.getPlayer();
-                Player* other = nullptr;
-                World& world = World::getInstance();
-
-                // TODO: valid sequence with client ? to avoid rollback..
-                if (world.queryPlayer(&other, player.getUID()))
+                if (!IS_SUCCESS(db.getPlayerInfo(client)))
                 {
-                    world.removePlayer(*other);
-                    other->disconnect();
+                    client.disconnect();
+                    break;
                 }
 
-                world.addPlayer(player);
+                Msg* msg = nullptr;
+                if (client.getPlayer() == nullptr)
+                {
+                    msg = new MsgTalk(STR_SYSTEM_NAME, STR_ALLUSERS_NAME, STR_REPLY_NEW_ROLE, MsgTalk::CHANNEL_ENTRANCE);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
+                }
+                else
+                {
+                    Player& player = *client.getPlayer();
+                    Player* other = nullptr;
+                    World& world = World::getInstance();
 
-                msg = new MsgTalk(STR_SYSTEM_NAME, STR_ALLUSERS_NAME, STR_REPLY_OK, MsgTalk::CHANNEL_ENTRANCE);
-                client.send(msg);
-                SAFE_DELETE(msg);
+                    // TODO: valid sequence with client ? to avoid rollback..
+                    if (world.queryPlayer(&other, player.getUID()))
+                    {
+                        world.removePlayer(*other);
+                        other->disconnect();
+                    }
 
-                msg = new MsgDate();
-                client.send(msg);
-                SAFE_DELETE(msg);
+                    world.addPlayer(player);
 
-                msg = new MsgUserInfo(player);
-                client.send(msg);
-                SAFE_DELETE(msg);
+                    msg = new MsgTalk(STR_SYSTEM_NAME, STR_ALLUSERS_NAME, STR_REPLY_OK, MsgTalk::CHANNEL_ENTRANCE);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
 
-                msg = new MsgTalk("SYSTEM", "ALLUSERS", STR_CREATOR_INFO, MsgTalk::CHANNEL_TALK);
-                client.send(msg);
-                SAFE_DELETE(msg);
+                    msg = new MsgDate();
+                    client.send(msg);
+                    SAFE_DELETE(msg);
 
-                msg = new MsgTalk("SYSTEM", "ALLUSERS", STR_BUILD_INFO, MsgTalk::CHANNEL_TALK);
-                client.send(msg);
-                SAFE_DELETE(msg);
+                    msg = new MsgUserInfo(player);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
 
-                player.sendSysMsg("MaxHP: %u, MaxMP: %u, MaxEnergy: %u",
-                                  player.getMaxHP(), player.getMaxMP(), player.getMaxEnergy());
-                player.sendSysMsg("MinAtk: %d, MaxAtk: %d, Def: %d, MAtk: %d, MDef: %d, Dext: %u",
-                                  player.getMinAtk(), player.getMaxAtk(), player.getDefense(), player.getMAtk(),
-                                  player.getMDef(), player.getDext());
+                    msg = new MsgTalk("SYSTEM", "ALLUSERS", STR_CREATOR_INFO, MsgTalk::CHANNEL_TALK);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
+
+                    msg = new MsgTalk("SYSTEM", "ALLUSERS", STR_BUILD_INFO, MsgTalk::CHANNEL_TALK);
+                    client.send(msg);
+                    SAFE_DELETE(msg);
+
+                    if (!IS_SUCCESS(db.getPlayerItems(player)))
+                    {
+                        client.disconnect();
+                        break;
+                    }
+                }
+
+                break;
             }
-
-            break;
-        }
-        default: // FIXME !
+        default:
             ASSERT(false);
             break;
     }

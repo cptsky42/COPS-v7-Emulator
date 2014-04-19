@@ -44,6 +44,7 @@ World :: getInstance()
                 QThread::yieldCurrentThread();
         }
     }
+
     return *sInstance;
 }
 
@@ -337,25 +338,25 @@ World :: regenerateMonsters()
             index = 0;
 
         Generator* generator = nullptr;
-        for (size_t i = 0, count = world.mAllGenerators.size();
-             !world.mStopping && i < count; ++i)
+        for (size_t count = world.mAllGenerators.size();
+             !world.mStopping && index < count; ++index)
         {
             generator = world.mAllGenerators[index];
 
-            maxNpc -= generator->generate(maxNpc);
+            maxNpc -= generator->generate(maxNpc, initializing);
             if (maxNpc <= 0)
                 break;
 
-            ++index;
-            if (index >= world.mAllGenerators.size())
-                index = 0;
-
             QThread::yieldCurrentThread();
         }
+
+        if (index >= world.mAllGenerators.size())
+            index = 0;
+
         world.mGeneratorMutex.unlock();
 
         if (initializing &&
-            MAXNPC_PER_ONTIMER == maxNpc) // SQL done and finished the initial spawning
+            index == 0 && MAXNPC_PER_ONTIMER == maxNpc) // SQL done and finished the initial spawning
         {
             initializing = false;
             mgr.packAll(); // done intial spawning... repack everything
@@ -364,7 +365,7 @@ World :: regenerateMonsters()
             fprintf(stdout, "Initial spawning of monsters completed...\n");
         }
 
-        mssleep(100);
+        mssleep(20);
     }
 }
 
@@ -386,12 +387,12 @@ World :: processPlayers()
              !world.mStopping && it != end; ++it)
         {
             Player* player = it->second;
-            player->timerElapsed(0);
+            player->timerElapsed();
 
             QThread::yieldCurrentThread();
         }
         world.mPlayerMutex.unlock();
 
-        mssleep(100);
+        mssleep(20);
     }
 }

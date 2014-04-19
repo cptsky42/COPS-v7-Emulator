@@ -12,6 +12,8 @@
 #include "common.h"
 #include <QtCore/QCoreApplication>
 
+static const char STR_PROGRAM_TITLE[] =     "COPS v7 Emulator for " TARGET_SYSTEM " (" TARGET_ARCH ") by Jean-Philippe Boivin (alias CptSky)";
+
 static const char STR_CREATOR_INFO[] =      "COPS v7 Emulator by Jean-Philippe Boivin (alias CptSky)...";
 static const char STR_BUILD_INFO[] =        "Build for " TARGET_SYSTEM " (" TARGET_ARCH "), using Qt " QT_VERSION_STR ", the " __TIMESTAMP__;
 
@@ -319,7 +321,7 @@ static const char STR_REPLY_NEW_ROLE[] =    "NEW_ROLE";
 #define	STR_BALANCED			    "ÊÆ¾ùÁ¦µÐ¡£"
 #define	STR_INVALID_AMOUNT	        "ÊýÁ¿´íÎó!"
 #define	STR_REPAIR_FAILED	        "The reparation has failed."
-#define	STR_REPAIR_NO_MONEY_d	    "ÐÞÀíÐèÒª»¨·Ñ%d¸ö½ð±Ò£¬½ð±Ò²»×ãÎÞ·¨ÐÞÀí£¡"
+#define	STR_REPAIR_NO_MONEY         "ÐÞÀíÐèÒª»¨·Ñ%u¸ö½ð±Ò£¬½ð±Ò²»×ãÎÞ·¨ÐÞÀí£¡"
 #define	STR_INVALID_TITLE	        "´íÎó£º¾üÏÎÃû²»ºÏ·¨!"
 #define	STR_NOT_FROM_YOUR_legion	    "¶Ô·½²»ÊÇÄúÆïÊ¿ÍÅµÄ³ÉÔ±¡£"
 #define	STR_ITEM_DAMAGED	        "Please repair your item before."

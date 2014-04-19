@@ -13,8 +13,13 @@
 #include "advancedentity.h"
 #include "client.h"
 #include "item.h"
+#include "timer.h"
+#include "mstimer.h"
+#include "msguserattrib.h"
+#include <QMutex>
 #include <string>
 #include <deque>
+#include <map>
 
 /**
  * Base class of all players.
@@ -51,6 +56,16 @@ public:
 
     /** Default hair. */
     static const uint16_t HAIR_DEFAULT   = 310;
+
+    /** The time interval between each addition of energy. */
+    static const int ADD_ENERGY_SECS            = 5;
+    /** The gained energy when standing. */
+    static const uint8_t ADD_ENERGY_STAND       = 1;
+    /** The gained energy when sit. */
+    static const uint8_t ADD_ENERGY_SIT         = 7;
+
+    /** Max size of the player's inventory. */
+    static const size_t MAX_INVENTORY_SIZE = 40;
 
     /** List of all PK modes. */
     enum PkMode
@@ -151,7 +166,7 @@ public:
     virtual void sendShow(const Player& aPlayer) const;
 
     /** Called when the timer elapse. */
-    virtual void timerElapsed(time_t aTime);
+    virtual void timerElapsed();
 
     /**
      * Distribute the points.
@@ -163,6 +178,17 @@ public:
      */
     void allot(uint8_t aForce, uint8_t aHealth, uint8_t aDexterity, uint8_t aSoul);
 
+    /**
+     * Send the items information.
+     */
+    void sendItemSet() const;
+
+    /**
+     * Save all the items.
+     */
+    void saveAllItem() const;
+
+public:
     /** Send a system message. */
     void sendSysMsg(const char* aFmt, ...) const;
 
@@ -287,12 +313,103 @@ public:
     Item* getEquipByPos(uint8_t aPos) const
     { ASSERT(aPos < Item::MAX_EQUIPMENT); return mEquipment[aPos]; }
 
+    /** Get the item by its unique ID. */
+    Item* getItem(uint32_t aUID) const;
+
+    /**
+     * Award an item to the player.
+     *
+     * @param[in]   aInfo    the info of the item to award
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool awardItem(const Item::Info& aInfo, bool aSend);
+
+    /**
+     * Add an item to the player's inventory.
+     *
+     * @param[in]   aItem    the item to add
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool addItem(Item* aItem, bool aSend);
+
+    /** Erase the item from the inventory and the database. */
+    bool eraseItem(uint32_t aUID, bool aSend);
+
 public:
     /** Get the tick of the latest cool effect */
     time_t getLastCoolShow() const { return mLastCoolShow; }
 
     /** Set the tick of the latest cool effect */
     void setLastCoolShow(time_t aTick) { mLastCoolShow = aTick; }
+
+public:
+    /**
+     * Add money to the player.
+     *
+     * @param[in]   aMoney   the money to add
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool gainMoney(uint32_t aMoney, bool aSend);
+
+    /**
+     * Add CPs to the player.
+     *
+     * @param[in]   aCPs     the CPs to add
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool gainCPs(uint32_t aCPs, bool aSend);
+
+    /**
+     * Remove money to the player.
+     *
+     * @param[in]   aMoney   the money to remove
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool spendMoney(uint32_t aMoney, bool aSend);
+
+    /**
+     * Remove CPs to the player.
+     *
+     * @param[in]   aCPs     the CPs to remove
+     * @param[in]   aSend    whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool spendCPs(uint32_t aCPs, bool aSend);
+
+    /**
+     * Add/remove a value from the player's attribute.
+     *
+     * @param[in]   aType       the type of the attribute
+     * @param[in]   aData       the value to add/remove
+     * @param[in]   aSend       whether or not the client must be updated
+     * @param[in]   aBroadcast  whether or not the broadcast set must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
+                   bool aSend, bool aBroadcast);
+
+private:
+    /** Delete all the items of the player. */
+    void deleteAllItem();
 
 private:
     Client& mClient; //!< the client
@@ -328,7 +445,8 @@ private:
     PkMode mPkMode; //!< the Pk mode of the player
 
     Item* mEquipment[Item::MAX_EQUIPMENT]; //!< the equipment of the player
-
+    std::map<uint32_t, Item*> mInventory; //!< the inventory of the player
+    mutable QMutex mInventoryMutex; //!< the mutex to access the inventory
 
     // MsgTick protection
     uint32_t mMsgCount; //!< the last msg count
@@ -340,6 +458,7 @@ private:
     std::deque<int32_t> mServerTicks; //!< the server ticks
 
     time_t mLastCoolShow; //!< the tick of the latest cool effect
+    Timer mLastAddEnergy; //!< the timer of the latest "add" ernergy
 };
 
 #endif // _COPS_V7_EMULATOR_PLAYER_H

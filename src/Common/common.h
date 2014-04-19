@@ -46,12 +46,12 @@
 
 // Delete a pointer and set the pointer to NULL.
 #define SAFE_DELETE(ptr)                          \
-    delete ptr;                                   \
+    delete ptr,                                   \
     ptr = nullptr;
 
 // Delete an array and set the pointer to NULL.
 #define SAFE_DELETE_ARRAY(ptr)                    \
-    delete[] ptr;                                 \
+    delete[] ptr,                                 \
     ptr = nullptr;
 
 /*

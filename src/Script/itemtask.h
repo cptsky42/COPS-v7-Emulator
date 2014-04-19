@@ -14,7 +14,6 @@
 #include <string>
 
 class Client;
-struct lua_State;
 
 /**
  * Process a Lua script and execute the processAction when executed.
@@ -22,15 +21,6 @@ struct lua_State;
  */
 class ItemTask : public Script
 {
-public:
-    /**
-     * Register the specific functions of the item's actions.
-     *
-     * @retval ERROR_SUCCESS on success
-     * @returns Error code otherwise
-     */
-    static err_t registerFunctions();
-
 public:
     /**
      * Create a new task to be used by an item.
@@ -54,9 +44,6 @@ public:
      * @returns Error code otherwise
      */
     virtual err_t execute(Client& aClient, int32_t aParam) const;
-
-private:
-    // MsgItem Lua methods
 
 private:
     std::string mFct; //!< the function's name to call

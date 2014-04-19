@@ -62,7 +62,7 @@ public:
 
 private:
     /* Multiplier to get the clock time in milliseconds instead of seconds. */
-    static const double CLOCK_MULTIPLIER = 1000.00 / CLOCKS_PER_SEC;
+    static const double CLOCK_MULTIPLIER; // see basefunc.cpp for the definition...
 
 private:
     clock_t mLastClock; //!< the last clock

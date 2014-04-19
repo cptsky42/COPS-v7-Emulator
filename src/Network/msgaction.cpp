@@ -183,8 +183,13 @@ MsgAction :: process(Client* aClient)
             }
         case ACTION_GET_ITEM_SET:
             {
-                // TODO: send item set
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
 
+                player.sendItemSet();
                 client.send(this);
                 break;
             }

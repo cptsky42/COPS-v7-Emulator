@@ -71,6 +71,8 @@ public:
     void process(Client* aClient,
                  const uint8_t* aEncryptIV, const uint8_t* aDecryptIV);
 
+    using Msg::process; // do not hide the virtual function...
+
 private:
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;

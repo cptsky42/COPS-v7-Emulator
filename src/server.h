@@ -13,16 +13,15 @@
 #include "env.h"
 #include "tcpserver.h"
 #include <string>
+#include <QCoreApplication>
 
 class NetworkClient;
 
 /**
  * Global server object with the AccServer and the MsgServer.
- * It is a singleton and will be created when getting the instance.
  */
-class Server : public Environment::Global
+class Server : public QCoreApplication
 {
-    // !!! class is a singleton !!!
     PROHIBIT_COPY(Server);
 
 public:
@@ -33,21 +32,35 @@ public:
 
 public:
     /**
-     * Get the Server singleton. If the object does not exist yet,
-     * it will be created.
+     * Get the Server instance.
      *
-     * @returns A reference to the singleton
+     * @returns A reference to the instance
      */
-    static Server& getInstance();
+    static const Server& getInstance();
 
     /** Get the IPv4 address of the MsgServer. */
     static const char* getServerIP() { return getInstance().mServerIP.c_str(); }
     /*** Get the name of the MsgServer. */
     static const char* getServerName() { return getInstance().mServerName.c_str(); }
 
+    Q_OBJECT
 public:
+    /* constructor */
+    Server(int argc, char* argv[]);
+
     /* destructor */
-    ~Server();
+    virtual ~Server();
+
+    /**
+     * Execute the server.
+     */
+    virtual int exec();
+
+private slots:
+    /**
+     * Action to do when the application is about to quit.
+     */
+    void aboutToQuit();
 
 private:
     /**
@@ -72,13 +85,6 @@ private:
      * @param aClient[in]   The client that will be disconnected
      */
     static void disconnectionHandler(NetworkClient* aClient);
-
-private:
-    /* constructor */
-    Server();
-
-private:
-    static Server* sInstance; //!< static instance of the singleton
 
 private:
     TcpServer mAccServer; //!< TCP/IP server for the AccServer

@@ -174,7 +174,7 @@ MsgTalk :: process(Client* aClient)
     {
         char cmd[MAX_WORDSSIZE] = "NO_CMD";
         char param[MAX_WORDSSIZE] = "";
-        sscanf(words, "/%s %s", cmd, param);
+        sscanf(words, "/%s %[^\n]s", cmd, param);
 
         if (strncmp(cmd, "break", MAX_WORDSSIZE) == 0)
         {

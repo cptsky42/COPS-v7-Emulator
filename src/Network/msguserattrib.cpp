@@ -10,10 +10,10 @@
 #include "client.h"
 #include "entity.h"
 
-MsgUserAttrib :: MsgUserAttrib(Entity* aEntity, int32_t aData, UserAttrType aType)
+MsgUserAttrib :: MsgUserAttrib(Entity* aEntity, uint64_t aData, UserAttrType aType)
     : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
 {
-    create(aEntity, aData, aType);
+    create(aEntity, &aData, aType);
 }
 
 MsgUserAttrib :: ~MsgUserAttrib()
@@ -22,9 +22,10 @@ MsgUserAttrib :: ~MsgUserAttrib()
 }
 
 void
-MsgUserAttrib :: create(Entity* aEntity, int32_t aData, UserAttrType aType)
+MsgUserAttrib :: create(Entity* aEntity, uint64_t* aData, UserAttrType aType)
 {
     ASSERT(aEntity != nullptr);
+    ASSERT(aData != nullptr);
 
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_USERATTRIB;
@@ -32,8 +33,8 @@ MsgUserAttrib :: create(Entity* aEntity, int32_t aData, UserAttrType aType)
     mInfo->UniqId = aEntity != nullptr ? aEntity->getUID() : 0;
     mInfo->Amount = 1;
 
-    mInfo->Attrib[0].Type = (int32_t)aType;
-    mInfo->Attrib[0].Data = aData;
+    mInfo->Attrib[0].Type = (uint32_t)aType;
+    mInfo->Attrib[0].Data = *aData;
 }
 
 void
@@ -43,10 +44,10 @@ MsgUserAttrib :: swap(uint8_t* aBuf) const
 
     MsgInfo* info = (MsgInfo*)aBuf;
 
-    for (int i = 0; i < info->Amount; ++i)
+    for (uint32_t i = 0; i < info->Amount; ++i)
     {
         info->Attrib[i].Type = bswap32(info->Attrib[i].Type);
-        info->Attrib[i].Data = bswap32(info->Attrib[i].Data);
+        info->Attrib[i].Data = bswap64(info->Attrib[i].Data);
     }
     info->UniqId = bswap32(info->UniqId);
     info->Amount = bswap32(info->Amount);

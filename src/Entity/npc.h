@@ -112,7 +112,7 @@ public:
     virtual void sendShow(const Player& aPlayer) const;
 
     /** Called when the timer elapse. */
-    virtual void timerElapsed(time_t aTime) { /* TODO npc timerElapsed */  }
+    virtual void timerElapsed() { /* TODO npc timerElapsed */  }
 
 public:
     /** Get the type of the NPC. */

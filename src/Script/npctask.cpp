@@ -8,26 +8,7 @@
 
 #include "npctask.h"
 #include "client.h"
-#include "player.h"
-#include "msgdialog.h"
 #include "lua.hpp"
-
-/* static */
-err_t
-NpcTask :: registerFunctions()
-{
-    err_t err = ERROR_SUCCESS;
-
-    lua_State* state = Script::getState();
-
-    // MsgDialog Lua methods
-    lua_register(state, "text", NpcTask::text);
-    lua_register(state, "link", NpcTask::link);
-    lua_register(state, "pic", NpcTask::pic);
-    lua_register(state, "create", NpcTask::create);
-
-    return err;
-}
 
 NpcTask :: NpcTask(uint32_t aUID, const char* aPath)
     : Script(aUID, aPath)
@@ -67,66 +48,4 @@ NpcTask :: execute(Client& aClient, int32_t aParam) const
     }
 
     return err;
-}
-
-
-
-
-/* static */
-int
-NpcTask :: text(lua_State* aState)
-{
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
-
-    const char* text = lua_tolstring(aState, 2, nullptr);
-
-    MsgDialog msg(text, 0, 0, MsgDialog::ACTION_TEXT);
-    client.send(&msg);
-
-    return 0;
-}
-
-/* static */
-int
-NpcTask :: link(lua_State* aState)
-{
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
-
-    const char* text = lua_tolstring(aState, 2, nullptr);
-    int idx = lua_tointeger(aState, 3);
-
-    MsgDialog msg(text, 0, idx, MsgDialog::ACTION_LINK);
-    client.send(&msg);
-
-    return 0;
-}
-
-/* static */
-int
-NpcTask :: pic(lua_State* aState)
-{
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
-
-    int pic = lua_tointeger(aState, 2);
-
-    MsgDialog msg(0, 0, pic, 0, MsgDialog::ACTION_PIC);
-    client.send(&msg);
-
-    return 0;
-}
-
-/* static */
-int
-NpcTask :: create(lua_State* aState)
-{
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
-
-    MsgDialog msg(0xFF, MsgDialog::ACTION_CREATE);
-    client.send(&msg);
-
-    return 0;
 }

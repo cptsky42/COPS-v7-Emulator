@@ -46,8 +46,8 @@ public:
     #pragma pack(push, 1)
     typedef struct
     {
-        int32_t Type;
-        int32_t Data;
+        uint32_t Type;
+        uint64_t Data;
     }UserAttrib;
     #pragma pack(pop)
 
@@ -58,20 +58,20 @@ public:
         /** Generic header of all msgs */
         Msg::Header Header;
         uint32_t UniqId;
-        int32_t Amount;
+        uint32_t Amount;
         UserAttrib Attrib[1];
     }MsgInfo;
     #pragma pack(pop)
 
 public:
-    MsgUserAttrib(Entity* aEntity, int32_t aData, UserAttrType aType);
+    MsgUserAttrib(Entity* aEntity, uint64_t aData, UserAttrType aType);
 
     /* destructor */
     virtual ~MsgUserAttrib();
 
 private:
     /* internal filling of the packet */
-    void create(Entity* aEntity, int32_t aData, UserAttrType aType);
+    void create(Entity* aEntity, uint64_t* aData, UserAttrType aType);
 
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;

@@ -91,7 +91,7 @@ public:
         union
         {
             /** The data of the action. */
-            int32_t Data;
+            uint32_t Data;
             struct
             {
                 /** The Y coord of the item. */
@@ -109,6 +109,23 @@ public:
     #pragma pack(pop)
 
 public:
+    /**
+     * Create a new MsgItem packet for the specified UID.
+     *
+     * @param[in]   aUID       the unique ID
+     * @param[in]   aAction    the action Id
+     */
+    MsgItem(uint32_t aUID, Action aAction);
+
+    /**
+     * Create a new MsgItem packet for the specified UID.
+     *
+     * @param[in]   aUID       the unique ID
+     * @param[in]   aData      the data of the action
+     * @param[in]   aAction    the action Id
+     */
+    MsgItem(uint32_t aUID, uint32_t aData, Action aAction);
+
     /**
      * Create a message object from the specified buffer.
      * The buffer will be took by the object and the memory
@@ -135,6 +152,9 @@ public:
     virtual void process(Client* aClient);
 
 private:
+    /* internal filling of the packet */
+    void create(uint32_t aUID, uint32_t aData, uint32_t aTargetUID, Action aAction);
+
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;
 

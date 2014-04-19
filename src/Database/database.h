@@ -98,6 +98,17 @@ public:
     err_t getPlayerInfo(Client& aClient) const;
 
     /**
+     * Try to retreive the player's items information.
+     *
+     * @param[in]   aPlayer     the player
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t getPlayerItems(Player& aPlayer) const;
+
+    /**
      * Try to save the player information for the specified client.
      *
      * @param[in]   aClient     the client
@@ -107,6 +118,48 @@ public:
      * @returns Error code otherwise
      */
     err_t savePlayer(Client& aClient) const;
+
+    /**
+     * Try to save the player's item information.
+     *
+     * @param[in]   aItem      the item
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t saveItem(const Item& aItem) const;
+
+    /**
+     * Try to create an item.
+     *
+     * @param[out]  aOutItem       the created item
+     * @param[in]   aInfo          the item info
+     * @param[in]   aPlayer        the owner of the item
+     * @param[in]   aAmount        the amount of the item
+     * @param[in]   aAmountLimit   the amount limit of the item
+     * @param[in]   aIdent         the ident of the item
+     * @param[in]   aPosition      the position of the item
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t createItem(Item** aOutItem, const Item::Info& aInfo,
+                     const Player& aPlayer,
+                     uint16_t aAmount, uint16_t aAmountLimit,
+                     uint8_t aIdent, Item::Position aPosition) const;
+
+    /**
+     * Try to erase the player's item.
+     *
+     * @param[in]   aItem      the item
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t eraseItem(const Item& aItem) const;
 
     /**
      * Get the required exp of the specified level.
@@ -187,13 +240,28 @@ public:
      * Get the item information based on the Id.
      *
      * @param[out]   aOutInfo      the object that will receive the info
-     * @param[in]    aId           the monster's Id
+     * @param[in]    aId           the item's Id
      *
      * @retval ERROR_SUCCESS on success
      * @retval ERROR_NOT_FOUND if the info is not found
      * @returns Error code otherwise
      */
     err_t getItemInfo(const Item::Info** aOutInfo, uint32_t aId) const;
+
+    /**
+     * Get the item information based on the shop Id and the item type.
+     *
+     * @param[out]   aOutInfo        the object that will receive the info
+     * @param[out]   aOutMoneyType   the money type required to buy the item
+     * @param[in]    aShopId         the shop's Id
+     * @param[in]    aItemId         the item's Id
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_NOT_FOUND if the info is not found
+     * @returns Error code otherwise
+     */
+    err_t getItemFromShop(const Item::Info** aOutInfo, uint8_t& aOutMoneyType,
+                          uint32_t aShopId, uint32_t aItemId) const;
 
     /**
      * Load all NPCs in memory from the database.

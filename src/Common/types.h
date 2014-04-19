@@ -39,4 +39,16 @@
 #define nullptr NULL
 #endif
 
+/*
+ *****************************************************
+ * constexpr definition
+ ****************************************************
+ */
+
+// GCC 4.6+ or Clang feature-detection
+#if !(defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 460)) && \
+    !(defined(__clang__) && __has_feature(cxx_constexpr))
+#define constexpr const
+#endif
+
 #endif // _COPS_V7_EMULATOR_TYPES_H

@@ -57,6 +57,9 @@ Npc :: activateNpc(Client& aClient, int32_t aAction)
         LOG(DBG, "Npc %d is a task npc and the task %d will be executed...",
             mUID, task.getUID());
         result = (task.execute(aClient, 0) == ERROR_SUCCESS);
+
+        if (result)
+            aClient.setCurTask(task);
     }
 
     return result;

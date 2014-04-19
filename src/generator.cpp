@@ -27,8 +27,8 @@ Generator :: makeGenerator(Generator** aOutGenerator, const QSqlQuery& aQuery)
 
     err_t err = ERROR_SUCCESS;
 
-    uint32_t id = (uint32_t)aQuery.value(SQLDATA_ID).toInt();
-    uint32_t mapId = (uint32_t)aQuery.value(SQLDATA_MAPID).toInt();
+    uint32_t id = (uint32_t)aQuery.value(SQLDATA_ID).toUInt();
+    uint32_t mapId = (uint32_t)aQuery.value(SQLDATA_MAPID).toUInt();
     GameMap* map = mgr.getMap(mapId);
 
     if (map != nullptr)
@@ -110,10 +110,14 @@ Generator :: findGenPos(uint16_t& aOutPosX, uint16_t& aOutPosY)
 }
 
 uint32_t
-Generator :: generate(uint32_t aAmount)
+Generator :: generate(uint32_t aAmount, bool aInitializing /* = false */)
 {
     static World& world = World::getInstance(); // singleton...
     const uint32_t RANDOM_GENERATOR_SECS = 600;
+
+    if (!aInitializing && !mMap.isActive())
+        return 0;
+
 
     if (mGenAmount >= mMaxNPC)
         return 0;

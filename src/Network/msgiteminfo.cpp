@@ -7,8 +7,9 @@
  */
 
 #include "msgiteminfo.h"
+#include "item.h"
 
-MsgItemInfo :: MsgItemInfo(void* aItem, Action aAction)
+MsgItemInfo :: MsgItemInfo(const Item& aItem, Action aAction)
     : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
 {
     create(aItem, aAction);
@@ -20,32 +21,33 @@ MsgItemInfo :: ~MsgItemInfo()
 }
 
 void
-MsgItemInfo :: create(void* aItem, Action aAction)
+MsgItemInfo :: create(const Item& aItem, Action aAction)
 {
-    //ASSERT(aItem != nullptr);
+    ASSERT(&aItem != nullptr);
 
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_ITEMINFO;
 
-    mInfo->UniqId = 1000000;
-    mInfo->Type = ((int*)aItem)[0];
-    mInfo->Amount = 1099;
-    mInfo->AmountLimit = 10099;
+    mInfo->UniqId = aItem.getUID();
+    mInfo->Type = aItem.getType();
+    mInfo->Amount = aItem.getAmount();
+    mInfo->AmountLimit = aItem.getAmountLimit();
     mInfo->Action = (uint8_t)aAction;
-    mInfo->Ident = 0;
-    mInfo->Position = ((int*)aItem)[1];
-    memset(mInfo->Padding, 0, sizeof(mInfo->Padding));
-    mInfo->Gem1 = 13;
-    mInfo->Gem2 = 23;
-    mInfo->Magic1 = 201;
-    mInfo->Magic2 = 0;
-    mInfo->Magic3 = 9; // Ph-Def Bonus
-    mInfo->Bless = 7;
-    mInfo->Enchant = 255;
-    mInfo->Restrain = 2;
-    mInfo->Locked = true;
-    mInfo->Suspicious = true;
-    mInfo->Color = 4;
+    mInfo->Ident = aItem.getIdent();
+    mInfo->Position = (uint8_t)aItem.getPosition();
+    memset(mInfo->Padding1, 0, sizeof(mInfo->Padding1));
+    mInfo->Gem1 = aItem.getGem1();
+    mInfo->Gem2 = aItem.getGem2();
+    mInfo->Magic1 = aItem.getMagic1();
+    mInfo->Magic2 = aItem.getMagic2();
+    mInfo->Magic3 = aItem.getMagic3();
+    mInfo->Bless = aItem.getBless();
+    mInfo->Enchant = aItem.getEnchant();
+    mInfo->Padding2 = 0;
+    mInfo->Restrain = aItem.getRestrain();
+    mInfo->Suspicious = aItem.isSuspicious();
+    mInfo->Locked = aItem.isLocked();
+    mInfo->Color = aItem.getColor();
 }
 
 void
@@ -60,5 +62,7 @@ MsgItemInfo :: swap(uint8_t* aBuf) const
     info->Amount = bswap16(info->Amount);
     info->AmountLimit = bswap16(info->AmountLimit);
     info->Restrain = bswap32(info->Restrain);
+    info->Suspicious = bswap16(info->Suspicious);
+    info->Locked = bswap16(info->Locked);
     info->Color = bswap32(info->Color);
 }

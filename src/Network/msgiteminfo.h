@@ -12,6 +12,8 @@
 #include "common.h"
 #include "msg.h"
 
+class Item;
+
 /**
  * Message describing all caracteristics of an item.
  */
@@ -53,13 +55,13 @@ public:
         /** Position of the item. */
         uint8_t Position;
         /** Unknown padding. */
-        uint8_t Padding[5];
+        uint8_t Padding1[5];
         /** First socket of the item. */
         uint8_t Gem1;
         /** Second socket of the item. */
         uint8_t Gem2;
         /** Attribute of the item. (e.g. poison) */
-        uint8_t Magic1; // Attr
+        uint8_t Magic1; // Attr (201, etc)
         /** Unknown attribute. */
         uint8_t Magic2; // ???
         /** Craft of the item. */
@@ -68,26 +70,34 @@ public:
         uint8_t Bless;
         /** Enchant of the item. */
         uint8_t Enchant;
+        /** Unknown padding. */
+        uint8_t Padding2;
         /** Restrain of the item. */
-        uint32_t Restrain;
-        /** Whether the item is locked or not. */
-        uint8_t Locked; // boolean
+        uint32_t Restrain; // ?
         /** Whether the item is suspicious or not. */
-        uint8_t Suspicious; // boolean
+        uint16_t Suspicious; // boolean
+        /** Whether the item is locked or not. */
+        uint16_t Locked; // boolean
         /** Color of the item. */
         uint32_t Color;
     }MsgInfo;
     #pragma pack(pop)
 
 public:
-    MsgItemInfo(void* aItem, Action aAction); // FIXME!
+    /**
+     * Create a new MsgItemInfo packet for the specified entity.
+     *
+     * @param[in]   aItem       the item
+     * @param[in]   aAction     the action Id
+     */
+    MsgItemInfo(const Item& aItem, Action aAction);
 
     /* destructor */
     virtual ~MsgItemInfo();
 
 private:
     /* internal filling of the packet */
-    void create(void* aItem, Action aAction); // FIXME!
+    void create(const Item& aItem, Action aAction);
 
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;

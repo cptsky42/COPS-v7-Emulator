@@ -9,10 +9,7 @@
 #include "player.h"
 #include "world.h"
 #include "mapmanager.h"
-#include "msgtalk.h"
-#include "msgaction.h"
-#include "msgtick.h"
-#include "msgplayer.h"
+#include "allmsg.h"
 #include <stdarg.h>
 #include <math.h>
 #include <map>
@@ -47,6 +44,7 @@ Player :: Player(Client& aClient, uint32_t aUID)
     mLastServerTick = 0;
 
     mLastCoolShow = 0;
+    mLastAddEnergy.start(Player::ADD_ENERGY_SECS);
 }
 
 Player :: ~Player()
@@ -56,6 +54,8 @@ Player :: ~Player()
 
     if (map != nullptr)
         map->leaveRoom(*this);
+
+    deleteAllItem();
 }
 
 int32_t
@@ -191,19 +191,19 @@ Player :: getAdditionMAtk() const
     for (uint8_t pos = 1; pos < Item::MAX_EQUIPMENT; ++pos)
     {
         // TODO get equipment
-    //		CItem* pItem = m_pEquipment[i];
-    //		if(pItem && pItem->TestStatus(_ITEM_STATUS_MAGIC_ADD))
-    //		{
-    //			if ( i + 1 == ITEMPOSITION_SPRITE )
-    //			{
-    //				if ( pItem->GetProfessionRequired() == _SPRITE_ADDITION_MATK )
-    //				{
-    //					nAttack += pItem->GetAmountLimit() ;
-    //				}
-    //			}
-    //			else if(i+1 == ITEMPOSITION_WEAPONR || i+1 == ITEMPOSITION_RINGR ||  i+1 == ITEMPOSITION_SHOES)
-    //				nAttack += m_pEquipment[i]->GetAddition();
-    //		}
+        //		CItem* pItem = m_pEquipment[i];
+        //		if(pItem && pItem->TestStatus(_ITEM_STATUS_MAGIC_ADD))
+        //		{
+        //			if ( i + 1 == ITEMPOSITION_SPRITE )
+        //			{
+        //				if ( pItem->GetProfessionRequired() == _SPRITE_ADDITION_MATK )
+        //				{
+        //					nAttack += pItem->GetAmountLimit() ;
+        //				}
+        //			}
+        //			else if(i+1 == ITEMPOSITION_WEAPONR || i+1 == ITEMPOSITION_RINGR ||  i+1 == ITEMPOSITION_SHOES)
+        //				nAttack += m_pEquipment[i]->GetAddition();
+        //		}
     }
 
     return atk;
@@ -401,9 +401,10 @@ Player :: move(uint32_t aMapId, uint16_t aX, uint16_t aY)
         send(&msg);
 
         enterMap();
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool
@@ -448,9 +449,11 @@ Player :: move(uint16_t aX, uint16_t aY, uint8_t aDir)
 
         // IsInBattle = false, MagicIntone = false, Mining = false
         // ProcessAfterMove()
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 void
@@ -472,7 +475,7 @@ Player :: sendShow(const Player& aPlayer) const
 }
 
 void
-Player :: timerElapsed(time_t aTime)
+Player :: timerElapsed()
 {
     int32_t now = timeGetTime();
 
@@ -538,31 +541,21 @@ Player :: timerElapsed(time_t aTime)
 
     ////	if (m_tAutoHealLife.ToNextTime())
     ////		this->ProcAutoHealLife();
-    ///
-    /////	if(IsAlive())		// && !this->QueryTransformation()
-    //	{
-    ////		if (!this->IsWing())
-    //		{
-    //			if(QueryStatus(STATUS_PELT))
-    //			{
-    //				if (m_tEnergy.ToNextTime(DEL_ENERGY_PELT_SECS))
-    //				{
-    //					if (this->GetEnergy() < DEL_ENERGY_PELT)
-    //						CRole::DetachStatus(this->QueryRole(), STATUS_PELT);
-    //					else
-    //						AddAttrib(_USERATTRIB_ENERGY, -1*DEL_ENERGY_PELT, SYNCHRO_TRUE);
-    //				}
-    //			}
-    //			else if(GetEnergy() < GetMaxEnergy())
-    //			{
-    //#ifdef	PALED_DEBUG
-    //					SendSysMsg("WALK --------------");
-    //#endif
-    //				if (m_tEnergy.ToNextTime(ADD_ENERGY_STAND_SECS))
-    //					AddAttrib(_USERATTRIB_ENERGY, ADD_ENERGY_STAND, SYNCHRO_TRUE);
-    //			}
-    //		}
-    //	}
+
+    if (isAlive())
+    {
+        if (true) //TODO if (!isWing())
+        {
+            if (getEnergy() < getMaxEnergy() &&
+                mLastAddEnergy.toNextTime())
+            {
+                if (Player::POSE_STANDBY == getPose())
+                    addAttrib(MsgUserAttrib::USER_ATTRIB_ENERGY, ADD_ENERGY_STAND, true, false);
+                else if (Player::POSE_SITDOWN == getPose())
+                    addAttrib(MsgUserAttrib::USER_ATTRIB_ENERGY, ADD_ENERGY_SIT, true, false);
+            }
+        }
+    }
 
     //	if (QueryMagic())
     //		QueryMagic()->OnTimer(tCurr);
@@ -644,43 +637,6 @@ Player :: timerElapsed(time_t aTime)
     //		KillCallPet();
     //	}
 
-    //	if(m_pMount)
-    //	{
-    //		DEADLOOP_CHECK(PID, "m_pMount")
-    //		if(!m_tMount.IsActive())
-    //			m_tMount.Startup(MOUNT_ADD_INTIMACY_SECS);
-    //		else if(m_tMount.ToNextTime())
-    //		{
-    //			if(m_pMount->GetInt(ITEMDATA_INTIMACY) < MAX_INTIMACY)
-    //			{
-    //				m_pMount->SetInt(ITEMDATA_INTIMACY, m_pMount->GetInt(ITEMDATA_INTIMACY) + 1, UPDATE_TRUE);
-    //				this->SendSysMsg(STR_INC_MOUNT_INTIMACY);
-
-    //				// synchro
-    //				CMsgItemInfo	msg;
-    //				if (msg.Create(m_pMount, ITEMINFO_UPDATE))
-    //					SendMsg(&msg);
-    //			}
-    //		}
-    //	}
-
-    //	if(m_pSprite)
-    //	{
-    //		DEADLOOP_CHECK(PID, "m_pSprite")
-    //		if (!m_tSprite.IsActive())
-    //			m_tSprite.Startup(SPRITE_ADD_EXP_SECS);
-    //		else if (m_tSprite.ToNextTime())
-    //		{
-    //			if (m_pSprite->AwardExp(SPRITE_ADD_EXP, this->GetLuck()) > 0)
-    //			{
-    //				// synchro
-    //				CMsgItemInfo	msg;
-    //				if (msg.Create(m_pSprite, ITEMINFO_UPDATE))
-    //					SendMsg(&msg);
-    //			}
-    //		}
-    //	}
-
     //	if (IsMoreLeaveWord() && m_tLeaveWord.ToNextTime(5))
     //	{
     //		LeaveWord()->ShowWords(this);
@@ -752,6 +708,192 @@ Player :: timerElapsed(time_t aTime)
     //	}
 }
 
+bool
+Player :: gainMoney(uint32_t aMoney, bool aSend)
+{
+    uint64_t money = aMoney + mMoney;
+    mMoney = (uint32_t)min(money, (uint64_t)UINT32_MAX);
+
+    if (aSend)
+    {
+        MsgUserAttrib msg(this, mMoney, MsgUserAttrib::USER_ATTRIB_MONEY);
+        send(&msg);
+    }
+
+    return money <= UINT32_MAX;
+}
+
+bool
+Player :: gainCPs(uint32_t aCPs, bool aSend)
+{
+    uint64_t cps = aCPs + mCPs;
+    mCPs = (uint32_t)min(cps, (uint64_t)UINT32_MAX);
+
+    if (aSend)
+    {
+        // TODO
+        //    MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
+        //    send(&msg);
+    }
+
+    return cps <= UINT32_MAX;
+}
+
+bool
+Player :: spendMoney(uint32_t aMoney, bool aSend)
+{
+    int64_t money = mMoney - aMoney;
+    mMoney = (uint32_t)max((int64_t)0, money);
+
+    if (aSend)
+    {
+        MsgUserAttrib msg(this, mMoney, MsgUserAttrib::USER_ATTRIB_MONEY);
+        send(&msg);
+    }
+
+    return money > 0;
+}
+
+bool
+Player :: spendCPs(uint32_t aCPs, bool aSend)
+{
+    int64_t cps = mCPs - aCPs;
+    mCPs = (uint32_t)max((int64_t)0, cps);
+
+    if (aSend)
+    {
+        // TODO
+        //    MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
+        //    send(&msg);
+    }
+
+    return cps > 0;
+}
+
+bool
+Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
+                    bool aSend, bool aBroadcast)
+{
+    if (aData == 0)
+        return false;
+
+    MsgUserAttrib* msg = nullptr;
+
+    switch (aType)
+    {
+        case MsgUserAttrib::USER_ATTRIB_LEV:
+            {
+                // TODO MAX_LEVEL
+                int64_t lvl = max((int64_t)0, min((int64_t)135, getLevel() + aData));
+                mLevel = (uint8_t)lvl;
+
+                msg = new MsgUserAttrib(this, getLevel(), MsgUserAttrib::USER_ATTRIB_LEV);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_LIFE:
+            {
+                int64_t life = max((int64_t)0, min((int64_t)getMaxHP(), getCurHP() + aData));
+                mCurHP = (uint16_t)life;
+
+                msg = new MsgUserAttrib(this, getCurHP(), MsgUserAttrib::USER_ATTRIB_LIFE);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_MANA:
+            {
+                int64_t mana = max((int64_t)0, min((int64_t)getMaxMP(), getCurMP() + aData));
+                mCurMP = (uint16_t)mana;
+
+                msg = new MsgUserAttrib(this, getCurMP(), MsgUserAttrib::USER_ATTRIB_MANA);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_EXP:
+            {
+                mExp += aData;
+                msg = new MsgUserAttrib(this, getExp(), MsgUserAttrib::USER_ATTRIB_EXP);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_PK:
+            {
+                int64_t pkpoints = max((int64_t)0, min((int64_t)INT16_MAX, mPkPoints + aData));
+                mPkPoints = (int16_t)pkpoints;
+
+                msg = new MsgUserAttrib(this, getPkPoints(), MsgUserAttrib::USER_ATTRIB_PK);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_ADD_POINT:
+            {
+                if (aData < 0)
+                    return false;
+
+                mAddPoints += aData;
+                msg = new MsgUserAttrib(this, getAddPoints(), MsgUserAttrib::USER_ATTRIB_ADD_POINT);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_SOUL:
+            {
+                int64_t soul = max((int64_t)0, getSoul() + aData);
+                mSoul = (uint16_t)soul;
+
+                msg = new MsgUserAttrib(this, getSoul(), MsgUserAttrib::USER_ATTRIB_SOUL);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_HEALTH:
+            {
+                int64_t health = max((int64_t)0, getHealth() + aData);
+                mHealth = (uint16_t)health;
+
+                msg = new MsgUserAttrib(this, getHealth(), MsgUserAttrib::USER_ATTRIB_HEALTH);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_FORCE:
+            {
+                int64_t force = max((int64_t)0, getForce() + aData);
+                mForce = (uint16_t)force;
+
+                msg = new MsgUserAttrib(this, getForce(), MsgUserAttrib::USER_ATTRIB_FORCE);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_DEXTERITY:
+            {
+                int64_t dexterity = max((int64_t)0, getDexterity() + aData);
+                mDexterity = (uint16_t)dexterity;
+
+                msg = new MsgUserAttrib(this, getDexterity(), MsgUserAttrib::USER_ATTRIB_DEXTERITY);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_XP:
+            {
+                int64_t xp = max((int64_t)0, min((int64_t)getMaxXP(), getXP() + aData));
+                mXP = (uint8_t)xp;
+
+                msg = new MsgUserAttrib(this, getXP(), MsgUserAttrib::USER_ATTRIB_XP);
+                break;
+            }
+        case MsgUserAttrib::USER_ATTRIB_ENERGY:
+            {
+                int64_t energy = max((int64_t)0, min((int64_t)getMaxEnergy(), getEnergy() + aData));
+                mEnergy = (uint8_t)energy;
+
+                msg = new MsgUserAttrib(this, getEnergy(), MsgUserAttrib::USER_ATTRIB_ENERGY);
+                break;
+            }
+        default:
+            ASSERT(false);
+            return false;
+    }
+
+    // TODO ? Save ?
+
+    if (aSend)
+        send(msg);
+
+    if (aBroadcast)
+        broadcastRoomMsg(msg, false);
+
+    SAFE_DELETE(msg);
+    return true;
+}
+
 void
 Player :: allot(uint8_t aForce, uint8_t aHealth, uint8_t aDexterity, uint8_t aSoul)
 {
@@ -760,6 +902,229 @@ Player :: allot(uint8_t aForce, uint8_t aHealth, uint8_t aDexterity, uint8_t aSo
     mDexterity += aDexterity;
     mSoul += aSoul;
     mAddPoints -= (aForce + aHealth + aDexterity + aSoul);
+}
+
+Item*
+Player :: getItem(uint32_t aUID) const
+{
+    Item* item = nullptr;
+
+    mInventoryMutex.lock();
+    map<uint32_t, Item*>::const_iterator it;
+    if ((it = mInventory.find(aUID)) != mInventory.end())
+    {
+        item = it->second;
+    }
+    mInventoryMutex.unlock();
+
+    return item;
+}
+
+bool
+Player :: awardItem(const Item::Info& aInfo, bool aSend)
+{
+    ASSERT_ERR(&aInfo != nullptr, false);
+
+    bool success = true;
+
+    /* TODO ? auto combine ?
+    if(bAutoCombine && CItem::IsCountable(nItemType))
+    {
+        //CItemTypeData* pType = ItemType()->QueryItemType(pInfo->idType);
+        //CHECKF(pType);
+        if(!CItem::IsNeedIdent(pInfo->nIdent) && pInfo->nAmount < pInfo->nAmountLimit)
+        {
+            CItem* pItem = FindCombineItem(nItemType);
+            if(pItem)
+            {
+                // check size
+                if(pItem->GetInt(ITEMDATA_AMOUNT) + pInfo->nAmount > pInfo->nAmountLimit
+                   && m_pPackage->IsPackFull(pItem))
+                {
+                    if (pItem->IsGhostGem())
+                        this->SendSysMsg(STR_GEMBAG_FULL);
+                    else
+                        this->SendSysMsg(STR_ITEMBAG_FULL);
+                    return NULL;
+                }
+
+                return CombineNewItem(pItem, pInfo, bSynchro);
+            }
+        }
+    }
+    */
+
+    if (mInventory.size() < Player::MAX_INVENTORY_SIZE)
+    {
+        Item* item = nullptr;
+        if (Item::createItem(&item, aInfo, *this))
+        {
+            if (!addItem(item, aSend))
+            {
+                LOG(ERROR, "Player::addItem() failed in Player::awardItem().");
+
+                err_t err = item->erase();
+                ASSERT(ERROR_SUCCESS == err);
+
+                SAFE_DELETE(item);
+                success = false;
+            }
+        }
+        else
+        {
+            sendSysMsg(STR_FAILED_GENERATE_ITEM);
+            success = false;
+        }
+    }
+    else
+    {
+        sendSysMsg(STR_ITEMBAG_FULL);
+        success = false;
+    }
+
+    return success;
+}
+
+bool
+Player :: addItem(Item* aItem, bool aSend)
+{
+    ASSERT_ERR(aItem != nullptr, false);
+
+    bool success = true;
+
+    if (aItem->getOwner() == nullptr || aItem->getOwner()->getUID() != getUID())
+        aItem->setOwner(this);
+
+    if (aItem->getPlayer() == nullptr || aItem->getPlayer()->getUID() != getUID())
+        aItem->setPlayer(this);
+
+    mInventoryMutex.lock();
+    if (mInventory.size() < Player::MAX_INVENTORY_SIZE)
+    {
+        map<uint32_t, Item*>::iterator it;
+        if ((it = mInventory.find(aItem->getUID())) == mInventory.end())
+        {
+            mInventory.insert(it, pair<uint32_t, Item*>(aItem->getUID(), aItem));
+        }
+        else
+        {
+            // already in the inventory...
+            success = false;
+        }
+    }
+    else
+    {
+        sendSysMsg(STR_ITEMBAG_FULL);
+        success = false;
+    }
+    mInventoryMutex.unlock();
+
+    if (aSend)
+    {
+        MsgItemInfo msg(*aItem, MsgItemInfo::ACTION_ADD_ITEM);
+        send(&msg);
+    }
+
+    return success;
+}
+
+bool
+Player :: eraseItem(uint32_t aUID, bool aSend)
+{
+    bool success = true;
+
+    mInventoryMutex.lock();
+    map<uint32_t, Item*>::iterator it;
+    if ((it = mInventory.find(aUID)) != mInventory.end())
+    {
+        Item* item = it->second;
+        ASSERT(item != nullptr);
+
+        err_t err = item->erase();
+        ASSERT(ERROR_SUCCESS == err);
+
+        mInventory.erase(it);
+        SAFE_DELETE(item);
+
+        if (aSend)
+        {
+            MsgItem msg(aUID, MsgItem::ACTION_DROP);
+            send(&msg);
+        }
+    }
+    else
+        success = false;
+    mInventoryMutex.unlock();
+
+    return success;
+}
+
+void
+Player :: sendItemSet() const
+{
+    for (uint8_t pos = 1; pos < Item::MAX_EQUIPMENT; ++pos)
+    {
+        Item* equip = mEquipment[pos];
+        if (equip != nullptr)
+        {
+            MsgItemInfo msg(*equip, MsgItemInfo::ACTION_ADD_ITEM);
+            send(&msg);
+        }
+    }
+
+    mInventoryMutex.lock();
+    for (map<uint32_t, Item*>::const_iterator
+         it = mInventory.begin(), end = mInventory.end();
+         it != end; ++it)
+    {
+        const Item* item = it->second;
+        if (item != nullptr)
+        {
+            MsgItemInfo msg(*item, MsgItemInfo::ACTION_ADD_ITEM);
+            send(&msg);
+        }
+    }
+    mInventoryMutex.unlock();
+}
+
+void
+Player :: saveAllItem() const
+{
+    for (uint8_t pos = 1; pos < Item::MAX_EQUIPMENT; ++pos)
+    {
+        Item* equip = mEquipment[pos];
+        if (equip != nullptr)
+            equip->save();
+    }
+
+    mInventoryMutex.lock();
+    for (map<uint32_t, Item*>::const_iterator
+         it = mInventory.begin(), end = mInventory.end();
+         it != end; ++it)
+    {
+        const Item* item = it->second;
+        if (item != nullptr)
+            item->save();
+    }
+    mInventoryMutex.unlock();
+}
+
+void
+Player :: deleteAllItem()
+{
+    for (uint8_t pos = 1; pos < Item::MAX_EQUIPMENT; ++pos)
+        SAFE_DELETE(mEquipment[pos]);
+
+    mInventoryMutex.lock();
+    for (map<uint32_t, Item*>::iterator
+         it = mInventory.begin(), end = mInventory.end();
+         it != end; ++it)
+    {
+        Item* item = it->second;
+        SAFE_DELETE(item);
+    }
+    mInventory.clear();
+    mInventoryMutex.unlock();
 }
 
 void

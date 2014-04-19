@@ -17,6 +17,7 @@
 #include "generator.h"
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlResult>
+#include <QtSql/QSqlDriver>
 #include <QVariant>
 #include <QSqlError>
 #include <QDirIterator>
@@ -100,6 +101,15 @@ Database :: connect(const char* aHost, const char* aDbName,
     mConnection.setUserName(aUserName);
     mConnection.setPassword(aPassword);
 
+    if (mConnection.driver() != nullptr &&
+        !mConnection.driver()->hasFeature(QSqlDriver::LastInsertId))
+    {
+        fprintf(stdout, "Warning ! %s driver doesn't have feature \"LastInsertId\".",
+                qPrintable(mConnection.driverName()));
+        LOG(WARN, "%s driver doesn't have feature \"LastInsertId\".",
+            qPrintable(mConnection.driverName()));
+    }
+
     return mConnection.open();
 }
 
@@ -152,8 +162,6 @@ Database :: authenticate(Client& aClient, const char* aAccount, const char* aPas
                 // the Account/Password pair is not found
                 err = ERROR_NOT_FOUND;
             }
-
-
         }
         else
         {
@@ -305,6 +313,67 @@ Database :: getPlayerInfo(Client& aClient) const
 }
 
 err_t
+Database :: getPlayerItems(Player& aPlayer) const
+{
+    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "SELECT * FROM `item` WHERE `player_id` = :player_id";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":player_id", aPlayer.getUID());
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        while (ERROR_SUCCESS == err && query.next())
+        {
+            Item* item = nullptr;
+            err = Item::createItem(&item, query);
+
+            if (IS_SUCCESS(err))
+            {
+                if (item->getOwner() != nullptr &&
+                    item->getOwner()->getUID() == aPlayer.getUID())
+                {
+                    if (Item::POS_INVENTORY == item->getPosition())
+                    {
+                        ASSERT(aPlayer.mInventory.size() < Player::MAX_INVENTORY_SIZE);
+
+                        aPlayer.mInventoryMutex.lock();
+                        aPlayer.mInventory.insert(aPlayer.mInventory.end(),
+                                                  pair<uint32_t, Item*>(item->getUID(), item));
+                        aPlayer.mInventoryMutex.unlock();
+                    }
+                    else if (Item::MAX_EQUIPMENT > item->getPosition())
+                    {
+                        aPlayer.mEquipment[item->getPosition()] = item;
+                    }
+                }
+            }
+            else
+            {
+                LOG(WARN, "Failed to create item %u for player %u. Ignoring.",
+                    (uint32_t)query.value(Item::SQLDATA_ID).toUInt(), aPlayer.getUID());
+                err = ERROR_SUCCESS;
+            }
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
 Database :: savePlayer(Client& aClient) const
 {
     ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
@@ -355,6 +424,132 @@ Database :: savePlayer(Client& aClient) const
     query.bindValue(":record_map", player.getMapId());
     query.bindValue(":record_x", player.getPosX());
     query.bindValue(":record_y", player.getPosY());
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (!query.exec())
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: saveItem(const Item& aItem) const
+{
+    ASSERT_ERR(&aItem != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "UPDATE `item` SET `type` = :type, `owner_id` = :owner_id, `player_id` = :player_id, "
+            "`amount` = :amount__, `amount_limit` = :amount_limit, "
+            "`ident` = :ident, `position` = :position, "
+            "`gem1` = :gem1, `gem2` = :gem2, `magic1` = :magic1, `magic2` = :magic2, `magic3` = :magic3, "
+            "`restrain` = :restrain, `bless` = :bless, `enchant` = :enchant, "
+            "`suspicious` = :suspicious, `locked` = :locked, `color` = :color "
+            "WHERE `id` = :uid";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":uid", aItem.getUID());
+
+    query.bindValue(":type", aItem.getType());
+    query.bindValue(":owner_id", aItem.getOwner() != nullptr ? aItem.getOwner()->getUID() : 0);
+    query.bindValue(":player_id", aItem.getPlayer() != nullptr ? aItem.getPlayer()->getUID() : 0);
+
+    query.bindValue(":amount__", aItem.getAmount());
+    query.bindValue(":amount_limit", aItem.getAmountLimit());
+
+    query.bindValue(":ident", aItem.getIdent());
+    query.bindValue(":position", aItem.getPosition());
+
+    query.bindValue(":gem1", aItem.getGem1());
+    query.bindValue(":gem2", aItem.getGem2());
+    query.bindValue(":magic1", aItem.getMagic1());
+    query.bindValue(":magic2", aItem.getMagic2());
+    query.bindValue(":magic3", aItem.getMagic3());
+    query.bindValue(":restrain", aItem.getRestrain());
+    query.bindValue(":bless", aItem.getBless());
+    query.bindValue(":enchant", aItem.getEnchant());
+
+    query.bindValue(":suspicious", aItem.isSuspicious());
+    query.bindValue(":locked", aItem.isLocked());
+
+    query.bindValue(":color", aItem.getColor());
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (!query.exec())
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: createItem(Item** aOutItem, const Item::Info& aInfo,
+                       const Player& aPlayer,
+                       uint16_t aAmount, uint16_t aAmountLimit,
+                       uint8_t aIdent, Item::Position aPosition) const
+{
+    ASSERT_ERR(aOutItem != nullptr && *aOutItem == nullptr, ERROR_INVALID_POINTER);
+    ASSERT_ERR(&aInfo != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "INSERT INTO `item` (`type`, `owner_id`, `player_id`, "
+            "`amount`, `amount_limit`, `ident`, `position`) VALUES "
+            "(:type, :owner_id, :player_id, :amount__, :amount_limit, "
+            ":ident, :position)";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":type", aInfo.Id);
+    query.bindValue(":owner_id", aPlayer.getUID());
+    query.bindValue(":player_id", aPlayer.getUID());
+    query.bindValue(":amount__", aAmount);
+    query.bindValue(":amount_limit", aAmountLimit);
+    query.bindValue(":ident", aIdent);
+    query.bindValue(":position", (uint8_t)aPosition);
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        uint32_t uid = (uint32_t)query.lastInsertId().toUInt();
+        *aOutItem = new Item(uid, aInfo);
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: eraseItem(const Item& aItem) const
+{
+    ASSERT_ERR(&aItem != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "DELETE FROM `item` WHERE `id` = :id";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":id", aItem.getUID());
 
     LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
 
@@ -629,39 +824,39 @@ Database :: loadAllItems()
             Item::Info* info = new Item::Info();
             ASSERT(info != nullptr);
 
-            info->Id = (uint32_t)query.value(Item::SQLDATA_ID).toUInt();
-            info->Name = query.value(Item::SQLDATA_NAME).toString().toStdString();
-            info->ReqProf = (uint8_t)query.value(Item::SQLDATA_REQ_PROF).toUInt();
-            info->ReqWeaponSkill = (uint8_t)query.value(Item::SQLDATA_REQ_WEAPONSKILL).toUInt();
-            info->ReqLevel = (uint8_t)query.value(Item::SQLDATA_REQ_LEVEL).toUInt();
-            info->ReqSex = (uint8_t)query.value(Item::SQLDATA_REQ_SEX).toUInt();
-            info->ReqForce = (uint16_t)query.value(Item::SQLDATA_REQ_FORCE).toUInt();
-            info->ReqSpeed = (uint16_t)query.value(Item::SQLDATA_REQ_SPEED).toUInt();
-            info->ReqHealth = (uint16_t)query.value(Item::SQLDATA_REQ_HEALTH).toUInt();
-            info->ReqSoul = (uint16_t)query.value(Item::SQLDATA_REQ_SOUL).toUInt();
-            info->Monopoly = (uint8_t)query.value(Item::SQLDATA_MONOPOLY).toUInt();
-            info->Weight = (uint16_t)query.value(Item::SQLDATA_WEIGHT).toUInt();
-            info->Price = (uint32_t)query.value(Item::SQLDATA_PRICE).toUInt();
-            info->Task = (uint32_t)query.value(Item::SQLDATA_TASK).toUInt();
-            info->MaxAtk = (uint16_t)query.value(Item::SQLDATA_MAX_ATK).toUInt();
-            info->MinAtk = (uint16_t)query.value(Item::SQLDATA_MIN_ATK).toUInt();
-            info->Defense = (int16_t)query.value(Item::SQLDATA_DEFENSE).toInt();
-            info->Dexterity = (int16_t)query.value(Item::SQLDATA_DEXTERITY).toInt();
-            info->Dodge = (int16_t)query.value(Item::SQLDATA_DODGE).toInt();
-            info->Life = (int16_t)query.value(Item::SQLDATA_LIFE).toInt();
-            info->Mana = (int16_t)query.value(Item::SQLDATA_MANA).toInt();
-            info->Amount = (uint16_t)query.value(Item::SQLDATA_AMOUNT).toUInt();
-            info->AmountLimit = (uint16_t)query.value(Item::SQLDATA_AMOUNT_LIMIT).toUInt();
-            info->Status = (uint8_t)query.value(Item::SQLDATA_STATUS).toUInt();
-            info->Gem1 = (uint8_t)query.value(Item::SQLDATA_GEM1).toUInt();
-            info->Gem2 = (uint8_t)query.value(Item::SQLDATA_GEM2).toUInt();
-            info->Magic1 = (uint8_t)query.value(Item::SQLDATA_MAGIC1).toUInt();
-            info->Magic2 = (uint8_t)query.value(Item::SQLDATA_MAGIC2).toUInt();
-            info->Magic3 = (uint8_t)query.value(Item::SQLDATA_MAGIC3).toUInt();
-            info->MagicAtk = (uint16_t)query.value(Item::SQLDATA_MAGIC_ATK).toUInt();
-            info->MagicDef = (uint16_t)query.value(Item::SQLDATA_MAGIC_DEF).toUInt();
-            info->AtkRange = (uint16_t)query.value(Item::SQLDATA_ATK_RANGE).toUInt();
-            info->AtkSpeed = (uint16_t)query.value(Item::SQLDATA_ATK_SPEED).toUInt();
+            info->Id = (uint32_t)query.value(Item::SQLDATA_INFO_ID).toUInt();
+            info->Name = query.value(Item::SQLDATA_INFO_NAME).toString().toStdString();
+            info->ReqProf = (uint8_t)query.value(Item::SQLDATA_INFO_REQ_PROF).toUInt();
+            info->ReqWeaponSkill = (uint8_t)query.value(Item::SQLDATA_INFO_REQ_WEAPONSKILL).toUInt();
+            info->ReqLevel = (uint8_t)query.value(Item::SQLDATA_INFO_REQ_LEVEL).toUInt();
+            info->ReqSex = (uint8_t)query.value(Item::SQLDATA_INFO_REQ_SEX).toUInt();
+            info->ReqForce = (uint16_t)query.value(Item::SQLDATA_INFO_REQ_FORCE).toUInt();
+            info->ReqSpeed = (uint16_t)query.value(Item::SQLDATA_INFO_REQ_SPEED).toUInt();
+            info->ReqHealth = (uint16_t)query.value(Item::SQLDATA_INFO_REQ_HEALTH).toUInt();
+            info->ReqSoul = (uint16_t)query.value(Item::SQLDATA_INFO_REQ_SOUL).toUInt();
+            info->Monopoly = (uint8_t)query.value(Item::SQLDATA_INFO_MONOPOLY).toUInt();
+            info->Weight = (uint16_t)query.value(Item::SQLDATA_INFO_WEIGHT).toUInt();
+            info->Price = (uint32_t)query.value(Item::SQLDATA_INFO_PRICE).toUInt();
+            info->Task = (uint32_t)query.value(Item::SQLDATA_INFO_TASK).toUInt();
+            info->MaxAtk = (uint16_t)query.value(Item::SQLDATA_INFO_MAX_ATK).toUInt();
+            info->MinAtk = (uint16_t)query.value(Item::SQLDATA_INFO_MIN_ATK).toUInt();
+            info->Defense = (int16_t)query.value(Item::SQLDATA_INFO_DEFENSE).toInt();
+            info->Dexterity = (int16_t)query.value(Item::SQLDATA_INFO_DEXTERITY).toInt();
+            info->Dodge = (int16_t)query.value(Item::SQLDATA_INFO_DODGE).toInt();
+            info->Life = (int16_t)query.value(Item::SQLDATA_INFO_LIFE).toInt();
+            info->Mana = (int16_t)query.value(Item::SQLDATA_INFO_MANA).toInt();
+            info->Amount = (uint16_t)query.value(Item::SQLDATA_INFO_AMOUNT).toUInt();
+            info->AmountLimit = (uint16_t)query.value(Item::SQLDATA_INFO_AMOUNT_LIMIT).toUInt();
+            info->Ident = (uint8_t)query.value(Item::SQLDATA_INFO_IDENT).toUInt();
+            info->Gem1 = (uint8_t)query.value(Item::SQLDATA_INFO_GEM1).toUInt();
+            info->Gem2 = (uint8_t)query.value(Item::SQLDATA_INFO_GEM2).toUInt();
+            info->Magic1 = (uint8_t)query.value(Item::SQLDATA_INFO_MAGIC1).toUInt();
+            info->Magic2 = (uint8_t)query.value(Item::SQLDATA_INFO_MAGIC2).toUInt();
+            info->Magic3 = (uint8_t)query.value(Item::SQLDATA_INFO_MAGIC3).toUInt();
+            info->MagicAtk = (uint16_t)query.value(Item::SQLDATA_INFO_MAGIC_ATK).toUInt();
+            info->MagicDef = (uint16_t)query.value(Item::SQLDATA_INFO_MAGIC_DEF).toUInt();
+            info->AtkRange = (uint16_t)query.value(Item::SQLDATA_INFO_ATK_RANGE).toUInt();
+            info->AtkSpeed = (uint16_t)query.value(Item::SQLDATA_INFO_ATK_SPEED).toUInt();
 
             ASSERT(info != nullptr);
             ASSERT(mAllItems.find(info->Id) == mAllItems.end());
@@ -704,6 +899,47 @@ Database :: getItemInfo(const Item::Info** aOutInfo, uint32_t aId) const
     {
         LOG(WARN, "Could not find the info of the item %u.", aId);
         err = ERROR_NOT_FOUND;
+    }
+
+    return err;
+}
+
+err_t
+Database :: getItemFromShop(const Item::Info** aOutInfo, uint8_t& aOutMoneyType,
+                            uint32_t aShopId, uint32_t aItemId) const
+{
+    static const char cmd[] = "SELECT `id`, `moneytype` FROM `goods` "
+                              "WHERE `ownerid` = :ownerid AND `itemtype` = :itemtype";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":ownerid", aShopId);
+    query.bindValue(":itemtype", aItemId);
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        if (query.size() == 1)
+        {
+            query.next(); // get the first result...
+
+            aOutMoneyType = (uint8_t)query.value(1).toUInt();
+            err = getItemInfo(aOutInfo, aItemId);
+        }
+        else
+        {
+            LOG(ERROR, "The cmd should return only one result, not %d", query.size());
+            err = ERROR_BAD_LENGTH;
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
     }
 
     return err;

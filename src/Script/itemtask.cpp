@@ -10,17 +10,6 @@
 #include "client.h"
 #include "lua.hpp"
 
-/* static */
-err_t
-ItemTask :: registerFunctions()
-{
-    err_t err = ERROR_SUCCESS;
-
-    lua_State* state = Script::getState();
-
-    return err;
-}
-
 ItemTask :: ItemTask(uint32_t aUID, const char* aPath)
     : Script(aUID, aPath)
 {
@@ -60,4 +49,3 @@ ItemTask :: execute(Client& aClient, int32_t aParam) const
 
     return err;
 }
-

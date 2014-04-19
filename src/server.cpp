@@ -26,39 +26,57 @@
 
 #include "inifile.h"
 
+extern "C" {
+#include "bigint.h"
+}
+
+#include <stdlib.h> // srandom()
+#include <time.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif // _WIN32
+
 using namespace std;
 
 /* static */
-Server* Server::sInstance = nullptr;
-
-/* static */
-Server&
+const Server&
 Server :: getInstance()
 {
-    static volatile long protect = 0;
+    Server* instance = dynamic_cast<Server*>(QCoreApplication::instance());
 
-    if (sInstance == nullptr)
-    {
-        if (1 == atomic_inc(&protect))
-        {
-            // create the instance
-            sInstance = new Server();
-        }
-        else
-        {
-            while (sInstance == nullptr)
-                QThread::yieldCurrentThread();
-        }
-    }
-    return *sInstance;
+    ASSERT(instance != nullptr);
+    return *instance;
 }
 
-Server :: Server()
+Server :: Server(int argc, char* argv[])
+    : QCoreApplication(argc, argv)
 {
-    err_t err = ERROR_SUCCESS;
+    #ifdef _WIN32
+    SetConsoleTitleA(STR_PROGRAM_TITLE);
+    #endif // _WIN32
+
+    fprintf(stdout, "%s\n", STR_CREATOR_INFO);
+    fprintf(stdout, "%s\n", STR_BUILD_INFO);
+    fprintf(stdout, "\n");
 
     // init the logger...
-    DOIF(err, Logger::init("./", "zfserv.log"));
+    Logger::init("./", "zfserv.log");
+    LOG(INFO, "============== Server - Begin ==============");
+
+    // Initialize the BigInt package
+    LOG(INFO, "Initializing the BigInt package...");
+    bi_initialize();
+    srand(time(NULL)); // for generatePrime() call
+
+    // connect signals & slots
+    connect(this, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
+}
+
+int
+Server :: exec()
+{
+    err_t err = ERROR_SUCCESS;
 
     // parse the config file...
     IniFile settings;
@@ -83,9 +101,7 @@ Server :: Server()
     }
 
     // load Lua VM
-    DOIF(err, Script::registerFunctions()); // register shared Lua functions
-    DOIF(err, NpcTask::registerFunctions()); // register NPC's Lua functions
-    DOIF(err, ItemTask::registerFunctions()); // register item's Lua functions
+    DOIF(err, Script::registerFunctions()); // register Lua functions
 
     // load DMap files
     MapManager& mgr = MapManager::getInstance();
@@ -117,12 +133,21 @@ Server :: Server()
 
     fprintf(stdout, "Waiting for connections...\n");
 
-    ASSERT(err == ERROR_SUCCESS);
+    ASSERT_ERR(err == ERROR_SUCCESS, err);
+    return QCoreApplication::exec();
 }
 
 Server :: ~Server()
 {
+    // Terminate the BigInt package
+    LOG(INFO, "Destroying the BigInt package...");
+    bi_terminate();
+}
 
+void
+Server :: aboutToQuit()
+{
+    // TODO save everything...
 }
 
 /* static */

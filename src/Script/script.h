@@ -62,9 +62,11 @@ public:
 protected:
     // Getters / Setters Lua methods
     static int getName(lua_State* aState);
+    static int getMate(lua_State* aState);
     static int getLook(lua_State* aState);
     static int getHair(lua_State* aState);
     static int getMoney(lua_State* aState);
+    static int getCPs(lua_State* aState);
     static int getExp(lua_State* aState);
     static int getForce(lua_State* aState);
     static int getHealth(lua_State* aState);
@@ -78,6 +80,19 @@ protected:
     static int getPkPoints(lua_State* aState);
     static int getLevel(lua_State* aState);
     static int getProfession(lua_State* aState);
+
+    static int gainMoney(lua_State* aState);
+    static int gainCPs(lua_State* aState);
+    static int spendMoney(lua_State* aState);
+    static int spendCPs(lua_State* aState);
+
+    static int move(lua_State* aState);
+
+    // MsgDialog Lua methods
+    static int text(lua_State* aState);
+    static int link(lua_State* aState);
+    static int pic(lua_State* aState);
+    static int create(lua_State* aState);
 
 protected:
     /* constructor */

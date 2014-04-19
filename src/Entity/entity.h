@@ -151,7 +151,7 @@ public:
     void broadcastRoomMsg(const Msg* aMsg, bool aIncludeSelf) const;
 
     /** Called when the timer elapse. */
-    virtual void timerElapsed(time_t aTime) = 0;
+    virtual void timerElapsed() = 0;
 
 public:
     /** Get the entity's UID. */

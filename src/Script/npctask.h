@@ -14,7 +14,6 @@
 #include <string>
 
 class Client;
-struct lua_State;
 
 /**
  * Process a Lua script and execute the processTask when executed.
@@ -22,15 +21,6 @@ struct lua_State;
  */
 class NpcTask : public Script
 {
-public:
-    /**
-     * Register the specific functions of the NPC's tasks.
-     *
-     * @retval ERROR_SUCCESS on success
-     * @returns Error code otherwise
-     */
-    static err_t registerFunctions();
-
 public:
     /**
      * Create a new task to be used by a NPC.
@@ -54,13 +44,6 @@ public:
      * @returns Error code otherwise
      */
     virtual err_t execute(Client& aClient, int32_t aParam) const;
-
-private:
-    // MsgDialog Lua methods
-    static int text(lua_State* aState);
-    static int link(lua_State* aState);
-    static int pic(lua_State* aState);
-    static int create(lua_State* aState);
 
 private:
     std::string mFct; //!< the function's name to call
