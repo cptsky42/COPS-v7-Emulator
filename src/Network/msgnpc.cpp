@@ -143,6 +143,7 @@ MsgNpc :: swap(uint8_t* aBuf) const
 
     MsgInfo* info = (MsgInfo*)aBuf;
 
+    info->Id = bswap32(mInfo->Id);
     if (info->Event == EVENT_CHANGEPOS)
     {
         info->PosX = bswap16(info->PosX);

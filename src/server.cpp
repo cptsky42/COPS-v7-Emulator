@@ -202,9 +202,9 @@ Server :: exec()
 
     // load database
     DOIF(err, db.loadAllMaps());
+    DOIF(err, db.loadAllTasks());
     DOIF(err, db.loadAllItems());
     DOIF(err, db.loadAllNPCs());
-    DOIF(err, db.loadAllTasks());
     DOIF(err, db.loadAllMonsters());
     DOIF(err, db.loadAllGenerators());
 

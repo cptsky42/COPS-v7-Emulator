@@ -217,6 +217,9 @@ public:
     /** Get the name of the mate of the player. */
     const char* getMate() const { return mMate.c_str(); }
 
+    /** Get the sex of the player. */
+    uint8_t getSex() const { return (mLook / 1000) % 10; }
+
     /** Get the hair ID of the player. */
     uint16_t getHair() const { return mHair; }
 
@@ -315,6 +318,48 @@ public:
 
     /** Get the item by its unique ID. */
     Item* getItem(uint32_t aUID) const;
+
+    /**
+     * Determine whether or not an item can be equipped.
+     *
+     * @param[in]   aItem      the item to equip
+     * @param[in]   aPosition  the target position of the item
+     *
+     * @retval TRUE if the item can be equipped
+     * @return FALSE otherwise
+     */
+    bool canEquipItem(const Item& aItem, Item::Position aPosition) const;
+
+    /**
+     * Use an item. It may equip it, launch the task or eat it.
+     *
+     * @param[in]   aItem      the item to use, equip or eat
+     * @param[in]   aPosition  the target position of the item (when equipping)
+     * @param[in]   aSend      whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool useItem(Item& aItem, Item::Position aPosition, bool aSend);
+
+    /**
+     * Equip an item.
+     *
+     * @param[in]   aItem      the item to equip
+     * @param[in]   aPosition  the target position of the item
+     * @param[in]   aSend      whether or not the client must be updated
+     *
+     * @retval TRUE on success
+     * @return FALSE otherwise
+     */
+    bool equipItem(Item& aItem, Item::Position aPosition, bool aSend);
+
+    /**
+     * Unequip an item without signaling the client.
+     *
+     * @param[in]   aPosition  the position of the item to unequip
+     */
+    void unequipOnly(Item::Position aPosition);
 
     /**
      * Award an item to the player.

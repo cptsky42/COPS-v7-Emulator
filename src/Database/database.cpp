@@ -14,6 +14,7 @@
 #include "player.h"
 #include "npc.h"
 #include "npctask.h"
+#include "itemtask.h"
 #include "generator.h"
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlResult>
@@ -819,6 +820,7 @@ Database :: loadAllItems()
 
     if (query.exec())
     {
+        World& world = World::getInstance();
         while (ERROR_SUCCESS == err && query.next())
         {
             Item::Info* info = new Item::Info();
@@ -837,7 +839,7 @@ Database :: loadAllItems()
             info->Monopoly = (uint8_t)query.value(Item::SQLDATA_INFO_MONOPOLY).toUInt();
             info->Weight = (uint16_t)query.value(Item::SQLDATA_INFO_WEIGHT).toUInt();
             info->Price = (uint32_t)query.value(Item::SQLDATA_INFO_PRICE).toUInt();
-            info->Task = (uint32_t)query.value(Item::SQLDATA_INFO_TASK).toUInt();
+            info->Task = nullptr;
             info->MaxAtk = (uint16_t)query.value(Item::SQLDATA_INFO_MAX_ATK).toUInt();
             info->MinAtk = (uint16_t)query.value(Item::SQLDATA_INFO_MIN_ATK).toUInt();
             info->Defense = (int16_t)query.value(Item::SQLDATA_INFO_DEFENSE).toInt();
@@ -857,9 +859,24 @@ Database :: loadAllItems()
             info->MagicDef = (uint16_t)query.value(Item::SQLDATA_INFO_MAGIC_DEF).toUInt();
             info->AtkRange = (uint16_t)query.value(Item::SQLDATA_INFO_ATK_RANGE).toUInt();
             info->AtkSpeed = (uint16_t)query.value(Item::SQLDATA_INFO_ATK_SPEED).toUInt();
+            info->FrayMode = (uint8_t)query.value(Item::SQLDATA_INFO_FRAY_MODE).toUInt();
+            info->RepairMode = (uint8_t)query.value(Item::SQLDATA_INFO_REPAIR_MODE).toUInt();
+            info->TypeMask = (uint8_t)query.value(Item::SQLDATA_INFO_TYPE_MASK).toUInt();
+            info->CPs = (uint32_t)query.value(Item::SQLDATA_INFO_CPS).toUInt();
 
             ASSERT(info != nullptr);
             ASSERT(mAllItems.find(info->Id) == mAllItems.end());
+
+            uint32_t taskId = (uint32_t)query.value(Item::SQLDATA_INFO_TASK).toUInt();
+            if (taskId != 0)
+            {
+                Script* task = nullptr;
+                if (world.queryTask(&task, taskId))
+                    info->Task = dynamic_cast<ItemTask*>(task);
+                else
+                    LOG(WARN, "Task %u is not loaded but needed by %u.",
+                        taskId, info->Id);
+            }
 
             mAllItems[info->Id] = info;
             info = nullptr;
@@ -977,6 +994,10 @@ Database :: loadAllNPCs()
             ASSERT(npc != nullptr);
             ASSERT(world.mAllNPCs.find(npc->getUID()) == world.mAllNPCs.end());
 
+            Script* task = nullptr;
+            if (world.queryTask(&task, npc->getUID()))
+                npc->linkTask(dynamic_cast<NpcTask*>(task));
+
             GameMap* map = mgr.getMap(npc->getMapId());
             if (map != nullptr)
             {
@@ -1010,7 +1031,7 @@ Database :: loadAllTasks()
     err_t err = ERROR_SUCCESS;
 
     World& world = World::getInstance();
-    QDirIterator it("./NPCs", QDirIterator::Subdirectories);
+    QDirIterator it("./tasks", QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         it.next();
@@ -1023,19 +1044,28 @@ Database :: loadAllTasks()
 
             if (uid > 0 && uid < UINT32_MAX)
             {
-                NpcTask* task = new NpcTask((uint32_t)uid, qPrintable(info.absoluteFilePath()));
+                Script* task = nullptr;
 
-                ASSERT(task != nullptr);
-                ASSERT(world.mAllTasks.find(task->getUID()) == world.mAllTasks.end());
-
-                Npc* npc = nullptr;
-                if (world.queryNpc(&npc, uid))
+                if (Entity::isNpc(uid))
                 {
-                    world.mAllTasks[task->getUID()] = task;
-                    npc->linkTask(task);
-                    task = nullptr;
+                    task = new NpcTask((uint32_t)uid, qPrintable(info.absoluteFilePath()));
+
+                    ASSERT(task != nullptr);
+                    ASSERT(world.mAllTasks.find(task->getUID()) == world.mAllTasks.end());
+                }
+                else
+                {
+                    task = new ItemTask((uint32_t)uid, qPrintable(info.absoluteFilePath()));
+
+                    ASSERT(task != nullptr);
+                    ASSERT(world.mAllTasks.find(task->getUID()) == world.mAllTasks.end());
                 }
 
+                if (task != nullptr)
+                {
+                    world.mAllTasks[task->getUID()] = task;
+                    task = nullptr;
+                }
                 SAFE_DELETE(task);
             }
             else

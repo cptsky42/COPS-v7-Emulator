@@ -57,6 +57,7 @@ MsgItem :: create(uint32_t aUID, uint32_t aData, uint32_t aTargetUID, Action aAc
     mInfo->UniqId = aUID;
     mInfo->Data = aData;
     mInfo->Action = (uint16_t)aAction;
+    mInfo->Timestamp = timeGetTime();
     mInfo->TargetUID = aTargetUID;
 }
 
@@ -173,6 +174,26 @@ MsgItem :: process(Client* aClient)
 
                 break;
             }
+        case ACTION_USE:
+            {
+                if (mInfo->TargetUID == 0 || mInfo->TargetUID == player.getUID())
+                {
+                    Item* item = player.getItem(mInfo->UniqId);
+                    if (item != nullptr)
+                    {
+                        if (!player.useItem(*item, (Item::Position)mInfo->Data, true))
+                            player.sendSysMsg(STR_UNABLE_USE_ITEM);
+                    }
+                    else
+                        player.sendSysMsg(STR_ITEM_INEXIST);
+                }
+                else
+                {
+                    printf("MsgItem::use() -> useItemTo(%u, %u)\n", mInfo->TargetUID, mInfo->UniqId);
+                    ASSERT(false);
+                }
+                break;
+            }
         case ACTION_EQUIP:
             {
                 ASSERT(false);
@@ -205,7 +226,7 @@ MsgItem :: process(Client* aClient)
                 }
 
                 // max durability changed
-                if (true) // TODO (item->isEquipment())
+                if (item->isEquipment())
                 {
                     if (item->getAmount() < item->getAmountLimit() / 2)
                     {
@@ -258,6 +279,7 @@ MsgItem :: swap(uint8_t* aBuf) const
 
     info->UniqId = bswap32(info->UniqId);
     info->Data = bswap32(info->Data);
-    info->Action = bswap16(info->Action);
+    info->Action = bswap32(info->Action);
+    info->Timestamp = bswap32(info->Timestamp);
     info->TargetUID = bswap32(info->TargetUID);
 }

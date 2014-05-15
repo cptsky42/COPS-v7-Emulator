@@ -102,7 +102,9 @@ public:
         };
 
         /** The action Id */
-        uint16_t Action;
+        uint32_t Action;
+        /** The timestamp of the msg. */
+        uint32_t Timestamp;
         /** The target unique Id. */
         uint32_t TargetUID;
     }MsgInfo;

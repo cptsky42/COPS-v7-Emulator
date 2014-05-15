@@ -15,6 +15,7 @@
 class Monster;
 class Player;
 class Entity;
+class ItemTask;
 class QSqlQuery;
 
 class Item
@@ -36,7 +37,7 @@ public:
         uint8_t Monopoly;
         uint16_t Weight;
         uint32_t Price;
-        uint32_t Task; //TODO: ItemTask*
+        ItemTask* Task;
         uint16_t MaxAtk;
         uint16_t MinAtk;
         int16_t Defense;
@@ -56,6 +57,25 @@ public:
         uint16_t MagicDef;
         uint16_t AtkRange;
         uint16_t AtkSpeed;
+        uint8_t FrayMode;
+        uint8_t RepairMode;
+        uint8_t TypeMask;
+        uint32_t CPs;
+
+    public:
+        /* constructor */
+        Info()
+            : Id(0), Name("None"),
+              ReqProf(0), ReqWeaponSkill(0), ReqLevel(0), ReqSex(0),
+              ReqForce(0), ReqSpeed(0), ReqHealth(0), ReqSoul(0),
+              Monopoly(0), Weight(0), Price(0), Task(nullptr),
+              MaxAtk(0), MinAtk(0), Defense(0), Dexterity(0), Dodge(0), Life(0), Mana(0),
+              Amount(0), AmountLimit(0), Ident(0), Gem1(0), Gem2(0), Magic1(0), Magic2(0), Magic3(0),
+              MagicAtk(0), MagicDef(0), AtkRange(0), AtkSpeed(0),
+              FrayMode(0), RepairMode(0), TypeMask(0), CPs(0)
+        {
+
+        }
     };
 
     enum Position
@@ -90,11 +110,11 @@ public:
     {
         SORT_INVALID = -1,
         SORT_FINERY = 1,
-        SORT_EXPEND = 10,
         SORT_ONE_HAND_WEAPON = 4,
         SORT_TWO_HANDS_WEAPON = 5,
         SORT_SHIELD = 9,
-        SORT_OTHER = 7
+        SORT_OTHER = 7,
+        SORT_EXPEND = 10
     };
 
     enum Type
@@ -105,14 +125,13 @@ public:
         TYPE_ARMOR = 30000,
         TYPE_RING = 50000,
         TYPE_SHOES = 60000,
-        TYPE_MEDICINE_HP = 10000,
-        TYPE_MEDICINE_MP = 11000,
         TYPE_SCROLL = 20000,
-        TYPE_SCROLL_SPECIAL = 20000,
-        TYPE_SCROLL_MSKILL = 21000,
-        TYPE_SCROLL_SSKILL = 22000,
-        TYPE_SCROLL_BSKILL = 23000,
-        TYPE_SPECIAL_USE = 50000
+        TYPE_SPECIAL_USE = 50000,
+        TYPE_GEM = 00000,
+        TYPE_MEDICINE = 00000,
+        TYPE_TASKITEM = 10000,
+        TYPE_ACTIONITEM = 20000,
+        TYPE_GAMECARD = 80000
     };
 
     static const uint8_t MONOPOLY_MASK                = 0x01;
@@ -162,7 +181,11 @@ public:
         SQLDATA_INFO_MAGIC_ATK,
         SQLDATA_INFO_MAGIC_DEF,
         SQLDATA_INFO_ATK_RANGE,
-        SQLDATA_INFO_ATK_SPEED
+        SQLDATA_INFO_ATK_SPEED,
+        SQLDATA_INFO_FRAY_MODE,
+        SQLDATA_INFO_REPAIR_MODE,
+        SQLDATA_INFO_TYPE_MASK,
+        SQLDATA_INFO_CPS
     };
 
     /** Position of the SQL data in the result set. */
@@ -190,6 +213,15 @@ public:
     };
 
 public:
+    /**
+     * Create an item object from a SQL query result set.
+     *
+     * @param[out]  aOutItem  a pointer that will receive the object
+     * @param[in]   aQuery    the SQL result set
+     *
+     * @retval ERROR_SUCCESS on success
+     * @returns An error code otherwise
+     */
     static err_t createItem(Item** aOutItem, const QSqlQuery& aQuery);
 
 public:
@@ -199,6 +231,8 @@ public:
 
 public:
     Item(uint32_t aUID, const Item::Info& aInfo);
+
+    /* destructor */
     ~Item();
 
     err_t save() const;
@@ -218,6 +252,7 @@ public:
     uint8_t getMonopoly() const { return mInfo.Monopoly; }
     uint16_t getWeight() const { return mInfo.Weight; }
     uint32_t getPrice() const { return mInfo.Price; }
+    ItemTask* getTask() const { return mInfo.Task; }
     uint16_t getMaxAtk() const { return mInfo.MaxAtk; }
     uint16_t getMinAtk() const { return mInfo.MinAtk; }
     int16_t getDefense() const { return mInfo.Defense; }
@@ -255,92 +290,174 @@ public:
     uint8_t getColor() const { return mColor; }
 
 public:
+    /**
+     * Set the owner of the item.
+     *
+     * @param[in]   aOwner    the new owner of the item
+     * @param[in]   aUpdate   (optional) determine whether or not the database must be updated
+     *                        The default value is true.
+     */
     void setOwner(Entity* aOwner, bool aUpdate = true) { mOwner = aOwner; if (aUpdate) { save(); } }
+
+    /**
+     * Set the owner (player) of the item.
+     *
+     * @param[in]   aPlayer   the new owner (player) of the item
+     * @param[in]   aUpdate   (optional) determine whether or not the database must be updated
+     *                        The default value is true.
+     */
     void setPlayer(Player* aPlayer, bool aUpdate = true) { mPlayer = aPlayer; if (aUpdate) { save(); } }
 
+    /**
+     * Set the position of the item.
+     *
+     * @param[in]   aPosition the new position of the item
+     * @param[in]   aUpdate   (optional) determine whether or not the database must be updated
+     *                        The default value is true.
+     */
+    void setPosition(Item::Position aPosition, bool aUpdate = true) { mPosition = aPosition; if (aUpdate) { save(); } }
+
+    /**
+     * Set the amount of the item.
+     *
+     * @param[in]   aAmount   the new amount of the item
+     * @param[in]   aUpdate   (optional) determine whether or not the database must be updated
+     *                        The default value is false.
+     */
     void setAmount(uint16_t aAmount, bool aUpdate = false) { mAmount = aAmount; if (aUpdate) { save(); } }
+
+    /**
+     * Set the amount limit of the item.
+     *
+     * @param[in] aAmountLimit  the new amount limit of the item
+     * @param[in] aUpdate       (optional) determine whether or not the database must be updated
+     *                          The default value is false.
+     */
     void setAmountLimit(uint16_t aAmountLimit, bool aUpdate = false) { mAmountLimit = aAmountLimit; if (aUpdate) { save(); } }
 
 public:
-    bool isNormal() const { return getItemSort() == SORT_EXPEND; }
+    /** Determine whether or not the item is a one-handed weapon. */
     bool is1HWeapon() const { return getItemSort() == SORT_ONE_HAND_WEAPON; }
+    /** Determine whether or not the item is a two-handed weapon. */
     bool is2HWeapon() const { return getItemSort() == SORT_TWO_HANDS_WEAPON; }
+    /** Determine whether or not the item is a weapon. */
     bool isWeapon() const { return is1HWeapon() || is2HWeapon(); }
+    /** Determine whether or not the item is a shield. */
     bool isShield() const { return getItemSort() == SORT_SHIELD; }
-    bool isOther() const { return getItemSort() == SORT_OTHER; }
+    /** Determine whether or not the item is an arrow. */
+    bool isArrow() const { return false; } // { return CItem::IsArrow(GetInt(ITEMDATA_TYPE)); } //IsNormal() && GetItemType() == ITEMTYPE_ARROW; }
+    /** Determine whether or not the item is finery (helmet, armor, rign, necklace, etc) */
     bool isFinery() const { return !isArrow() && getItemSort() == SORT_FINERY; }
-    bool isArrow() const { return false; }
-//    bool	IsArrow()		{ return CItem::IsArrow(GetInt(ITEMDATA_TYPE)); } //IsNormal() && GetItemType() == ITEMTYPE_ARROW; }
-//    bool	IsDart()		{ return CItem::IsDart(GetInt(ITEMDATA_TYPE)); } //IsNormal() && GetItemType() == ITEMTYPE_DART; }
-//    bool	IsSpell()		{ return CItem::IsSpell(GetInt(ITEMDATA_TYPE)); }
+    /** Determine whether or not the item is an helmet. */
+    bool isHelmet() const { return isFinery() && getItemType() == TYPE_HELMET; }
+    /** Determine whether or not the item is a necklace. */
+    bool isNecklace() const { return isFinery() && getItemType() == TYPE_NECKLACE; }
+    /** Determine whether or not the item is an armor. */
+    bool isArmor() const { return isFinery() && getItemType() == TYPE_ARMOR; }
+    /** Determine whether or not the item is a ring. */
+    bool isRing() const { return isFinery() && getItemType() == TYPE_RING; }
+    /** Determine whether or not the item is a pair of shoes. */
+    bool isShoes() const { return isFinery() && getItemType() == TYPE_SHOES; }
+
+    bool isOther() const { return getItemSort() == SORT_OTHER; }
+    bool isSpell() const { return isExpend() && getItemType() == TYPE_SCROLL; }
     bool isExpend() const { return isArrow() || (getItemSort() == SORT_EXPEND && getItemType() < TYPE_SPECIAL_USE); }
-//    bool	IsHelmet()		{ return IsFinery() && GetItemType() == ITEMTYPE_HELMET; }
-//    bool	IsNecklace()	{ return IsFinery() && GetItemType() == ITEMTYPE_NECKLACE; }
-//    bool	IsArmor()		{ return IsFinery() && GetItemType() == ITEMTYPE_ARMOR; }
-//    bool	IsRing()		{ return IsFinery() && GetItemType() == ITEMTYPE_RING; }
-//    bool	IsBangle()		{ return IsFinery() && GetItemType() == ITEMTYPE_BANGLE; }	// ÊÇ·ñÊÖïí -- zlong 2004-02-03
-//    bool	IsShoes()		{ return IsFinery() && GetItemType() == ITEMTYPE_SHOES; }
-//    bool	IsEquipment()	{ return CItem::IsEquipment(GetInt(ITEMDATA_TYPE)); }
-//    bool	IsBowSort()		{ return CItem::IsBowSort(GetInt(ITEMDATA_TYPE)); }
-//    bool	IsBow()			{ return CItem::IsBow(GetInt(ITEMDATA_TYPE)); }
-//    bool	IsCrossBow()	{ return CItem::IsCrossBow(GetInt(ITEMDATA_TYPE)); }
-//    bool	IsActionItem()	{ return IsOther() && GetItemType() == ITEMTYPE_ACTIONITEM || IsSpell(); }
-//    bool	IsTaskItem()	{ return IsOther() && GetItemType() == ITEMTYPE_TASKITEM; }
-//    bool	IsGem()			{ return IsOther() && GetItemType() == ITEMTYPE_GEM; }
-//    bool	IsNonsuch()		{ return GetQuality() == 9; }
+    bool isEquipment() const { return !isArrow() && (getItemSort() >= SORT_FINERY && getItemSort() <= SORT_TWO_HANDS_WEAPON) || isShield(); }
+    bool isBow() const { return getItemSort() == SORT_TWO_HANDS_WEAPON && getItemType() == 500; /* TODO TYPE==BOW */ }
+    bool isActionItem() const { return isOther() && getItemType() == TYPE_ACTIONITEM || isSpell(); }
+    bool isTaskItem() const { return isOther() && getItemType() == TYPE_TASKITEM; }
+    bool isGem() const { return isOther() && getItemType() == TYPE_GEM; }
     bool isGameCard() const { return mInfo.Id == CARD_FEE_POINT_1 || mInfo.Id == CARD_FEE_POINT_2; }
-    //bool	IsMedicine()	{ return CItem::IsMedicine(GetInt(ITEMDATA_TYPE)); }
+    bool isMedicine() const { return isExpend() && (getItemType() == TYPE_MEDICINE && (getItemSubType() >= 0 && getItemSubType() <= 2)); }
     bool isPickAxe() const { return 470 == ((mInfo.Id / 1000) % 1000); }
 
+    // Type = 10000, Subtype = 710, Sort = 7 => Quest item ? Not usable ?
+    // Type = 20000, Subtype = 725, Sort = 7 => Skills
+    // Type = 30000, Subtype = 730, Sort = 7 => Stones
+    // Type = 50000, Subtype = 750, Sort = 7 => CloudSaint's jar
+    // Type = 80000, Subtype = 780, Sort = 7 => Game Card
+    // Type = 90000, Subtype = 790, Sort = 7 => Dis City Item ?
+
+    // Type = 0, Sort = 10 Subtype = 0 & 1 => HP, 2 = MP
+
+    // Type = 50000, Subtype = 50, Sort = 10 => Arrow
+    // Type = 60000, Subtype = 60, Sort = 10 => Scroll / WindSpell
+    // Type = 72000, Subtype = 72, Sort = 10 => Mine / Ore Gold etc
+    // Type = 80000, Subtype = 80, Sort = 10 => Emerald
+    // Type = 88000, Subtype = 88, Sort = 10 => DB, Meteor
+    // Type = 90000  | 91000, Subtype, Sort = 10 => Money
+    // Type = 0, Sybtype = 0, Sort = 11 => Sash
+    // Type = 0, Subtype = 0, Sort = 12 => PrayingStones, Drill
+    // Type = 0, Subtype = 0, Sort = 21 => Trophies / Gourd
+
+    //    bool	IsNonsuch()		{ return GetQuality() == 9; }
+
 public:
-    //    bool	IsHoldEnable()		{ return IsWeapon1() || IsWeapon2() || IsShield() || IsArrowSort(); }
-    //	bool	IsEquipEnable()		{ return IsEquipment() || IsArrowSort() || IsSprite(); }
-    //	bool	IsEatEnable()		{ return IsMedicine(); }
-    //	bool	IsPileEnable()		{ return IsExpend() && GetInt(ITEMDATA_AMOUNTLIMIT) > 1; }
-    bool isRepairEnable() const { return !isExpend() && !isNeedIdent() && mAmountLimit >= 100 && !isCannotRepair(); }
+    /** Determine whether or not the item can be held. */
+    bool isHoldEnable() const { return is1HWeapon() || is2HWeapon() || isShield() || isArrow(); }
+    /** Determine whether or not the item can be equipped. */
+    bool isEquipEnable() const { return isEquipment() || isArrow(); }
+    /** Determine whether or not the item can be ate. */
+    bool isEatEnable() const { return isMedicine(); }
+    /** Determine whether or not the item can be stacked. */
+    bool isPileEnable() const { return isExpend() && mInfo.AmountLimit > 1; }
+
+    /** Determine whether or not the item can be repaired. */
+    bool isRepairEnable() const { return !isExpend() && !isNeedIdent() && mAmountLimit >= 100 && !((mInfo.Ident & (uint8_t)IDENT_CANNOT_REPAIR) != 0); }
+    /** Determine whether or not the item can be exchanged. */
     bool isExchangeEnable() const { return ((mInfo.Monopoly & MONOPOLY_MASK) == 0); }
+    /** Determine whether or not the item can be stored. */
     bool isStorageEnable() const { return ((mInfo.Monopoly & STORAGE_MASK) == 0); }
+    /** Determine whether or not the item can be sold. */
     bool isSellEnable() const { return ((mInfo.Monopoly & SELL_DISABLE_MASK) == 0) && !isGameCard(); }
+    /** Determine whether or not the item can be dropped on death. */
     bool isNeverDropWhenDead() const { return ((mInfo.Monopoly & NEVER_DROP_WHEN_DEAD_MASK) != 0); }
-    //bool isNonsuchItem();
-    //bool	IsNormalArrow()		{ return GetInt(ITEMDATA_TYPE) == NORMAL_ARROW_TYPE; }
+    /** Determine whether or not the item can be discarded. */
     bool isDiscardable() const { return !isGameCard(); }
+    /** Determine whether or not the item need ident. */
     bool isNeedIdent() const { return ((mInfo.Ident & (uint8_t)IDENT_NOT_IDENT) != 0); }
-    bool isCannotRepair() const { return ((mInfo.Ident & (uint8_t)IDENT_CANNOT_REPAIR) != 0); }
+    /** Determine whether or not the item never wear. */
     bool isNeverWear() const { return ((mInfo.Ident & (uint8_t)IDENT_NEVER_DAMAGE) != 0); }
 
+    //bool isNonsuchItem();
+
 public:
+    /** Get the sell price of the item. */
     uint32_t getSellPrice() const;
+    /** Get the repair cost for the item. */
     uint32_t getRepairCost() const;
 
-private:
-    uint32_t getItemSort() const { return (mInfo.Id % 10000000) / 100000; }
-    uint32_t getItemType() const { return (is1HWeapon() || is2HWeapon()) ? ((mInfo.Id % 100000) / 1000) * 1000 : ((mInfo.Id % 100000) / 10000) * 10000; }
-    uint32_t getItemSubType() const { return (mInfo.Id % 1000000) / 1000; }
+public:
+    /** Get the sort of the item. @warning Unrecommended function. */
+    inline uint32_t getItemSort() const { return (mInfo.Id % 10000000) / 100000; }
+    /** Get the type of the item. @warning Unrecommended function. */
+    inline uint32_t getItemType() const { return (is1HWeapon() || is2HWeapon()) ? ((mInfo.Id % 100000) / 1000) * 1000 : ((mInfo.Id % 100000) / 10000) * 10000; }
+    /** Get the subtype of the item. @warning Unrecommended function. */
+    inline uint32_t getItemSubType() const { return (mInfo.Id % 1000000) / 1000; }
 
 private:
-    const uint32_t mUID;
-    const Item::Info& mInfo;
+    const uint32_t mUID; //!< unique ID of the item
+    const Item::Info& mInfo; //!< generic info of the item
 
-    Entity* mOwner;
-    Player* mPlayer;
+    Entity* mOwner; //!< entity owning the item
+    Player* mPlayer; //!< player owning the item
 
-    uint16_t mAmount;
-    uint16_t mAmountLimit;
-    uint8_t mIdent;
-    Position mPosition;
+    uint16_t mAmount; //!< amount / durability of the item
+    uint16_t mAmountLimit; //!< amount limit of the item
+    uint8_t mIdent; //!< ident of the item
+    Position mPosition; //!< position of the item
 
-    uint8_t mGem1;
-    uint8_t mGem2;
-    uint8_t mMagic1; // Attr
-    uint8_t mMagic2; // ???
-    uint8_t mMagic3; // Plus
-    uint8_t mBless;
-    uint8_t mEnchant;
-    uint32_t mRestrain;
-    bool mSuspicious;
-    bool mLocked;
-    uint8_t mColor;
+    uint8_t mGem1; //!< first gem of the item
+    uint8_t mGem2; //!< second gem of the item
+    uint8_t mMagic1; //!< attribute of the item (e.g. poison, HP, MP)
+    uint8_t mMagic2; //!< unknown attribute of the item, probably unused
+    uint8_t mMagic3; //!< crafting of the item (plus)
+    uint8_t mBless; //!< blessing of the item
+    uint8_t mEnchant; //!< enchant of the item
+    uint32_t mRestrain; //!< restrain of the item (see restrain.ini), unused on English servers
+    bool mSuspicious; //!< whether the item is suspicious or not
+    bool mLocked; //!< whether the item is locked or not
+    uint8_t mColor; //!< color of the item
 };
 
 #endif // _COPS_V7_EMULATOR_ITEM_H_

@@ -24,7 +24,7 @@ class Player;
 class Monster;
 class Generator;
 class Npc;
-class NpcTask;
+class Script;
 class Worker;
 
 /**
@@ -121,6 +121,18 @@ public:
      */
     bool queryNpc(Npc** aOutNpc, uint32_t aUID) const;
 
+    /**
+     * Search a task based on its UID. If the task is not found,
+     * the output task will be null.
+     *
+     * @param[in,out]   aOutTask     a pointer to the object receiving the task
+     * @param[in]       aUID         the UID of the task
+     *
+     * @retval TRUE if the task is found
+     * @returns FALSE otherwise
+     */
+    bool queryTask(Script** aOutTask, uint32_t aUID) const;
+
     /** Generate a monster with the next available UID. */
     Monster* generateMonster(uint32_t aId, Generator* aGenerator = nullptr);
 
@@ -149,7 +161,8 @@ private:
     mutable QMutex mPlayerMutex; //!< mutex to access the players
 
     std::map<uint32_t, Npc*> mAllNPCs; //!< internal map
-    std::map<uint32_t, NpcTask*> mAllTasks; //!< internal map
+    std::map<uint32_t, Script*> mAllTasks; //!< internal map
+    mutable QMutex mTaskMutex; //!< mutex to access the tasks
 
     std::vector<Generator*> mAllGenerators; //!< interval vector
     mutable QMutex mGeneratorMutex; //!< mutex to access the generators

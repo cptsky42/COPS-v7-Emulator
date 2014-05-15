@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.8
+-- version 4.0.0
 -- http://www.phpmyadmin.net
 --
--- Client: localhost:3306
--- Généré le: Sam 19 Avril 2014 à 13:41
--- Version du serveur: 5.1.72
--- Version de PHP: 5.3.28
+-- Host: localhost
+-- Generation Time: May 14, 2014 at 08:54 PM
+-- Server version: 5.0.67-log
+-- PHP Version: 5.2.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,12 +17,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `zfserver`
+-- Database: `zfserver`
 --
 
 DELIMITER $$
 --
--- Procédures
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser`(IN `account_id` INT(4) UNSIGNED, IN `name` CHAR(15) CHARSET latin1, IN `lookface` INT(7) UNSIGNED, IN `profession` TINYINT(3) UNSIGNED, IN `force_` SMALLINT(3) UNSIGNED, IN `dexterity` SMALLINT(3) UNSIGNED, IN `health` SMALLINT(3) UNSIGNED, IN `soul` SMALLINT(3) UNSIGNED, IN `life` SMALLINT(5) UNSIGNED, IN `mana` SMALLINT(5) UNSIGNED)
     MODIFIES SQL DATA
@@ -35,25 +35,25 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `account`
+-- Table structure for table `account`
 --
 
 CREATE TABLE IF NOT EXISTS `account` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `email` char(128) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `password` char(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `type` tinyint(2) unsigned zerofill NOT NULL DEFAULT '02',
-  `creationtime` int(8) unsigned zerofill NOT NULL DEFAULT '20130101',
-  `online` tinyint(1) DEFAULT '0',
-  `licence` tinyint(1) DEFAULT '0',
-  `last_ip` char(15) COLLATE latin1_general_ci DEFAULT '127.0.0.1',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(16) collate latin1_general_ci NOT NULL default '',
+  `email` char(128) collate latin1_general_ci NOT NULL default '',
+  `password` char(16) collate latin1_general_ci NOT NULL default '',
+  `type` tinyint(2) unsigned zerofill NOT NULL default '02',
+  `creationtime` int(8) unsigned zerofill NOT NULL default '20130101',
+  `online` tinyint(1) default '0',
+  `licence` tinyint(1) default '0',
+  `last_ip` char(15) collate latin1_general_ci default '127.0.0.1',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `ix_name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
 
 --
--- Contenu de la table `account`
+-- Dumping data for table `account`
 --
 
 INSERT INTO `account` (`id`, `name`, `email`, `password`, `type`, `creationtime`, `online`, `licence`, `last_ip`) VALUES
@@ -63,16 +63,16 @@ INSERT INTO `account` (`id`, `name`, `email`, `password`, `type`, `creationtime`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_depot`
+-- Table structure for table `cq_depot`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_depot` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `playerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `level` tinyint(4) unsigned NOT NULL DEFAULT '0',
-  `pwd` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `ownerid` int(4) unsigned NOT NULL default '0',
+  `playerid` int(4) unsigned NOT NULL default '0',
+  `level` tinyint(4) unsigned NOT NULL default '0',
+  `pwd` varchar(32) default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -80,248 +80,248 @@ CREATE TABLE IF NOT EXISTS `cq_depot` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_dynamap`
+-- Table structure for table `cq_dynamap`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_dynamap` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'Î´ÃüÃû',
-  `describe_text` varchar(127) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `mapdoc` int(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `owner_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `mapgroup` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `idxserver` int(4) NOT NULL DEFAULT '-1',
-  `weather` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bgmusic` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bgmusic_show` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal0_x` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal0_y` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `reborn_mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `reborn_portal` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `res_lev` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `owner_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `link_map` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `link_x` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `link_y` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `del_flag` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `color` int(4) unsigned zerofill DEFAULT '4294967295',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'Î´ÃüÃû',
+  `describe_text` varchar(127) character set latin1 collate latin1_bin NOT NULL default '',
+  `mapdoc` int(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `owner_id` int(4) unsigned NOT NULL default '0',
+  `mapgroup` int(4) unsigned zerofill NOT NULL default '0000',
+  `idxserver` int(4) NOT NULL default '-1',
+  `weather` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic_show` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal0_x` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal0_y` int(4) unsigned zerofill NOT NULL default '0000',
+  `reborn_mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `reborn_portal` int(4) unsigned zerofill NOT NULL default '0000',
+  `res_lev` tinyint(3) unsigned NOT NULL default '0',
+  `owner_type` tinyint(3) unsigned NOT NULL default '0',
+  `link_map` int(4) unsigned zerofill NOT NULL default '0000',
+  `link_x` smallint(2) unsigned zerofill NOT NULL default '00',
+  `link_y` smallint(2) unsigned zerofill NOT NULL default '00',
+  `del_flag` tinyint(1) unsigned NOT NULL default '0',
+  `color` int(4) unsigned zerofill default '4294967295',
+  PRIMARY KEY  (`id`),
   KEY `idx` (`idxserver`,`mapgroup`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_dynanpc`
+-- Table structure for table `cq_dynanpc`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_dynanpc` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned NOT NULL DEFAULT '0',
-  `ownertype` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'Unnamed',
-  `type` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `lookface` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `idxserver` tinyint(3) NOT NULL DEFAULT '-1',
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `cellx` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `celly` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `task0` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task1` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task2` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task3` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task4` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task5` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task6` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `task7` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data0` int(4) NOT NULL DEFAULT '0',
-  `data1` int(4) NOT NULL DEFAULT '0',
-  `data2` int(4) NOT NULL DEFAULT '0',
-  `data3` int(4) NOT NULL DEFAULT '0',
-  `datastr` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'None',
-  `linkid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `life` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `maxlife` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `base` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `itemid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `defence` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `magic_def` smallint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `ownerid` int(4) unsigned NOT NULL default '0',
+  `ownertype` tinyint(3) unsigned NOT NULL default '0',
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default 'Unnamed',
+  `type` smallint(2) unsigned zerofill NOT NULL default '00',
+  `lookface` int(4) unsigned zerofill NOT NULL default '0000',
+  `idxserver` tinyint(3) NOT NULL default '-1',
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `cellx` smallint(2) unsigned zerofill NOT NULL default '00',
+  `celly` smallint(2) unsigned zerofill NOT NULL default '00',
+  `task0` int(4) unsigned zerofill NOT NULL default '0000',
+  `task1` int(4) unsigned zerofill NOT NULL default '0000',
+  `task2` int(4) unsigned zerofill NOT NULL default '0000',
+  `task3` int(4) unsigned zerofill NOT NULL default '0000',
+  `task4` int(4) unsigned zerofill NOT NULL default '0000',
+  `task5` int(4) unsigned zerofill NOT NULL default '0000',
+  `task6` int(4) unsigned zerofill NOT NULL default '0000',
+  `task7` int(4) unsigned zerofill NOT NULL default '0000',
+  `data0` int(4) NOT NULL default '0',
+  `data1` int(4) NOT NULL default '0',
+  `data2` int(4) NOT NULL default '0',
+  `data3` int(4) NOT NULL default '0',
+  `datastr` varchar(255) character set latin1 collate latin1_bin NOT NULL default 'None',
+  `linkid` int(4) unsigned zerofill NOT NULL default '0000',
+  `life` int(4) unsigned zerofill NOT NULL default '0000',
+  `maxlife` int(4) unsigned zerofill NOT NULL default '0000',
+  `base` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` smallint(2) unsigned zerofill NOT NULL default '00',
+  `itemid` int(4) unsigned zerofill NOT NULL default '0000',
+  `defence` smallint(2) unsigned zerofill NOT NULL default '00',
+  `magic_def` smallint(2) unsigned zerofill NOT NULL default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_enemy`
+-- Table structure for table `cq_enemy`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_enemy` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `userid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `enemy` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `enemyname` varchar(15) NOT NULL DEFAULT '?T',
-  `time` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `userid` int(4) unsigned zerofill NOT NULL default '0000',
+  `enemy` int(4) unsigned zerofill NOT NULL default '0000',
+  `enemyname` varchar(15) NOT NULL default '?T',
+  `time` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `userid` (`userid`,`enemy`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_friend`
+-- Table structure for table `cq_friend`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_friend` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `userid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `friend` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `friendname` varchar(32) DEFAULT '?T',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `userid` int(4) unsigned zerofill NOT NULL default '0000',
+  `friend` int(4) unsigned zerofill NOT NULL default '0000',
+  `friendname` varchar(32) default '?T',
+  PRIMARY KEY  (`id`),
   KEY `userid` (`userid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_magic`
+-- Table structure for table `cq_magic`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_magic` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `ownerid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `type` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `exp` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `unlearn` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `old_level` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `ownerid` int(4) unsigned zerofill NOT NULL default '0000',
+  `type` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `level` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `exp` int(4) unsigned zerofill NOT NULL default '0000',
+  `unlearn` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `old_level` smallint(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `user_magic` (`ownerid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8006 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_magictype`
+-- Table structure for table `cq_magictype`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_magictype` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `name` varchar(15) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `crime` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `ground` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `multi` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `target` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_mp` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `power` int(4) NOT NULL DEFAULT '0',
-  `intone_speed` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `percent` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `step_secs` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `range` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `distance` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `status` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_prof` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_exp` int(4) NOT NULL DEFAULT '0',
-  `need_level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_xp` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `weapon_subtype` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `active_times` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `auto_active` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `floor_attr` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `auto_learn` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `learn_level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `drop_weapon` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `use_ep` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `weapon_hit` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `use_item` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `next_magic` int(4) unsigned zerofill DEFAULT '0000',
-  `delay_ms` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `use_item_num` int(4) unsigned zerofill NOT NULL DEFAULT '0001',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` int(4) unsigned zerofill NOT NULL default '0000',
+  `name` varchar(15) character set latin1 collate latin1_bin NOT NULL default '',
+  `crime` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `ground` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `multi` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `target` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_mp` int(4) unsigned zerofill NOT NULL default '0000',
+  `power` int(4) NOT NULL default '0',
+  `intone_speed` int(4) unsigned zerofill NOT NULL default '0000',
+  `percent` int(4) unsigned zerofill NOT NULL default '0000',
+  `step_secs` int(4) unsigned zerofill NOT NULL default '0000',
+  `range` int(4) unsigned zerofill NOT NULL default '0000',
+  `distance` int(4) unsigned zerofill NOT NULL default '0000',
+  `status` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_prof` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_exp` int(4) NOT NULL default '0',
+  `need_level` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_xp` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `weapon_subtype` int(4) unsigned zerofill NOT NULL default '0000',
+  `active_times` int(4) unsigned zerofill NOT NULL default '0000',
+  `auto_active` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `floor_attr` int(4) unsigned zerofill NOT NULL default '0000',
+  `auto_learn` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `learn_level` int(4) unsigned zerofill NOT NULL default '0000',
+  `drop_weapon` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `use_ep` int(4) unsigned zerofill NOT NULL default '0000',
+  `weapon_hit` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `use_item` int(4) unsigned zerofill NOT NULL default '0000',
+  `next_magic` int(4) unsigned zerofill default '0000',
+  `delay_ms` int(4) unsigned zerofill NOT NULL default '0000',
+  `use_item_num` int(4) unsigned zerofill NOT NULL default '0001',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_trap`
+-- Table structure for table `cq_trap`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_trap` (
   `id` int(4) unsigned zerofill NOT NULL,
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
   `look` int(4) unsigned zerofill NOT NULL,
   `owner_id` int(4) unsigned zerofill NOT NULL,
   `map_id` int(4) unsigned zerofill NOT NULL,
   `pos_x` smallint(2) unsigned NOT NULL,
   `pos_y` smallint(2) unsigned NOT NULL,
   `data` int(4) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cq_traptype`
+-- Table structure for table `cq_traptype`
 --
 
 CREATE TABLE IF NOT EXISTS `cq_traptype` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `sort` tinyint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `look` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `action_id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_max` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_min` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `dexterity` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `attack_speed` int(4) unsigned zerofill NOT NULL DEFAULT '1000',
-  `active_times` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `magic_type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `magic_hitrate` int(4) unsigned zerofill NOT NULL DEFAULT '0100',
-  `size` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `atk_mode` int(3) unsigned zerofill NOT NULL DEFAULT '001',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `sort` tinyint(3) unsigned zerofill NOT NULL default '000',
+  `look` int(4) unsigned zerofill NOT NULL default '0000',
+  `action_id` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_max` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_min` int(4) unsigned zerofill NOT NULL default '0000',
+  `dexterity` int(4) unsigned zerofill NOT NULL default '0000',
+  `attack_speed` int(4) unsigned zerofill NOT NULL default '1000',
+  `active_times` int(4) unsigned zerofill NOT NULL default '0000',
+  `magic_type` int(4) unsigned zerofill NOT NULL default '0000',
+  `magic_hitrate` int(4) unsigned zerofill NOT NULL default '0100',
+  `size` int(4) unsigned zerofill NOT NULL default '0000',
+  `atk_mode` int(3) unsigned zerofill NOT NULL default '001',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `forbidname`
+-- Table structure for table `forbidname`
 --
 
 CREATE TABLE IF NOT EXISTS `forbidname` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `check` char(15) COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `check` char(15) collate latin1_general_ci NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=40 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `generator`
+-- Table structure for table `generator`
 --
 
 CREATE TABLE IF NOT EXISTS `generator` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_x` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_y` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cy` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `max_npc` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `rest_secs` smallint(4) unsigned zerofill NOT NULL DEFAULT '0001',
-  `max_per_gen` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `monster_type` int(3) unsigned zerofill NOT NULL DEFAULT '000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `bound_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cy` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `max_npc` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `rest_secs` smallint(4) unsigned zerofill NOT NULL default '0001',
+  `max_per_gen` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `monster_type` int(3) unsigned zerofill NOT NULL default '000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=20004 ;
 
 --
--- Contenu de la table `generator`
+-- Dumping data for table `generator`
 --
 
 INSERT INTO `generator` (`id`, `mapid`, `bound_x`, `bound_y`, `bound_cx`, `bound_cy`, `max_npc`, `rest_secs`, `max_per_gen`, `monster_type`) VALUES
@@ -2220,20 +2220,20 @@ INSERT INTO `generator` (`id`, `mapid`, `bound_x`, `bound_y`, `bound_cx`, `bound
 -- --------------------------------------------------------
 
 --
--- Structure de la table `goods`
+-- Table structure for table `goods`
 --
 
 CREATE TABLE IF NOT EXISTS `goods` (
-  `id` int(4) unsigned NOT NULL DEFAULT '1',
+  `id` int(4) unsigned NOT NULL default '1',
   `ownerid` int(4) unsigned NOT NULL,
   `itemtype` int(4) unsigned NOT NULL,
-  `moneytype` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `moneytype` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   KEY `index_id` (`ownerid`,`itemtype`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `goods`
+-- Dumping data for table `goods`
 --
 
 INSERT INTO `goods` (`id`, `ownerid`, `itemtype`, `moneytype`) VALUES
@@ -3583,94 +3583,116 @@ INSERT INTO `goods` (`id`, `ownerid`, `itemtype`, `moneytype`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `item`
+-- Table structure for table `item`
 --
 
 CREATE TABLE IF NOT EXISTS `item` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `type` int(4) unsigned NOT NULL DEFAULT '0',
-  `owner_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `player_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `amount` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `amount_limit` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `ident` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `position` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem1` tinyint(1) unsigned DEFAULT '0',
-  `gem2` tinyint(1) unsigned DEFAULT '0',
-  `magic1` tinyint(1) unsigned DEFAULT '0',
-  `magic2` tinyint(1) unsigned DEFAULT '0',
-  `magic3` tinyint(1) unsigned DEFAULT '0',
-  `restrain` int(4) unsigned DEFAULT '0',
-  `bless` tinyint(1) unsigned DEFAULT '0',
-  `enchant` tinyint(3) unsigned zerofill DEFAULT '000',
-  `suspicious` tinyint(1) unsigned DEFAULT '0',
-  `locked` tinyint(1) unsigned DEFAULT '0',
-  `color` tinyint(1) unsigned DEFAULT '3',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `type` int(4) unsigned NOT NULL default '0',
+  `owner_id` int(4) unsigned NOT NULL default '0',
+  `player_id` int(4) unsigned NOT NULL default '0',
+  `amount` smallint(2) unsigned NOT NULL default '100',
+  `amount_limit` smallint(2) unsigned NOT NULL default '100',
+  `ident` tinyint(1) unsigned NOT NULL default '0',
+  `position` tinyint(1) unsigned NOT NULL default '0',
+  `gem1` tinyint(1) unsigned default '0',
+  `gem2` tinyint(1) unsigned default '0',
+  `magic1` tinyint(1) unsigned default '0',
+  `magic2` tinyint(1) unsigned default '0',
+  `magic3` tinyint(1) unsigned default '0',
+  `restrain` int(4) unsigned default '0',
+  `bless` tinyint(1) unsigned default '0',
+  `enchant` tinyint(3) unsigned zerofill default '000',
+  `suspicious` tinyint(1) unsigned default '0',
+  `locked` tinyint(1) unsigned default '0',
+  `color` tinyint(1) unsigned default '3',
+  PRIMARY KEY  (`id`),
   KEY `package` (`owner_id`,`position`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=51 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=73 ;
 
 --
--- Contenu de la table `item`
+-- Dumping data for table `item`
 --
 
 INSERT INTO `item` (`id`, `type`, `owner_id`, `player_id`, `amount`, `amount_limit`, `ident`, `position`, `gem1`, `gem2`, `magic1`, `magic2`, `magic3`, `restrain`, `bless`, `enchant`, `suspicious`, `locked`, `color`) VALUES
-(1, 130109, 1000001, 1000001, 1099, 10099, 0, 3, 13, 13, 0, 0, 12, 0, 7, 255, 0, 1, 2),
+(1, 130109, 1000001, 1000001, 1099, 10099, 0, 3, 13, 13, 0, 0, 12, 0, 7, 255, 0, 0, 2),
 (2, 410339, 1000001, 1000001, 100, 100, 0, 4, 13, 13, 200, 0, 12, 0, 7, 255, 0, 0, 3),
 (3, 410339, 1000001, 1000001, 100, 100, 0, 5, 13, 13, 0, 0, 12, 0, 7, 255, 0, 0, 3),
 (4, 410339, 1000001, 1000001, 60099, 60099, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
 (50, 725005, 1000001, 1000001, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
-(49, 1000000, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3);
+(49, 1000000, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(51, 1000010, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(52, 118013, 1000001, 1000001, 2698, 2698, 0, 1, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(53, 132015, 1000001, 1000001, 3698, 3698, 0, 3, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(54, 111033, 1000001, 1000001, 3298, 3298, 0, 1, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(55, 134025, 1000001, 1000001, 3898, 3898, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(56, 562000, 1000001, 1000001, 1198, 1198, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(57, 160055, 1000001, 1000001, 3198, 3198, 0, 8, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(58, 500005, 1000001, 1000001, 1599, 1599, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(59, 121183, 1000001, 1000001, 3198, 3198, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(60, 150193, 1000001, 1000001, 6698, 6698, 0, 6, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(61, 152163, 1000001, 1000001, 5198, 5198, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(62, 1060070, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(63, 1002040, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(64, 120045, 1000001, 1000001, 3198, 3198, 0, 2, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(65, 121023, 1000001, 1000001, 3998, 3998, 0, 2, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(66, 152045, 1000001, 1000001, 2698, 2698, 0, 6, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(67, 117015, 1000001, 1000001, 2698, 2698, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(68, 160015, 1000001, 1000001, 1698, 1698, 0, 8, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(69, 1060020, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(70, 720011, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(71, 720031, 1000001, 1000001, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(72, 725025, 1000001, 1000001, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `itemtype`
+-- Table structure for table `itemtype`
 --
 
 CREATE TABLE IF NOT EXISTS `itemtype` (
-  `id` int(4) unsigned NOT NULL DEFAULT '0',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `req_profession` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_weaponskill` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_level` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_sex` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `req_force` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_speed` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_health` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `req_soul` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `monopoly` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `weight` smallint(2) unsigned NOT NULL DEFAULT '100',
-  `price` int(4) unsigned NOT NULL DEFAULT '0',
-  `task` int(4) NOT NULL DEFAULT '0',
-  `attack_max` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `attack_min` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `defense` smallint(2) NOT NULL DEFAULT '0',
-  `dexterity` smallint(2) NOT NULL DEFAULT '0',
-  `dodge` smallint(2) NOT NULL DEFAULT '0',
-  `life` smallint(2) NOT NULL DEFAULT '0',
-  `mana` smallint(2) NOT NULL DEFAULT '0',
-  `amount` smallint(2) unsigned NOT NULL DEFAULT '1',
-  `amount_limit` smallint(2) unsigned NOT NULL DEFAULT '1',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `gem2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic2` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic3` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `magic_atk` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `magic_def` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `atk_range` smallint(2) unsigned zerofill NOT NULL DEFAULT '01',
-  `atk_speed` smallint(2) unsigned zerofill NOT NULL DEFAULT '800',
-  `fray_mode` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `repair_mode` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `type_mask` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `cps_price` int(4) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned NOT NULL default '0',
+  `name` char(15) collate latin1_general_ci NOT NULL,
+  `req_profession` tinyint(1) unsigned NOT NULL default '0',
+  `req_weaponskill` tinyint(1) unsigned NOT NULL default '0',
+  `req_level` tinyint(1) unsigned NOT NULL default '0',
+  `req_sex` tinyint(1) unsigned NOT NULL default '0',
+  `req_force` smallint(2) unsigned NOT NULL default '0',
+  `req_speed` smallint(2) unsigned NOT NULL default '0',
+  `req_health` smallint(2) unsigned NOT NULL default '0',
+  `req_soul` smallint(2) unsigned NOT NULL default '0',
+  `monopoly` tinyint(1) unsigned NOT NULL default '0',
+  `weight` smallint(2) unsigned NOT NULL default '100',
+  `price` int(4) unsigned NOT NULL default '0',
+  `task` int(4) NOT NULL default '0',
+  `attack_max` smallint(2) unsigned NOT NULL default '0',
+  `attack_min` smallint(2) unsigned NOT NULL default '0',
+  `defense` smallint(2) NOT NULL default '0',
+  `dexterity` smallint(2) NOT NULL default '0',
+  `dodge` smallint(2) NOT NULL default '0',
+  `life` smallint(2) NOT NULL default '0',
+  `mana` smallint(2) NOT NULL default '0',
+  `amount` smallint(2) unsigned NOT NULL default '1',
+  `amount_limit` smallint(2) unsigned NOT NULL default '1',
+  `status` tinyint(1) unsigned NOT NULL default '0',
+  `gem1` tinyint(1) unsigned NOT NULL default '0',
+  `gem2` tinyint(1) unsigned NOT NULL default '0',
+  `magic1` tinyint(1) unsigned NOT NULL default '0',
+  `magic2` tinyint(1) unsigned NOT NULL default '0',
+  `magic3` tinyint(1) unsigned NOT NULL default '0',
+  `magic_atk` smallint(2) unsigned NOT NULL default '0',
+  `magic_def` smallint(2) unsigned NOT NULL default '0',
+  `atk_range` smallint(2) unsigned zerofill NOT NULL default '01',
+  `atk_speed` smallint(2) unsigned zerofill NOT NULL default '800',
+  `fray_mode` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `repair_mode` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `type_mask` tinyint(2) unsigned NOT NULL default '0',
+  `cps_price` int(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `itemtype`
+-- Dumping data for table `itemtype`
 --
 
 INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_level`, `req_sex`, `req_force`, `req_speed`, `req_health`, `req_soul`, `monopoly`, `weight`, `price`, `task`, `attack_max`, `attack_min`, `defense`, `dexterity`, `dodge`, `life`, `mana`, `amount`, `amount_limit`, `status`, `gem1`, `gem2`, `magic1`, `magic2`, `magic3`, `magic_atk`, `magic_def`, `atk_range`, `atk_speed`, `fray_mode`, `repair_mode`, `type_mask`, `cps_price`) VALUES
@@ -9567,24 +9589,24 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (710212, 'LotteryTicket', 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (710213, 'CoatTicket', 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (710214, 'QuestChanceB', 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(720010, 'Amrita', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 600, 50500, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720011, 'Panacea', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 50510, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720012, 'Ginseng', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1800, 50520, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720013, 'Vanilla', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 50530, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720014, 'RecoveryPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2250, 50540, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720015, 'SoulPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 50550, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720016, 'RefreshingPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7500, 50560, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720017, 'ChantPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11500, 50570, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720020, 'StatueScroll', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 150050, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720021, 'GuildTransport1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 150150, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720022, 'GuildTransport2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 150200, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720023, 'GuildTransport3', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 150230, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(720024, 'GuildTransport4', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 150260, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720010, 'Amrita', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 600, 350500, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720011, 'Panacea', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 350510, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720012, 'Ginseng', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1800, 350520, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720013, 'Vanilla', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 350530, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720014, 'RecoveryPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2250, 350540, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720015, 'SoulPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 350550, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720016, 'RefreshingPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7500, 350560, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720017, 'ChantPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11500, 350570, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720020, 'StatueScroll', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 450050, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720021, 'GuildTransport1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 450150, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720022, 'GuildTransport2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 450200, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720023, 'GuildTransport3', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 450230, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(720024, 'GuildTransport4', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 450260, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (720027, 'MeteorScroll', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8002125, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (720028, 'DBScroll', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8002124, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (720030, 'Firework', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 601550, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(720031, 'EndlessLove', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 200100, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(720032, 'MyWish', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 200110, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(720031, 'EndlessLove', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 500100, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(720032, 'MyWish', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 500110, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (720033, 'FineRocketWrap', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7596000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (720034, 'GreatRocketWrap', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7596010, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (720035, 'SuperRocketWrap', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7596030, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
@@ -9790,21 +9812,21 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (721263, 'Sulphur', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (721271, 'HappyRabbit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8500120, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (721272, 'FunnyRabbit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8500125, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721273, 'LonghammerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90191, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721274, 'HalbertSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 93651, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721275, 'SpearSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90151, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721276, 'DaggerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90171, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721277, 'WandSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 93601, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721278, 'GlaiveSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90131, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721279, 'PoleaxeSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 93851, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721280, 'HookSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 95001, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721281, 'AxeSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 95031, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721282, 'ClubSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 95061, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721283, 'ScepterSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 95091, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721284, 'WhipSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 95121, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721273, 'LonghammerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 390191, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721274, 'HalbertSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 393651, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721275, 'SpearSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 390151, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721276, 'DaggerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 390171, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721277, 'WandSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 393601, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721278, 'GlaiveSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 390131, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721279, 'PoleaxeSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 393851, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721280, 'HookSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 395001, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721281, 'AxeSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 395031, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721282, 'ClubSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 395061, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721283, 'ScepterSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 395091, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721284, 'WhipSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 395121, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (721285, 'MagicBox', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8950050, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 9, 0, 0, 00, 00, 0, 0, 1, 0),
-(721287, 'SwordSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 93751, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(721288, 'HammerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 93801, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721287, 'SwordSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 393751, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(721288, 'HammerSkill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 393801, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (721330, 'Mil.GinsengPack', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
 (721331, 'Mil.Ginseng', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (721332, 'ChantPillPack', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
@@ -10266,38 +10288,38 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (723725, 'LifeFruitBasket', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7403420, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 1, 10),
 (723726, 'LifeFruit', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7403440, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 1, 10),
 (723727, 'PenitenceAmulet', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9000650, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 1, 10),
-(725000, 'Thunder', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 90000, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725001, 'Fire', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 90010, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725002, 'Tornado', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 90030, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725003, 'Cure', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500, 90050, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725004, 'Lightning', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2000, 90070, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725005, 'FastBlade', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90090, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725010, 'ScentSword', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90110, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725011, 'WideStrike', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90131, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725012, 'SpeedGun', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90151, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725013, 'Penetration', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90171, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725014, 'Halt', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 90191, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725015, 'DivineHare', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 90210, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725016, 'NightDevil', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80000, 90250, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 380),
-(725018, 'Dance2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93200, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725019, 'Dance3', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93250, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725020, 'Dance4', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93300, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725021, 'Dance5', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93350, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725022, 'Dance6', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93400, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725023, 'Dance7', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93450, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725024, 'Dance8', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 93500, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
-(725025, 'FlyingMoon', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 93550, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725026, 'Snow', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 93601, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725027, 'StrandedMonster', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 93651, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725028, 'SpeedLightning', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 93700, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725029, 'Phoenix', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 93751, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725030, 'Boom', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 93801, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725031, 'Boreas', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 93851, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725040, 'Seizer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 95001, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725041, 'Earthquake', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 95031, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725042, 'Rage', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 95061, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725043, 'Celestial', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 95091, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(725044, 'Roamer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 95121, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725000, 'Thunder', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 390000, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725001, 'Fire', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 390010, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725002, 'Tornado', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 390030, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725003, 'Cure', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500, 390050, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725004, 'Lightning', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2000, 390070, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725005, 'FastBlade', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390090, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725010, 'ScentSword', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390110, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725011, 'WideStrike', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390131, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725012, 'SpeedGun', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390151, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725013, 'Penetration', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390171, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725014, 'Halt', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 390191, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725015, 'DivineHare', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 390210, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725016, 'NightDevil', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80000, 390250, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 380),
+(725018, 'Dance2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393200, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725019, 'Dance3', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393250, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725020, 'Dance4', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393300, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725021, 'Dance5', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393350, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725022, 'Dance6', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393400, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725023, 'Dance7', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393450, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725024, 'Dance8', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 393500, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 1, 0),
+(725025, 'FlyingMoon', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 393550, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725026, 'Snow', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 393601, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725027, 'StrandedMonster', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 393651, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725028, 'SpeedLightning', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000, 393700, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725029, 'Phoenix', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 393751, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725030, 'Boom', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 393801, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725031, 'Boreas', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 393851, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725040, 'Seizer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 395001, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725041, 'Earthquake', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 395031, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725042, 'Rage', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 395061, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725043, 'Celestial', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 395091, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(725044, 'Roamer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5000, 395121, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (725050, 'HotJuly', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7000000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (729904, 'CloudSaint`sLet', 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1211000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (729910, 'CPMiniBag', 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 7403510, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
@@ -10430,9 +10452,9 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (1000000, 'Stancher', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 70, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1000010, 'Resolutive', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 100, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1000020, 'Painkiller', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 250, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1000030, 'Amrita', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 0, 500, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1001000, 'Agrypnotic', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 70, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0);
+(1000030, 'Amrita', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 0, 500, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0);
 INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_level`, `req_sex`, `req_force`, `req_speed`, `req_health`, `req_soul`, `monopoly`, `weight`, `price`, `task`, `attack_max`, `attack_min`, `defense`, `dexterity`, `dodge`, `life`, `mana`, `amount`, `amount_limit`, `status`, `gem1`, `gem2`, `magic1`, `magic2`, `magic3`, `magic_atk`, `magic_def`, `atk_range`, `atk_speed`, `fray_mode`, `repair_mode`, `type_mask`, `cps_price`) VALUES
+(1001000, 'Agrypnotic', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 70, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1001010, 'Tonic', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 200, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1001020, 'PearlOintment', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 225, 0, 0, 0, 0, 0, 0, 0, 450, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1001030, 'RecoveryPill', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 450, 0, 0, 0, 0, 0, 0, 0, 1000, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
@@ -10462,32 +10484,32 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (1050051, 'FreezingArrow', 40, 0, 86, 0, 0, 0, 0, 0, 0, 0, 650, 0, 100, 100, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 16, 0, 0, 0, 0, 25, 1000, 0, 0, 0, 0),
 (1050052, 'MagicArrow', 40, 0, 96, 0, 0, 0, 0, 0, 0, 0, 800, 0, 100, 100, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 17, 0, 0, 0, 0, 25, 1000, 0, 0, 0, 0),
 (1051000, 'FreezingArrow', 40, 0, 63, 0, 0, 0, 0, 0, 0, 0, 500, 0, 50, 50, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 210, 0, 0, 0, 0, 25, 1000, 0, 0, 0, 0),
-(1060020, 'TwinCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13021, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
-(1060021, 'DesertCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13022, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
-(1060022, 'ApeCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13023, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
-(1060023, 'CastleGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13024, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
-(1060024, 'BirdIslandGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13025, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
-(1060025, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13026, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060026, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13027, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060027, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13028, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060028, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13029, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060029, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13030, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060030, 'BlackDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13051, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060031, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13032, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060032, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13033, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060033, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13034, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060034, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13035, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060035, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13036, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060037, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13038, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060038, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13031, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060040, 'VioletDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13052, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060050, 'BlueDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13053, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060060, 'GreenDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13054, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060070, 'BrownDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13055, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060080, 'RedDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13056, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060090, 'WhiteDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 13057, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
-(1060100, 'BombScroll', 143, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1060101, 'FireofHell', 143, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 50020, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060020, 'TwinCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313021, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
+(1060021, 'DesertCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313022, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
+(1060022, 'ApeCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313023, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
+(1060023, 'CastleGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313024, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
+(1060024, 'BirdIslandGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313025, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 1),
+(1060025, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313026, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060026, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313027, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060027, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313028, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060028, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313029, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060029, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313030, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060030, 'BlackDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313051, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060031, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313032, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060032, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313033, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060033, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313034, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060034, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313035, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060035, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313036, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060037, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313038, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060038, 'WindSpell', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 313031, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060040, 'VioletDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313052, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060050, 'BlueDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313053, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060060, 'GreenDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313054, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060070, 'BrownDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313055, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060080, 'RedDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313056, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060090, 'WhiteDye', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 313057, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1060100, 'BombScroll', 143, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 350000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1060101, 'FireofHell', 143, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 350020, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1060102, 'StoneCityGate', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 301000, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072010, 'Rate1IronOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072011, 'Rate2IronOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
@@ -10509,7 +10531,7 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (1072027, 'Rate8CopperOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1046, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072028, 'Rate9CopperOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1176, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072029, 'Rate10CopperOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1310, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1072031, 'EuxeniteOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 199, 199, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
+(1072031, 'EuxeniteOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 199, 199, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072040, 'Rate1SilverOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 288, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072041, 'Rate2SilverOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 576, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
 (1072042, 'Rate3SilverOre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 864, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
@@ -10534,7 +10556,7 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 (1088000, 'DragonBall', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 220),
 (1088001, 'Meteor', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 13),
 (1088002, 'MeteorTear', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 00, 00, 0, 0, 0, 0),
-(1090000, 'Silver', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10001, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
+(1090000, 'Silver', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1090010, 'Sycee', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1090020, 'Gold', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
 (1091000, 'GoldBullion', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 298, 298, 0, 0, 0, 0, 0, 0, 0, 0, 01, 1000, 0, 0, 0, 0),
@@ -10559,34 +10581,34 @@ INSERT INTO `itemtype` (`id`, `name`, `req_profession`, `req_weaponskill`, `req_
 -- --------------------------------------------------------
 
 --
--- Structure de la table `leaveword`
+-- Table structure for table `leaveword`
 --
 
 CREATE TABLE IF NOT EXISTS `leaveword` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `speaker` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `hearer` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `time` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT '00000000000000',
-  `words` char(255) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL DEFAULT 'N/A',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `speaker` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `hearer` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `time` char(15) collate latin1_general_ci NOT NULL default '00000000000000',
+  `words` char(255) character set latin1 collate latin1_general_cs NOT NULL default 'N/A',
+  PRIMARY KEY  (`id`),
   KEY `user_name` (`speaker`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `levelexp`
+-- Table structure for table `levelexp`
 --
 
 CREATE TABLE IF NOT EXISTS `levelexp` (
-  `level` tinyint(3) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `exp` bigint(10) unsigned NOT NULL DEFAULT '0',
-  `up_lvl_time` int(4) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`level`)
+  `level` tinyint(3) unsigned zerofill NOT NULL auto_increment,
+  `exp` bigint(10) unsigned NOT NULL default '0',
+  `up_lvl_time` int(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`level`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=135 ;
 
 --
--- Contenu de la table `levelexp`
+-- Dumping data for table `levelexp`
 --
 
 INSERT INTO `levelexp` (`level`, `exp`, `up_lvl_time`) VALUES
@@ -10728,27 +10750,27 @@ INSERT INTO `levelexp` (`level`, `exp`, `up_lvl_time`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `map`
+-- Table structure for table `map`
 --
 
 CREATE TABLE IF NOT EXISTS `map` (
-  `id` int(4) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `describe_text` varchar(127) COLLATE latin1_general_ci DEFAULT NULL,
-  `doc_id` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill DEFAULT '0000',
-  `weather` int(4) unsigned zerofill DEFAULT '0000',
-  `bgmusic` int(4) unsigned zerofill DEFAULT '0000',
-  `bgmusic_show` int(4) unsigned zerofill DEFAULT '0000',
-  `portal_x` smallint(4) unsigned zerofill DEFAULT '0000',
-  `portal_y` smallint(4) unsigned zerofill DEFAULT '0000',
-  `reborn_map` int(4) unsigned DEFAULT '0',
-  `reborn_portal` int(4) DEFAULT '0',
-  `light` int(4) unsigned zerofill DEFAULT '4294967295'
+  `id` int(4) unsigned NOT NULL default '0',
+  `name` varchar(15) collate latin1_general_ci default NULL,
+  `describe_text` varchar(127) collate latin1_general_ci default NULL,
+  `doc_id` smallint(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill default '0000',
+  `weather` int(4) unsigned zerofill default '0000',
+  `bgmusic` int(4) unsigned zerofill default '0000',
+  `bgmusic_show` int(4) unsigned zerofill default '0000',
+  `portal_x` smallint(4) unsigned zerofill default '0000',
+  `portal_y` smallint(4) unsigned zerofill default '0000',
+  `reborn_map` int(4) unsigned default '0',
+  `reborn_portal` int(4) default '0',
+  `light` int(4) unsigned zerofill default '4294967295'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `map`
+-- Dumping data for table `map`
 --
 
 INSERT INTO `map` (`id`, `name`, `describe_text`, `doc_id`, `type`, `weather`, `bgmusic`, `bgmusic_show`, `portal_x`, `portal_y`, `reborn_map`, `reborn_portal`, `light`) VALUES
@@ -10912,50 +10934,50 @@ INSERT INTO `map` (`id`, `name`, `describe_text`, `doc_id`, `type`, `weather`, `
 -- --------------------------------------------------------
 
 --
--- Structure de la table `monstertype`
+-- Table structure for table `monstertype`
 --
 
 CREATE TABLE IF NOT EXISTS `monstertype` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'None',
-  `type` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
-  `ai_type` tinyint(2) unsigned zerofill DEFAULT '00',
-  `look` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `level` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `life` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `escape_life` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `attack_user` tinyint(1) unsigned DEFAULT '3',
-  `attack_min` int(4) unsigned NOT NULL DEFAULT '0',
-  `attack_max` int(4) unsigned NOT NULL DEFAULT '0',
-  `defense` int(4) unsigned NOT NULL DEFAULT '0',
-  `dexterity` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `dodge` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `magic_type` int(4) unsigned zerofill DEFAULT '0000',
-  `magic_def` int(4) unsigned DEFAULT '0',
-  `magic_hitrate` int(4) unsigned zerofill DEFAULT '0100',
-  `view_range` tinyint(2) unsigned NOT NULL DEFAULT '5',
-  `attack_range` tinyint(2) unsigned DEFAULT '2',
-  `attack_speed` smallint(4) unsigned zerofill DEFAULT '1000',
-  `move_speed` smallint(4) unsigned zerofill DEFAULT '0500',
-  `run_speed` smallint(4) unsigned zerofill DEFAULT '0400',
-  `drop_armet` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_necklace` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_armor` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_ring` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_weapon` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_shield` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_shoes` tinyint(3) unsigned zerofill DEFAULT '099',
-  `drop_money` int(4) unsigned zerofill DEFAULT '0000',
-  `drop_hp` int(4) unsigned DEFAULT '0',
-  `drop_mp` int(4) unsigned DEFAULT '0',
-  `extra_battlelev` smallint(3) unsigned zerofill DEFAULT '000',
-  `extra_exp` smallint(3) unsigned zerofill DEFAULT '100',
-  `extra_damage` smallint(2) unsigned DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL default 'None',
+  `type` tinyint(1) unsigned zerofill NOT NULL default '0',
+  `ai_type` tinyint(2) unsigned zerofill default '00',
+  `look` int(4) unsigned zerofill NOT NULL default '0000',
+  `level` tinyint(3) unsigned NOT NULL default '1',
+  `life` smallint(5) unsigned NOT NULL default '0',
+  `escape_life` smallint(5) unsigned NOT NULL default '0',
+  `attack_user` tinyint(1) unsigned default '3',
+  `attack_min` int(4) unsigned NOT NULL default '0',
+  `attack_max` int(4) unsigned NOT NULL default '0',
+  `defense` int(4) unsigned NOT NULL default '0',
+  `dexterity` tinyint(2) unsigned NOT NULL default '0',
+  `dodge` tinyint(2) unsigned NOT NULL default '0',
+  `magic_type` int(4) unsigned zerofill default '0000',
+  `magic_def` int(4) unsigned default '0',
+  `magic_hitrate` int(4) unsigned zerofill default '0100',
+  `view_range` tinyint(2) unsigned NOT NULL default '5',
+  `attack_range` tinyint(2) unsigned default '2',
+  `attack_speed` smallint(4) unsigned zerofill default '1000',
+  `move_speed` smallint(4) unsigned zerofill default '0500',
+  `run_speed` smallint(4) unsigned zerofill default '0400',
+  `drop_armet` tinyint(3) unsigned zerofill default '099',
+  `drop_necklace` tinyint(3) unsigned zerofill default '099',
+  `drop_armor` tinyint(3) unsigned zerofill default '099',
+  `drop_ring` tinyint(3) unsigned zerofill default '099',
+  `drop_weapon` tinyint(3) unsigned zerofill default '099',
+  `drop_shield` tinyint(3) unsigned zerofill default '099',
+  `drop_shoes` tinyint(3) unsigned zerofill default '099',
+  `drop_money` int(4) unsigned zerofill default '0000',
+  `drop_hp` int(4) unsigned default '0',
+  `drop_mp` int(4) unsigned default '0',
+  `extra_battlelev` smallint(3) unsigned zerofill default '000',
+  `extra_exp` smallint(3) unsigned zerofill default '100',
+  `extra_damage` smallint(2) unsigned default '0',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=9029 ;
 
 --
--- Contenu de la table `monstertype`
+-- Dumping data for table `monstertype`
 --
 
 INSERT INTO `monstertype` (`id`, `name`, `type`, `ai_type`, `look`, `level`, `life`, `escape_life`, `attack_user`, `attack_min`, `attack_max`, `defense`, `dexterity`, `dodge`, `magic_type`, `magic_def`, `magic_hitrate`, `view_range`, `attack_range`, `attack_speed`, `move_speed`, `run_speed`, `drop_armet`, `drop_necklace`, `drop_armor`, `drop_ring`, `drop_weapon`, `drop_shield`, `drop_shoes`, `drop_money`, `drop_hp`, `drop_mp`, `extra_battlelev`, `extra_exp`, `extra_damage`) VALUES
@@ -11362,26 +11384,26 @@ INSERT INTO `monstertype` (`id`, `name`, `type`, `ai_type`, `look`, `level`, `li
 -- --------------------------------------------------------
 
 --
--- Structure de la table `npc`
+-- Table structure for table `npc`
 --
 
 CREATE TABLE IF NOT EXISTS `npc` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `type` tinyint(2) unsigned zerofill DEFAULT '02',
-  `lookface` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `mapid` int(4) unsigned NOT NULL DEFAULT '0',
-  `cellx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `celly` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `life` smallint(5) unsigned zerofill DEFAULT '00000',
-  `maxlife` smallint(5) unsigned zerofill DEFAULT '00000',
-  `base` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `sort` tinyint(2) unsigned zerofill DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `type` tinyint(2) unsigned zerofill default '02',
+  `lookface` int(4) unsigned zerofill NOT NULL default '0000',
+  `mapid` int(4) unsigned NOT NULL default '0',
+  `cellx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `celly` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `life` smallint(5) unsigned zerofill default '00000',
+  `maxlife` smallint(5) unsigned zerofill default '00000',
+  `base` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `sort` tinyint(2) unsigned zerofill default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `npc`
+-- Dumping data for table `npc`
 --
 
 INSERT INTO `npc` (`id`, `name`, `type`, `lookface`, `mapid`, `cellx`, `celly`, `life`, `maxlife`, `base`, `sort`) VALUES
@@ -11952,21 +11974,21 @@ INSERT INTO `npc` (`id`, `name`, `type`, `lookface`, `mapid`, `cellx`, `celly`, 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `passway`
+-- Table structure for table `passway`
 --
 
 CREATE TABLE IF NOT EXISTS `passway` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `passway_idx` int(2) unsigned zerofill NOT NULL DEFAULT '00' COMMENT 'Idx as in the DMap',
-  `portal_mapid` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'MapId as in the table portal',
-  `portal_idx` int(2) unsigned zerofill NOT NULL DEFAULT '00' COMMENT 'Idx as in the table portal',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `passway_idx` int(2) unsigned zerofill NOT NULL default '00' COMMENT 'Idx as in the DMap',
+  `portal_mapid` smallint(4) unsigned zerofill NOT NULL default '0000' COMMENT 'MapId as in the table portal',
+  `portal_idx` int(2) unsigned zerofill NOT NULL default '00' COMMENT 'Idx as in the table portal',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=632 ;
 
 --
--- Contenu de la table `passway`
+-- Dumping data for table `passway`
 --
 
 INSERT INTO `passway` (`id`, `mapid`, `passway_idx`, `portal_mapid`, `portal_idx`) VALUES
@@ -12244,22 +12266,22 @@ INSERT INTO `passway` (`id`, `mapid`, `passway_idx`, `portal_mapid`, `portal_idx
 -- --------------------------------------------------------
 
 --
--- Structure de la table `point_allot`
+-- Table structure for table `point_allot`
 --
 
 CREATE TABLE IF NOT EXISTS `point_allot` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `profession` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `level` tinyint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `force` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `speed` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `health` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  `soul` smallint(3) unsigned zerofill NOT NULL DEFAULT '000',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `profession` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `level` tinyint(3) unsigned zerofill NOT NULL default '000',
+  `force` smallint(3) unsigned zerofill NOT NULL default '000',
+  `speed` smallint(3) unsigned zerofill NOT NULL default '000',
+  `health` smallint(3) unsigned zerofill NOT NULL default '000',
+  `soul` smallint(3) unsigned zerofill NOT NULL default '000',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=483 ;
 
 --
--- Contenu de la table `point_allot`
+-- Dumping data for table `point_allot`
 --
 
 INSERT INTO `point_allot` (`id`, `profession`, `level`, `force`, `speed`, `health`, `soul`) VALUES
@@ -12747,21 +12769,21 @@ INSERT INTO `point_allot` (`id`, `profession`, `level`, `force`, `speed`, `healt
 -- --------------------------------------------------------
 
 --
--- Structure de la table `portal`
+-- Table structure for table `portal`
 --
 
 CREATE TABLE IF NOT EXISTS `portal` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `idx` int(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `portal_x` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `portal_y` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `mapid` int(4) unsigned zerofill NOT NULL default '0000',
+  `idx` int(2) unsigned zerofill NOT NULL default '00',
+  `portal_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `portal_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=615 ;
 
 --
--- Contenu de la table `portal`
+-- Dumping data for table `portal`
 --
 
 INSERT INTO `portal` (`id`, `mapid`, `idx`, `portal_x`, `portal_y`) VALUES
@@ -13028,21 +13050,21 @@ INSERT INTO `portal` (`id`, `mapid`, `idx`, `portal_x`, `portal_y`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `rebirth`
+-- Table structure for table `rebirth`
 --
 
 CREATE TABLE IF NOT EXISTS `rebirth` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `need_prof` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `new_prof` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  `need_level` tinyint(3) unsigned zerofill NOT NULL DEFAULT '120',
-  `new_level` tinyint(3) unsigned zerofill NOT NULL DEFAULT '015',
-  `metepsychosis` tinyint(2) unsigned zerofill NOT NULL DEFAULT '00',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000',
+  `need_prof` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `new_prof` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `need_level` tinyint(3) unsigned zerofill NOT NULL default '120',
+  `new_level` tinyint(3) unsigned zerofill NOT NULL default '015',
+  `metepsychosis` tinyint(2) unsigned zerofill NOT NULL default '00',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Contenu de la table `rebirth`
+-- Dumping data for table `rebirth`
 --
 
 INSERT INTO `rebirth` (`id`, `need_prof`, `new_prof`, `need_level`, `new_level`, `metepsychosis`) VALUES
@@ -13100,28 +13122,28 @@ INSERT INTO `rebirth` (`id`, `need_prof`, `new_prof`, `need_level`, `new_level`,
 -- --------------------------------------------------------
 
 --
--- Structure de la table `region`
+-- Table structure for table `region`
 --
 
 CREATE TABLE IF NOT EXISTS `region` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `mapid` int(4) unsigned NOT NULL DEFAULT '0',
-  `type` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_x` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_y` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cx` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `bound_cy` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `datastr` varchar(127) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `data0` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data1` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data2` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  `data3` int(4) unsigned zerofill NOT NULL DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `mapid` int(4) unsigned NOT NULL default '0',
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `bound_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cx` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `bound_cy` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `datastr` varchar(127) collate latin1_general_ci NOT NULL default '',
+  `data0` int(4) unsigned zerofill NOT NULL default '0000',
+  `data1` int(4) unsigned zerofill NOT NULL default '0000',
+  `data2` int(4) unsigned zerofill NOT NULL default '0000',
+  `data3` int(4) unsigned zerofill NOT NULL default '0000',
+  PRIMARY KEY  (`id`),
   KEY `mapid` (`mapid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=57 ;
 
 --
--- Contenu de la table `region`
+-- Dumping data for table `region`
 --
 
 INSERT INTO `region` (`id`, `mapid`, `type`, `bound_x`, `bound_y`, `bound_cx`, `bound_cy`, `datastr`, `data0`, `data1`, `data2`, `data3`) VALUES
@@ -13150,59 +13172,59 @@ INSERT INTO `region` (`id`, `mapid`, `type`, `bound_x`, `bound_y`, `bound_cx`, `
 -- --------------------------------------------------------
 
 --
--- Structure de la table `superman`
+-- Table structure for table `superman`
 --
 
 CREATE TABLE IF NOT EXISTS `superman` (
-  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `number` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Number of monsters killed.',
-  `name` char(15) COLLATE latin1_general_ci NOT NULL COMMENT 'Player''s name.',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned zerofill NOT NULL auto_increment,
+  `number` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Number of monsters killed.',
+  `name` char(15) collate latin1_general_ci NOT NULL COMMENT 'Player''s name.',
+  PRIMARY KEY  (`id`),
   KEY `number` (`number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `synattr`
+-- Table structure for table `synattr`
 --
 
 CREATE TABLE IF NOT EXISTS `synattr` (
-  `id` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Member UID.',
-  `syn_id` smallint(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Syndicate UID.',
-  `rank` tinyint(3) unsigned zerofill NOT NULL DEFAULT '000' COMMENT 'Rank in the syndicate.',
-  `proffer` int(4) unsigned zerofill NOT NULL DEFAULT '0000' COMMENT 'Money given to the syndicate.',
-  PRIMARY KEY (`id`)
+  `id` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Member UID.',
+  `syn_id` smallint(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Syndicate UID.',
+  `rank` tinyint(3) unsigned zerofill NOT NULL default '000' COMMENT 'Rank in the syndicate.',
+  `proffer` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Money given to the syndicate.',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `syndicate`
+-- Table structure for table `syndicate`
 --
 
 CREATE TABLE IF NOT EXISTS `syndicate` (
-  `id` smallint(4) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `announce` char(255) COLLATE latin1_general_ci DEFAULT '',
-  `leader_title` char(15) COLLATE latin1_general_ci DEFAULT '°ïÖ÷' COMMENT '??',
-  `member_title` char(15) COLLATE latin1_general_ci DEFAULT '°ïÖÚ' COMMENT '??',
+  `id` smallint(4) unsigned zerofill NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL,
+  `announce` char(255) collate latin1_general_ci default '',
+  `leader_title` char(15) collate latin1_general_ci default '°ïÖ÷' COMMENT '??',
+  `member_title` char(15) collate latin1_general_ci default '°ïÖÚ' COMMENT '??',
   `leader_id` int(4) unsigned NOT NULL,
-  `leader_name` char(15) COLLATE latin1_general_ci NOT NULL,
-  `money` int(4) unsigned DEFAULT '0',
-  `fealty_syn` smallint(4) unsigned zerofill DEFAULT '0000',
-  `del_flag` tinyint(1) DEFAULT '0',
-  `enemy0` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy1` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy2` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy3` smallint(4) unsigned zerofill DEFAULT '0000',
-  `enemy4` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally0` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally1` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally2` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally3` smallint(4) unsigned zerofill DEFAULT '0000',
-  `ally4` smallint(4) unsigned zerofill DEFAULT '0000',
-  PRIMARY KEY (`id`),
+  `leader_name` char(15) collate latin1_general_ci NOT NULL,
+  `money` int(4) unsigned default '0',
+  `fealty_syn` smallint(4) unsigned zerofill default '0000',
+  `del_flag` tinyint(1) default '0',
+  `enemy0` smallint(4) unsigned zerofill default '0000',
+  `enemy1` smallint(4) unsigned zerofill default '0000',
+  `enemy2` smallint(4) unsigned zerofill default '0000',
+  `enemy3` smallint(4) unsigned zerofill default '0000',
+  `enemy4` smallint(4) unsigned zerofill default '0000',
+  `ally0` smallint(4) unsigned zerofill default '0000',
+  `ally1` smallint(4) unsigned zerofill default '0000',
+  `ally2` smallint(4) unsigned zerofill default '0000',
+  `ally3` smallint(4) unsigned zerofill default '0000',
+  `ally4` smallint(4) unsigned zerofill default '0000',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `index_money` (`money`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
@@ -13210,67 +13232,71 @@ CREATE TABLE IF NOT EXISTS `syndicate` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `account_id` int(4) unsigned DEFAULT '0',
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` char(15) COLLATE latin1_general_ci NOT NULL DEFAULT 'Unknown',
-  `mate` char(15) COLLATE latin1_general_ci DEFAULT 'None',
+  `account_id` int(4) unsigned default '0',
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  `mate` char(15) collate latin1_general_ci default 'None',
   `lookface` int(7) unsigned zerofill NOT NULL,
-  `hair` smallint(3) unsigned zerofill DEFAULT '310',
-  `money` int(4) unsigned DEFAULT '1000',
-  `money_saved` int(4) unsigned DEFAULT '0',
-  `cps` int(4) unsigned DEFAULT '0',
-  `level` tinyint(3) unsigned DEFAULT '1',
-  `exp` bigint(10) unsigned DEFAULT '0',
-  `force` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `dexterity` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `health` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `soul` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `add_points` smallint(3) unsigned DEFAULT '0',
-  `life` smallint(5) unsigned NOT NULL DEFAULT '1',
-  `mana` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `profession` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `pk` smallint(5) DEFAULT '0',
-  `virtue` int(4) DEFAULT '0',
-  `nobility` tinyint(1) unsigned DEFAULT '0',
-  `metempsychosis` tinyint(1) unsigned DEFAULT '0',
-  `syndicate_id` smallint(4) unsigned zerofill DEFAULT '0000',
-  `record_map` int(4) unsigned DEFAULT '1010',
-  `record_x` smallint(4) unsigned zerofill DEFAULT '0031',
-  `record_y` smallint(4) unsigned zerofill DEFAULT '0083',
-  `last_login` int(8) unsigned DEFAULT '20130101',
-  PRIMARY KEY (`id`),
+  `hair` smallint(3) unsigned zerofill default '310',
+  `money` int(4) unsigned default '1000',
+  `money_saved` int(4) unsigned default '0',
+  `cps` int(4) unsigned default '0',
+  `level` tinyint(3) unsigned default '1',
+  `exp` bigint(10) unsigned default '0',
+  `force` smallint(3) unsigned NOT NULL default '0',
+  `dexterity` smallint(3) unsigned NOT NULL default '0',
+  `health` smallint(3) unsigned NOT NULL default '0',
+  `soul` smallint(3) unsigned NOT NULL default '0',
+  `add_points` smallint(3) unsigned default '0',
+  `life` smallint(5) unsigned NOT NULL default '1',
+  `mana` smallint(5) unsigned NOT NULL default '0',
+  `profession` tinyint(3) unsigned NOT NULL default '0',
+  `pk` smallint(5) default '0',
+  `virtue` int(4) default '0',
+  `nobility` tinyint(1) unsigned default '0',
+  `metempsychosis` tinyint(1) unsigned default '0',
+  `syndicate_id` smallint(4) unsigned zerofill default '0000',
+  `record_map` int(4) unsigned default '1010',
+  `record_x` smallint(4) unsigned zerofill default '0031',
+  `record_y` smallint(4) unsigned zerofill default '0083',
+  `last_login` int(8) unsigned default '20130101',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `index_name` (`name`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `account_id` (`account_id`),
-  KEY `index_account` (`account_id`) USING BTREE
+  KEY `index_account` USING BTREE (`account_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000006 ;
 
 --
--- Contenu de la table `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`account_id`, `id`, `name`, `mate`, `lookface`, `hair`, `money`, `money_saved`, `cps`, `level`, `exp`, `force`, `dexterity`, `health`, `soul`, `add_points`, `life`, `mana`, `profession`, `pk`, `virtue`, `nobility`, `metempsychosis`, `syndicate_id`, `record_map`, `record_x`, `record_y`, `last_login`) VALUES
-(1, 1000001, 'CptSky[PM]', 'None', 1011004, 310, 13413044, 0, 25000, 130, 1347234, 180, 45, 120, 0, 26, 150, 100, 15, 30, 0, 0, 2, 0000, 1036, 0206, 0197, 0),
+(1, 1000001, 'CptSky[PM]', 'None', 1011004, 310, 13287744, 0, 25000, 130, 1347234, 180, 45, 120, 26, 0, 150, 100, 15, 30, 0, 0, 2, 0000, 1036, 0198, 0186, 0),
 (2, 1000004, 'test', 'None', 0671003, 310, 1000, 0, 0, 1, 0, 2, 7, 1, 0, 0, 51, 0, 40, 0, 0, 0, 0, 0000, 1002, 0446, 0446, 20130101);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `wanted`
+-- Table structure for table `wanted`
 --
 
 CREATE TABLE IF NOT EXISTS `wanted` (
-  `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
-  `target` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the target.',
-  `payer` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the payer.',
-  `bounty` int(4) unsigned DEFAULT NULL COMMENT 'Price for the contract.',
-  `order_time` bigint(8) unsigned DEFAULT NULL COMMENT 'UNIX timestamp when the order was added.',
-  `hunter` char(15) COLLATE latin1_general_ci DEFAULT NULL COMMENT 'Name of the hunder.',
-  `finish_time` bigint(8) unsigned DEFAULT NULL COMMENT 'UNIX timestamp when the target was hunted.',
-  PRIMARY KEY (`id`),
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `target` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the target.',
+  `payer` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the payer.',
+  `bounty` int(4) unsigned default NULL COMMENT 'Price for the contract.',
+  `order_time` bigint(8) unsigned default NULL COMMENT 'UNIX timestamp when the order was added.',
+  `hunter` char(15) collate latin1_general_ci default NULL COMMENT 'Name of the hunder.',
+  `finish_time` bigint(8) unsigned default NULL COMMENT 'UNIX timestamp when the target was hunted.',
+  PRIMARY KEY  (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

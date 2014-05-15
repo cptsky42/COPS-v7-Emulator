@@ -256,8 +256,8 @@ unix:!macx {
 
 # UNIX-like stuff...
 unix {
-QMAKE_CFLAGS += -Wextra -Wno-deprecated-register
-QMAKE_CXXFLAGS += -Wextra -Wno-deprecated-register
+QMAKE_CFLAGS += -Wextra
+QMAKE_CXXFLAGS += -Wextra
 }
 
 

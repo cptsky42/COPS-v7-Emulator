@@ -17,6 +17,7 @@
 
 #include "npc.h"
 #include "npctask.h"
+#include "itemtask.h"
 
 using namespace std;
 
@@ -921,6 +922,283 @@ Player :: getItem(uint32_t aUID) const
 }
 
 bool
+Player :: canEquipItem(const Item& aItem, Item::Position aPosition) const
+{
+    if (aItem.isTaskItem())
+        return false;
+
+    if (aItem.getReqLevel() > getLevel())
+        return false;
+
+    if (aItem.isNeedIdent())
+        return false;
+
+    if (aItem.getReqSex() != 0 && aItem.getReqSex() & (1 << getSex()) == 0)
+        return false;
+
+    // rebirth
+    if (getMetempsychosis() > 0 && getLevel() >= 70 && aItem.getReqLevel() <= 70)
+        return true;
+
+    if (aItem.getReqProf() != 0)
+    {
+        uint8_t reqProfSort = (aItem.getReqProf() % 1000) / 10;
+        uint8_t reqProfLevel = aItem.getReqProf() % 10;
+        uint8_t curProfSort = (getProfession() % 1000) / 10;
+        uint8_t curProfLevel (getProfession() % 10);
+
+        if (reqProfSort == 19) // taoist
+        {
+            if (curProfSort < 10)
+                return false;
+            else
+            {
+                if (Item::POS_LWEAPON == aPosition)
+                    return false;
+            }
+        }
+        else
+        {
+            if (reqProfSort != curProfSort)
+                return false;
+        }
+
+        if (reqProfLevel > curProfLevel)
+            return false;
+    }
+
+    // TODO check for weapon skill
+    //if (aItem.getReqWeaponSkill() != 0 && aItem.isWeapon() )
+
+    if (aItem.getReqForce() > getForce() ||
+        aItem.getReqSpeed() > getDexterity() ||
+        aItem.getReqHealth() > getHealth() ||
+        aItem.getReqSoul() > getSoul())
+        return false;
+
+    return true;
+}
+
+bool
+Player :: useItem(Item& aItem, Item::Position aPosition, bool aSend)
+{
+    ASSERT_ERR(&aItem != nullptr, false);
+
+    bool success = false;
+
+    if (aItem.isActionItem())
+    {
+        if (aItem.getTask() != nullptr)
+        {
+            success = ERROR_SUCCESS == aItem.getTask()->execute(mClient, 0);
+            // TODO ? erase Item ?
+        }
+    }
+    else if (aItem.isEquipEnable())
+    {
+        success = equipItem(aItem, aPosition, aSend);
+    }
+    else if (aItem.isEatEnable())
+    {
+        int16_t addLife = aItem.getLife();
+        int16_t addMana = aItem.getMana();
+
+        if (eraseItem(aItem.getUID(), aSend))
+        {
+            addAttrib(MsgUserAttrib::USER_ATTRIB_LIFE, addLife, true, true);
+            // TODO broadcast team life...
+
+            addAttrib(MsgUserAttrib::USER_ATTRIB_LIFE, addMana, true, false);
+
+            success = true;
+        }
+    }
+
+    return success;
+}
+
+bool
+Player :: equipItem(Item& aItem, Item::Position aPosition, bool aSend)
+{
+    ASSERT_ERR(&aItem != nullptr, false);
+
+    bool success = false;
+
+    // TODO AbortMagic().
+
+    if (canEquipItem(aItem, aPosition))
+    {
+        // TODO if (isWing()) return false
+
+        // TODO simplify the code
+        switch (aPosition)
+        {
+            case Item::POS_ARMET:
+                {
+                    if (aItem.isHelmet())
+                    {
+                        unequipOnly(aPosition);
+
+                        mEquipment[aPosition] = &aItem;
+                        aItem.setPosition(aPosition);
+
+                        success = true;
+                    }
+                    break;
+                }
+            case Item::POS_NECKLACE:
+                {
+                    if (aItem.isNecklace())
+                    {
+                        unequipOnly(aPosition);
+
+                        mEquipment[aPosition] = &aItem;
+                        aItem.setPosition(aPosition);
+
+                        success = true;
+                    }
+                    break;
+                }
+            case Item::POS_ARMOR:
+                {
+                    if (aItem.isArmor())
+                    {
+                        unequipOnly(aPosition);
+
+                        mEquipment[aPosition] = &aItem;
+                        aItem.setPosition(aPosition);
+
+                        success = true;
+                    }
+                    break;
+                }
+            case Item::POS_RWEAPON:
+                {
+                    if (aItem.isHoldEnable())
+                    {
+                        if (aItem.is2HWeapon())
+                        {
+                            if (false) // TODO !(mWepR && mWepL && !IsBackPackSpare(2))
+                            {
+                                unequipOnly(Item::POS_RWEAPON);
+                                if (mEquipment[Item::POS_LWEAPON] != nullptr &&
+                                    !(mEquipment[Item::POS_LWEAPON]->isArrow() && aItem.isBow()))
+                                    unequipOnly(Item::POS_LWEAPON); // LWep not empty and not a arrow (and equiping a bow)
+
+                                mEquipment[aPosition] = &aItem;
+                                aItem.setPosition(aPosition);
+
+                                success = true;
+                            }
+                        }
+                        else if (aItem.is1HWeapon())
+                        {
+                            if (true) // !(mWepL && mWepL->isArrow() && !isBackPackSpare(2))
+                            {
+                                unequipOnly(Item::POS_RWEAPON);
+                                if (mEquipment[Item::POS_LWEAPON] != nullptr &&
+                                    mEquipment[Item::POS_LWEAPON]->isArrow())
+                                    unequipOnly(Item::POS_LWEAPON);
+
+                                mEquipment[aPosition] = &aItem;
+                                aItem.setPosition(aPosition);
+
+                                success = true;
+                            }
+                        }
+                    }
+                    break;
+                }
+            case Item::POS_LWEAPON:
+                {
+                    if (aItem.isHoldEnable())
+                    {
+                        if (mEquipment[Item::POS_RWEAPON] != nullptr)
+                        {
+                            // 1H + 1H || 1H + Shield || Bow + Arrow
+                            if ((mEquipment[Item::POS_RWEAPON]->is1HWeapon() && (aItem.is1HWeapon() || aItem.isShield())) ||
+                                (mEquipment[Item::POS_RWEAPON]->isBow() && aItem.isArrow()))
+                            {
+                                unequipOnly(aPosition);
+
+                                mEquipment[aPosition] = &aItem;
+                                aItem.setPosition(aPosition);
+
+                                success = true;
+                            }
+                        }
+                    }
+                    break;
+                }
+            case Item::POS_RING:
+                {
+                    if (aItem.isRing())
+                    {
+                        unequipOnly(aPosition);
+
+                        mEquipment[aPosition] = &aItem;
+                        aItem.setPosition(aPosition);
+
+                        success = true;
+                    }
+                    break;
+                }
+            case Item::POS_SHOES:
+                {
+                    if (aItem.isShoes())
+                    {
+                        unequipOnly(aPosition);
+
+                        mEquipment[aPosition] = &aItem;
+                        aItem.setPosition(aPosition);
+
+                        success = true;
+                    }
+                    break;
+                }
+            default:
+                ASSERT(false);
+                break;
+        }
+    }
+
+    if (success)
+    {
+        if (aSend)
+        {
+            MsgItem msg(aItem.getUID(), aPosition, MsgItem::ACTION_EQUIP);
+            send(&msg);
+
+            if (Item::POS_ARMET == aPosition ||
+                Item::POS_ARMOR == aPosition ||
+                Item::POS_RWEAPON == aPosition ||
+                Item::POS_LWEAPON == aPosition)
+            {
+                MsgPlayer msgPlayer(*this);
+                broadcastRoomMsg(&msgPlayer, false);
+            }
+        }
+
+        // TODO calcFightRate();
+    }
+
+    return success;
+}
+
+void
+Player :: unequipOnly(Item::Position aPosition)
+{
+    Item* equip = getEquipByPos(aPosition);
+    if (equip == nullptr)
+        return;
+
+    // TODO mInventory->isFull()
+
+    if (addItem(equip, true))
+        mEquipment[aPosition] = nullptr;
+}
+
+bool
 Player :: awardItem(const Item::Info& aInfo, bool aSend)
 {
     ASSERT_ERR(&aInfo != nullptr, false);
@@ -992,15 +1270,15 @@ Player :: addItem(Item* aItem, bool aSend)
 
     bool success = true;
 
-    if (aItem->getOwner() == nullptr || aItem->getOwner()->getUID() != getUID())
-        aItem->setOwner(this);
-
-    if (aItem->getPlayer() == nullptr || aItem->getPlayer()->getUID() != getUID())
-        aItem->setPlayer(this);
-
     mInventoryMutex.lock();
     if (mInventory.size() < Player::MAX_INVENTORY_SIZE)
     {
+        if (aItem->getOwner() == nullptr || aItem->getOwner()->getUID() != getUID())
+            aItem->setOwner(this);
+
+        if (aItem->getPlayer() == nullptr || aItem->getPlayer()->getUID() != getUID())
+            aItem->setPlayer(this);
+
         map<uint32_t, Item*>::iterator it;
         if ((it = mInventory.find(aItem->getUID())) == mInventory.end())
         {

@@ -451,7 +451,7 @@ test_blowfish()
         swap_block(tmp);
         bf.encipher(tmp);
         swap_block(tmp);
-        for (size_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
+        for (int32_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
         {
             success = (cipher[i][x] == tmp[x]);
 
@@ -462,7 +462,7 @@ test_blowfish()
         swap_block(tmp);
         bf.decipher(tmp);
         swap_block(tmp);
-        for (size_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
+        for (int32_t x = 0; success && x < Blowfish::BLOCK_SIZE; ++x)
         {
             success = (clear[i][x] == tmp[x]);
 

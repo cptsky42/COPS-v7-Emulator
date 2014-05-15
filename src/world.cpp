@@ -11,7 +11,7 @@
 #include "mapmanager.h"
 #include "player.h"
 #include "npc.h"
-#include "npctask.h"
+#include "script.h"
 #include "generator.h"
 #include <QThread>
 #include <QtConcurrentRun>
@@ -81,11 +81,11 @@ World :: ~World()
     }
     mAllNPCs.clear();
 
-    for (map<uint32_t, NpcTask*>::iterator
+    for (map<uint32_t, Script*>::iterator
             it = mAllTasks.begin(), end = mAllTasks.end();
          it != end; ++it)
     {
-        NpcTask* task = it->second;
+        Script* task = it->second;
         SAFE_DELETE(task);
     }
     mAllTasks.clear();
@@ -245,6 +245,25 @@ World :: queryNpc(Npc** aOutNpc, uint32_t aUID) const
         *aOutNpc = it->second;
         found = true;
     }
+
+    return found;
+}
+
+bool
+World :: queryTask(Script** aOutTask, uint32_t aUID) const
+{
+    ASSERT_ERR(aOutTask != nullptr && *aOutTask == nullptr, false);
+
+    bool found = false;
+    map<uint32_t, Script*>::const_iterator it;
+
+    mTaskMutex.lock();
+    if ((it = mAllTasks.find(aUID)) != mAllTasks.end())
+    {
+        *aOutTask = it->second;
+        found = true;
+    }
+    mTaskMutex.unlock();
 
     return found;
 }
