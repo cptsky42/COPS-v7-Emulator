@@ -68,6 +68,8 @@ interesting implementation.
   - Buying items from NPCs
   - Selling items to NPCs
   - Repairing items
+  - Using / eating items
+  - Equiping items
   - Real item ID generation for monsters [Incomplete]
 
 Documentation about the emulator can be generated with dOxygen.
