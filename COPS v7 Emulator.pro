@@ -59,10 +59,13 @@ SOURCES += \
     src/Network/msgconnectex.cpp \
     src/Network/msgdate.cpp \
     src/Network/msgdialog.cpp \
+    src/Network/msgflushexp.cpp \
+    src/Network/msgfriendinfo.cpp \
     src/Network/msgitem.cpp \
     src/Network/msgiteminfo.cpp \
     src/Network/msgloginchallenges.cpp \
     src/Network/msgloginproofa.cpp \
+    src/Network/msgmagicinfo.cpp \
     src/Network/msgmapinfo.cpp \
     src/Network/msgnpc.cpp \
     src/Network/msgnpcinfo.cpp \
@@ -73,6 +76,8 @@ SOURCES += \
     src/Network/msguserattrib.cpp \
     src/Network/msguserinfo.cpp \
     src/Network/msgwalk.cpp \
+    src/Network/msgweaponskill.cpp \
+    src/Network/msgweather.cpp \
     src/Network/stringpacker.cpp \
     src/Script/itemtask.cpp \
     src/Script/npctask.cpp \
@@ -158,10 +163,13 @@ HEADERS += \
     src/Network/msgconnectex.h \
     src/Network/msgdate.h \
     src/Network/msgdialog.h \
+    src/Network/msgflushexp.h \
+    src/Network/msgfriendinfo.h \
     src/Network/msgiteminfo.h \
     src/Network/msgitem.h \
     src/Network/msgloginchallenges.h \
     src/Network/msgloginproofa.h \
+    src/Network/msgmagicinfo.h \
     src/Network/msgmapinfo.h \
     src/Network/msgnpc.h \
     src/Network/msgnpcinfo.h \
@@ -172,6 +180,8 @@ HEADERS += \
     src/Network/msguserattrib.h \
     src/Network/msguserinfo.h \
     src/Network/msgwalk.h \
+    src/Network/msgweaponskill.h \
+    src/Network/msgweather.h \
     src/Network/networkdef.h \
     src/Network/stringpacker.h \
     src/Script/itemtask.h \

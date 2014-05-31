@@ -368,7 +368,7 @@ public:
     bool isTaskItem() const { return isOther() && getItemType() == TYPE_TASKITEM; }
     bool isGem() const { return isOther() && getItemType() == TYPE_GEM; }
     bool isGameCard() const { return mInfo.Id == CARD_FEE_POINT_1 || mInfo.Id == CARD_FEE_POINT_2; }
-    bool isMedicine() const { return isExpend() && (getItemType() == TYPE_MEDICINE && (getItemSubType() >= 0 && getItemSubType() <= 2)); }
+    bool isMedicine() const { return isExpend() && (getItemType() == TYPE_MEDICINE && (getItemSubType() <= 2)); }
     bool isPickAxe() const { return 470 == ((mInfo.Id / 1000) % 1000); }
 
     // Type = 10000, Subtype = 710, Sort = 7 => Quest item ? Not usable ?

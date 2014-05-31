@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 14, 2014 at 08:54 PM
+-- Generation Time: May 31, 2014 at 10:34 AM
 -- Server version: 5.0.67-log
 -- PHP Version: 5.2.15
 
@@ -45,12 +45,12 @@ CREATE TABLE IF NOT EXISTS `account` (
   `password` char(16) collate latin1_general_ci NOT NULL default '',
   `type` tinyint(2) unsigned zerofill NOT NULL default '02',
   `creationtime` int(8) unsigned zerofill NOT NULL default '20130101',
-  `online` tinyint(1) default '0',
-  `licence` tinyint(1) default '0',
-  `last_ip` char(15) collate latin1_general_ci default '127.0.0.1',
+  `online` tinyint(1) NOT NULL default '0',
+  `licence` tinyint(1) NOT NULL default '0',
+  `last_ip` char(15) collate latin1_general_ci NOT NULL default '127.0.0.1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `ix_name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `account`
@@ -154,55 +154,6 @@ CREATE TABLE IF NOT EXISTS `cq_dynanpc` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cq_enemy`
---
-
-CREATE TABLE IF NOT EXISTS `cq_enemy` (
-  `id` int(4) unsigned zerofill NOT NULL auto_increment,
-  `userid` int(4) unsigned zerofill NOT NULL default '0000',
-  `enemy` int(4) unsigned zerofill NOT NULL default '0000',
-  `enemyname` varchar(15) NOT NULL default '?T',
-  `time` int(4) unsigned zerofill NOT NULL default '0000',
-  PRIMARY KEY  (`id`),
-  KEY `userid` (`userid`,`enemy`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cq_friend`
---
-
-CREATE TABLE IF NOT EXISTS `cq_friend` (
-  `id` int(4) unsigned zerofill NOT NULL auto_increment,
-  `userid` int(4) unsigned zerofill NOT NULL default '0000',
-  `friend` int(4) unsigned zerofill NOT NULL default '0000',
-  `friendname` varchar(32) default '?T',
-  PRIMARY KEY  (`id`),
-  KEY `userid` (`userid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cq_magic`
---
-
-CREATE TABLE IF NOT EXISTS `cq_magic` (
-  `id` int(4) unsigned zerofill NOT NULL auto_increment,
-  `ownerid` int(4) unsigned zerofill NOT NULL default '0000',
-  `type` smallint(4) unsigned zerofill NOT NULL default '0000',
-  `level` smallint(4) unsigned zerofill NOT NULL default '0000',
-  `exp` int(4) unsigned zerofill NOT NULL default '0000',
-  `unlearn` tinyint(1) unsigned zerofill NOT NULL default '0',
-  `old_level` smallint(4) unsigned zerofill NOT NULL default '0000',
-  PRIMARY KEY  (`id`),
-  KEY `user_magic` (`ownerid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8006 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `cq_magictype`
 --
 
@@ -289,6 +240,19 @@ CREATE TABLE IF NOT EXISTS `cq_traptype` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `enemy`
+--
+
+CREATE TABLE IF NOT EXISTS `enemy` (
+  `id` int(4) unsigned NOT NULL default '0',
+  `owner_id` int(4) NOT NULL,
+  `enemy_id` int(4) NOT NULL,
+  `enemy_name` char(15) character set latin1 collate latin1_general_ci NOT NULL default 'Unknown'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `forbidname`
 --
 
@@ -297,6 +261,20 @@ CREATE TABLE IF NOT EXISTS `forbidname` (
   `check` char(15) collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=40 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `friend`
+--
+
+CREATE TABLE IF NOT EXISTS `friend` (
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `owner_id` int(4) NOT NULL,
+  `friend_id` int(4) NOT NULL,
+  `friend_name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3595,20 +3573,20 @@ CREATE TABLE IF NOT EXISTS `item` (
   `amount_limit` smallint(2) unsigned NOT NULL default '100',
   `ident` tinyint(1) unsigned NOT NULL default '0',
   `position` tinyint(1) unsigned NOT NULL default '0',
-  `gem1` tinyint(1) unsigned default '0',
-  `gem2` tinyint(1) unsigned default '0',
-  `magic1` tinyint(1) unsigned default '0',
-  `magic2` tinyint(1) unsigned default '0',
-  `magic3` tinyint(1) unsigned default '0',
-  `restrain` int(4) unsigned default '0',
-  `bless` tinyint(1) unsigned default '0',
-  `enchant` tinyint(3) unsigned zerofill default '000',
-  `suspicious` tinyint(1) unsigned default '0',
-  `locked` tinyint(1) unsigned default '0',
-  `color` tinyint(1) unsigned default '3',
+  `gem1` tinyint(1) unsigned NOT NULL default '0',
+  `gem2` tinyint(1) unsigned NOT NULL default '0',
+  `magic1` tinyint(1) unsigned NOT NULL default '0',
+  `magic2` tinyint(1) unsigned NOT NULL default '0',
+  `magic3` tinyint(1) unsigned NOT NULL default '0',
+  `restrain` int(4) unsigned NOT NULL default '0',
+  `bless` tinyint(1) unsigned NOT NULL default '0',
+  `enchant` tinyint(3) unsigned zerofill NOT NULL default '000',
+  `suspicious` tinyint(1) unsigned NOT NULL default '0',
+  `locked` tinyint(1) unsigned NOT NULL default '0',
+  `color` tinyint(1) unsigned NOT NULL default '3',
   PRIMARY KEY  (`id`),
   KEY `package` (`owner_id`,`position`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=73 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=73 ;
 
 --
 -- Dumping data for table `item`
@@ -3619,8 +3597,8 @@ INSERT INTO `item` (`id`, `type`, `owner_id`, `player_id`, `amount`, `amount_lim
 (2, 410339, 1000001, 1000001, 100, 100, 0, 4, 13, 13, 200, 0, 12, 0, 7, 255, 0, 0, 3),
 (3, 410339, 1000001, 1000001, 100, 100, 0, 5, 13, 13, 0, 0, 12, 0, 7, 255, 0, 0, 3),
 (4, 410339, 1000001, 1000001, 60099, 60099, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
-(50, 725005, 1000001, 1000001, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
 (49, 1000000, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
+(50, 725005, 1000001, 1000001, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
 (51, 1000010, 1000001, 1000001, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
 (52, 118013, 1000001, 1000001, 2698, 2698, 0, 1, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
 (53, 132015, 1000001, 1000001, 3698, 3698, 0, 3, 0, 0, 0, 0, 0, 0, 0, 000, 0, 0, 3),
@@ -10592,7 +10570,7 @@ CREATE TABLE IF NOT EXISTS `leaveword` (
   `words` char(255) character set latin1 collate latin1_general_cs NOT NULL default 'N/A',
   PRIMARY KEY  (`id`),
   KEY `user_name` (`speaker`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -10750,6 +10728,23 @@ INSERT INTO `levelexp` (`level`, `exp`, `up_lvl_time`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `magic`
+--
+
+CREATE TABLE IF NOT EXISTS `magic` (
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `owner_id` int(4) unsigned NOT NULL,
+  `type` smallint(4) unsigned zerofill NOT NULL,
+  `level` tinyint(1) unsigned NOT NULL default '0',
+  `exp` int(4) unsigned NOT NULL default '0',
+  `old_level` tinyint(1) unsigned NOT NULL default '0',
+  `unlearn` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `map`
 --
 
@@ -10758,15 +10753,15 @@ CREATE TABLE IF NOT EXISTS `map` (
   `name` varchar(15) collate latin1_general_ci default NULL,
   `describe_text` varchar(127) collate latin1_general_ci default NULL,
   `doc_id` smallint(4) unsigned NOT NULL default '0',
-  `type` int(4) unsigned zerofill default '0000',
-  `weather` int(4) unsigned zerofill default '0000',
-  `bgmusic` int(4) unsigned zerofill default '0000',
-  `bgmusic_show` int(4) unsigned zerofill default '0000',
-  `portal_x` smallint(4) unsigned zerofill default '0000',
-  `portal_y` smallint(4) unsigned zerofill default '0000',
-  `reborn_map` int(4) unsigned default '0',
-  `reborn_portal` int(4) default '0',
-  `light` int(4) unsigned zerofill default '4294967295'
+  `type` int(4) unsigned zerofill NOT NULL default '0000',
+  `weather` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic` int(4) unsigned zerofill NOT NULL default '0000',
+  `bgmusic_show` int(4) unsigned zerofill NOT NULL default '0000',
+  `portal_x` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `portal_y` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `reborn_map` int(4) unsigned NOT NULL default '0',
+  `reborn_portal` int(4) NOT NULL default '0',
+  `light` int(4) unsigned zerofill NOT NULL default '4294967295'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -10941,38 +10936,38 @@ CREATE TABLE IF NOT EXISTS `monstertype` (
   `id` int(4) unsigned zerofill NOT NULL auto_increment,
   `name` char(15) collate latin1_general_ci NOT NULL default 'None',
   `type` tinyint(1) unsigned zerofill NOT NULL default '0',
-  `ai_type` tinyint(2) unsigned zerofill default '00',
+  `ai_type` tinyint(2) unsigned zerofill NOT NULL default '00',
   `look` int(4) unsigned zerofill NOT NULL default '0000',
   `level` tinyint(3) unsigned NOT NULL default '1',
   `life` smallint(5) unsigned NOT NULL default '0',
   `escape_life` smallint(5) unsigned NOT NULL default '0',
-  `attack_user` tinyint(1) unsigned default '3',
+  `attack_user` tinyint(1) unsigned NOT NULL default '3',
   `attack_min` int(4) unsigned NOT NULL default '0',
   `attack_max` int(4) unsigned NOT NULL default '0',
   `defense` int(4) unsigned NOT NULL default '0',
   `dexterity` tinyint(2) unsigned NOT NULL default '0',
   `dodge` tinyint(2) unsigned NOT NULL default '0',
-  `magic_type` int(4) unsigned zerofill default '0000',
-  `magic_def` int(4) unsigned default '0',
-  `magic_hitrate` int(4) unsigned zerofill default '0100',
+  `magic_type` int(4) unsigned zerofill NOT NULL default '0000',
+  `magic_def` int(4) unsigned NOT NULL default '0',
+  `magic_hitrate` int(4) unsigned zerofill NOT NULL default '0100',
   `view_range` tinyint(2) unsigned NOT NULL default '5',
-  `attack_range` tinyint(2) unsigned default '2',
-  `attack_speed` smallint(4) unsigned zerofill default '1000',
-  `move_speed` smallint(4) unsigned zerofill default '0500',
-  `run_speed` smallint(4) unsigned zerofill default '0400',
-  `drop_armet` tinyint(3) unsigned zerofill default '099',
-  `drop_necklace` tinyint(3) unsigned zerofill default '099',
-  `drop_armor` tinyint(3) unsigned zerofill default '099',
-  `drop_ring` tinyint(3) unsigned zerofill default '099',
-  `drop_weapon` tinyint(3) unsigned zerofill default '099',
-  `drop_shield` tinyint(3) unsigned zerofill default '099',
-  `drop_shoes` tinyint(3) unsigned zerofill default '099',
-  `drop_money` int(4) unsigned zerofill default '0000',
-  `drop_hp` int(4) unsigned default '0',
-  `drop_mp` int(4) unsigned default '0',
-  `extra_battlelev` smallint(3) unsigned zerofill default '000',
-  `extra_exp` smallint(3) unsigned zerofill default '100',
-  `extra_damage` smallint(2) unsigned default '0',
+  `attack_range` tinyint(2) unsigned NOT NULL default '2',
+  `attack_speed` smallint(4) unsigned zerofill NOT NULL default '1000',
+  `move_speed` smallint(4) unsigned zerofill NOT NULL default '0500',
+  `run_speed` smallint(4) unsigned zerofill NOT NULL default '0400',
+  `drop_armet` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_necklace` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_armor` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_ring` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_weapon` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_shield` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_shoes` tinyint(3) unsigned zerofill NOT NULL default '099',
+  `drop_money` int(4) unsigned zerofill NOT NULL default '0000',
+  `drop_hp` int(4) unsigned NOT NULL default '0',
+  `drop_mp` int(4) unsigned NOT NULL default '0',
+  `extra_battlelev` smallint(3) unsigned zerofill NOT NULL default '000',
+  `extra_exp` smallint(3) unsigned zerofill NOT NULL default '100',
+  `extra_damage` smallint(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=9029 ;
 
@@ -11390,15 +11385,15 @@ INSERT INTO `monstertype` (`id`, `name`, `type`, `ai_type`, `look`, `level`, `li
 CREATE TABLE IF NOT EXISTS `npc` (
   `id` int(4) unsigned zerofill NOT NULL default '0000',
   `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
-  `type` tinyint(2) unsigned zerofill default '02',
+  `type` tinyint(2) unsigned zerofill NOT NULL default '02',
   `lookface` int(4) unsigned zerofill NOT NULL default '0000',
   `mapid` int(4) unsigned NOT NULL default '0',
   `cellx` smallint(4) unsigned zerofill NOT NULL default '0000',
   `celly` smallint(4) unsigned zerofill NOT NULL default '0000',
-  `life` smallint(5) unsigned zerofill default '00000',
-  `maxlife` smallint(5) unsigned zerofill default '00000',
+  `life` smallint(5) unsigned zerofill NOT NULL default '00000',
+  `maxlife` smallint(5) unsigned zerofill NOT NULL default '00000',
   `base` tinyint(2) unsigned zerofill NOT NULL default '00',
-  `sort` tinyint(2) unsigned zerofill default '00',
+  `sort` tinyint(2) unsigned zerofill NOT NULL default '00',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
@@ -13181,7 +13176,7 @@ CREATE TABLE IF NOT EXISTS `superman` (
   `name` char(15) collate latin1_general_ci NOT NULL COMMENT 'Player''s name.',
   PRIMARY KEY  (`id`),
   KEY `number` (`number`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13195,7 +13190,7 @@ CREATE TABLE IF NOT EXISTS `synattr` (
   `rank` tinyint(3) unsigned zerofill NOT NULL default '000' COMMENT 'Rank in the syndicate.',
   `proffer` int(4) unsigned zerofill NOT NULL default '0000' COMMENT 'Money given to the syndicate.',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
@@ -13206,28 +13201,28 @@ CREATE TABLE IF NOT EXISTS `synattr` (
 CREATE TABLE IF NOT EXISTS `syndicate` (
   `id` smallint(4) unsigned zerofill NOT NULL auto_increment,
   `name` char(15) collate latin1_general_ci NOT NULL,
-  `announce` char(255) collate latin1_general_ci default '',
-  `leader_title` char(15) collate latin1_general_ci default '°ïÖ÷' COMMENT '??',
-  `member_title` char(15) collate latin1_general_ci default '°ïÖÚ' COMMENT '??',
+  `announce` char(255) collate latin1_general_ci NOT NULL,
+  `leader_title` char(15) collate latin1_general_ci NOT NULL default 'Unknown' COMMENT '??',
+  `member_title` char(15) collate latin1_general_ci NOT NULL default 'Unknown' COMMENT '??',
   `leader_id` int(4) unsigned NOT NULL,
   `leader_name` char(15) collate latin1_general_ci NOT NULL,
-  `money` int(4) unsigned default '0',
-  `fealty_syn` smallint(4) unsigned zerofill default '0000',
-  `del_flag` tinyint(1) default '0',
-  `enemy0` smallint(4) unsigned zerofill default '0000',
-  `enemy1` smallint(4) unsigned zerofill default '0000',
-  `enemy2` smallint(4) unsigned zerofill default '0000',
-  `enemy3` smallint(4) unsigned zerofill default '0000',
-  `enemy4` smallint(4) unsigned zerofill default '0000',
-  `ally0` smallint(4) unsigned zerofill default '0000',
-  `ally1` smallint(4) unsigned zerofill default '0000',
-  `ally2` smallint(4) unsigned zerofill default '0000',
-  `ally3` smallint(4) unsigned zerofill default '0000',
-  `ally4` smallint(4) unsigned zerofill default '0000',
+  `money` int(4) unsigned NOT NULL default '0',
+  `fealty_syn` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `del_flag` tinyint(1) NOT NULL default '0',
+  `enemy0` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `enemy1` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `enemy2` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `enemy3` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `enemy4` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `ally0` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `ally1` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `ally2` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `ally3` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `ally4` smallint(4) unsigned zerofill NOT NULL default '0000',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `index_money` (`money`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13236,40 +13231,40 @@ CREATE TABLE IF NOT EXISTS `syndicate` (
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `account_id` int(4) unsigned default '0',
+  `account_id` int(4) unsigned NOT NULL default '0',
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` char(15) collate latin1_general_ci NOT NULL default 'Unknown',
-  `mate` char(15) collate latin1_general_ci default 'None',
+  `mate` char(15) collate latin1_general_ci NOT NULL default 'None',
   `lookface` int(7) unsigned zerofill NOT NULL,
-  `hair` smallint(3) unsigned zerofill default '310',
-  `money` int(4) unsigned default '1000',
-  `money_saved` int(4) unsigned default '0',
-  `cps` int(4) unsigned default '0',
-  `level` tinyint(3) unsigned default '1',
-  `exp` bigint(10) unsigned default '0',
+  `hair` smallint(3) unsigned zerofill NOT NULL default '310',
+  `money` int(4) unsigned NOT NULL default '1000',
+  `money_saved` int(4) unsigned NOT NULL default '0',
+  `cps` int(4) unsigned NOT NULL default '0',
+  `level` tinyint(3) unsigned NOT NULL default '1',
+  `exp` bigint(10) unsigned NOT NULL default '0',
   `force` smallint(3) unsigned NOT NULL default '0',
   `dexterity` smallint(3) unsigned NOT NULL default '0',
   `health` smallint(3) unsigned NOT NULL default '0',
   `soul` smallint(3) unsigned NOT NULL default '0',
-  `add_points` smallint(3) unsigned default '0',
+  `add_points` smallint(3) unsigned NOT NULL default '0',
   `life` smallint(5) unsigned NOT NULL default '1',
   `mana` smallint(5) unsigned NOT NULL default '0',
   `profession` tinyint(3) unsigned NOT NULL default '0',
-  `pk` smallint(5) default '0',
-  `virtue` int(4) default '0',
-  `nobility` tinyint(1) unsigned default '0',
-  `metempsychosis` tinyint(1) unsigned default '0',
-  `syndicate_id` smallint(4) unsigned zerofill default '0000',
-  `record_map` int(4) unsigned default '1010',
-  `record_x` smallint(4) unsigned zerofill default '0031',
-  `record_y` smallint(4) unsigned zerofill default '0083',
-  `last_login` int(8) unsigned default '20130101',
+  `pk` smallint(5) NOT NULL default '0',
+  `virtue` int(4) NOT NULL default '0',
+  `nobility` tinyint(1) unsigned NOT NULL default '0',
+  `metempsychosis` tinyint(1) unsigned NOT NULL default '0',
+  `syndicate_id` smallint(4) unsigned zerofill NOT NULL default '0000',
+  `record_map` int(4) unsigned NOT NULL default '1010',
+  `record_x` smallint(4) unsigned zerofill NOT NULL default '0031',
+  `record_y` smallint(4) unsigned zerofill NOT NULL default '0083',
+  `last_login` int(8) unsigned NOT NULL default '20130101',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_name` (`name`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `account_id` (`account_id`),
   KEY `index_account` USING BTREE (`account_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000006 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1000005 ;
 
 --
 -- Dumping data for table `user`
@@ -13295,7 +13290,31 @@ CREATE TABLE IF NOT EXISTS `wanted` (
   `finish_time` bigint(8) unsigned default NULL COMMENT 'UNIX timestamp when the target was hunted.',
   PRIMARY KEY  (`id`),
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `weaponskill`
+--
+
+CREATE TABLE IF NOT EXISTS `weaponskill` (
+  `id` int(4) unsigned NOT NULL auto_increment,
+  `owner_id` int(4) unsigned NOT NULL,
+  `type` smallint(3) unsigned zerofill NOT NULL,
+  `level` tinyint(2) unsigned zerofill NOT NULL default '00',
+  `exp` int(4) unsigned NOT NULL default '0',
+  `old_level` tinyint(2) unsigned NOT NULL default '0',
+  `unlearn` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `weaponskill`
+--
+
+INSERT INTO `weaponskill` (`id`, `owner_id`, `type`, `level`, `exp`, `old_level`, `unlearn`) VALUES
+(1, 1000001, 410, 20, 0, 0, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
