@@ -1,5 +1,108 @@
 [0.2.0]
+Project :
+Simplified the Qt version detection.
+Added NDEBUG flag when building in release.
+Fixed the names (case) on case-sensitive systems.
+Fixed missing includes.
+Fixed the RC5 KEY/SUB error with Clang.
 
+Common :
+Updated the SAFE_DELETE macros to work on a single line.
+Updated the ASSERT macro to be executed in release too.
+Added feature detection for Clang & GCC.
+Added a constexpr macro (for future use).
+Added AtomicIncrement support on Mac OS X (native).
+Moved the CLOCK_MULTIPLIER constant to basefunc.cpp.
+Fixed the generator (still generating when the map was inactive).
+Fixed the logger on Windows.
+
+Server :
+Changed the Server implementation from Singleton pattern to QCoreApplication.
+Changed the loading order - Scripts are now loaded before items & NPCs.
+Added a method to get the server information (uname).
+
+Database :
+Added a validation of the SQL driver for the LastInsertId feature.
+Added missing data to Item::Info.
+Added tasks' loading for items.
+Added the getPlayerItems() method in the database.
+Added the saveItem() method in the database.
+Added the createItem() method in the database.
+Added the eraseItem() method in the database.
+Added the getItemFromShop() method in the database.
+Updated tasks' loading for NPCs.
+Moved Lua scripts to tasks folder.
+Updated the MySQL dump to include new tables / data.
+Updated the MySQL dump with InnoDB engine for some tables.
+
+Scripts :
+Added Conductress scripts.
+Added old KCOSS scripts as reference.
+Added a Lua method to get the Mate.
+Added Lua methods to add/spend money/CPs.
+Added a Lua method to move the player.
+Merged ItemTask & NpcTask to the Script class.
+
+World :
+Added a method to query a task.
+
+Entities :
+Removed the time parameter of timerElapsed().
+When activating a NPC, set the task to the client.
+
+Player :
+Added a timer for adding energy to the player.
+Added methods for adding/spending money/CPs to the player.
+Added a method for adding a value to an attribute to the player.
+Added a method to find an item in the inventory.
+Added a method to award an item.
+Added a method to add an item to the inventory.
+Added a method to erase an item from the inventory.
+Added a method to send the info of all items.
+Added a method to save all items.
+Added a method to free all items.
+Added a method for determining if an item can be equipped.
+Added a method to use an item (and equip).
+Added a method to equip an item.
+Added a method to unequip an item.
+Added methods to determine what is the item and what can be done.
+
+Item :
+Added missing data to Item::Info.
+Added documentation to the class.
+Added a factory method to create an item and insert it in the database.
+Added a factory method to create an item from a Sql query.
+Added a constructor to avoid invalid values.
+Added a method to save the item.
+Added a method to erase the item.
+Added a method to get the sell price of the item.
+Added a method to get the repair cost of the item.
+Added a method to set the position.
+Added methods to determine what is the item.
+
+Msg / Networking :
+Fixed the structure of the MsgItem packet.
+Added support for using item.
+Fixed the swapping of MsgNpc packet.
+
+Msg / Networking :
+Loading items at connection (MsgConnect).
+Sending items at login (ACTION_GET_ITEM_SET).
+Fixed the warning of hidden virtual function in MsgLoginChallengeS.
+Fixed the command parsing in MsgTalk to handle white-spaces.
+Fixed and finalized the MsgUserAttrib packet.
+Fixed and finalized the MsgItemInfo packet.
+Added support for buying, selling & repairing items.
+Added support for using & equipping items.
+Added basic support for executing the next Idx of a NPC's task.
+Added real handling of commands in MsgTalk.
+Added constness to Msg for send/broadcast.
+Added the MsgFlushExp packet.
+Added the MsgFriendInfo packet.
+Added the MsgMagicInfo packet.
+Added the MsgWeaponSkill packet.
+Updated Msg Ids.
+Removed send/broadcast of buffer.
 
 [0.1.0]
 - Initial release, see README of this version.
