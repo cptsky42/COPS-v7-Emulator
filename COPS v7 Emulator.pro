@@ -88,39 +88,39 @@ SOURCES += \
     src/Security/Cryptography/tqcipher.cpp \
     src/third_party/bigint/bigint_int.c \
     src/third_party/bigint/bigint_ext.c \
-    src/third_party/lua-5.2.2/src/lzio.c \
-    src/third_party/lua-5.2.2/src/lvm.c \
-    src/third_party/lua-5.2.2/src/lundump.c \
-    src/third_party/lua-5.2.2/src/ltm.c \
-    src/third_party/lua-5.2.2/src/ltablib.c \
-    src/third_party/lua-5.2.2/src/ltable.c \
-    src/third_party/lua-5.2.2/src/lstrlib.c \
-    src/third_party/lua-5.2.2/src/lstring.c \
-    src/third_party/lua-5.2.2/src/lstate.c \
-    src/third_party/lua-5.2.2/src/lparser.c \
-    src/third_party/lua-5.2.2/src/loslib.c \
-    src/third_party/lua-5.2.2/src/lopcodes.c \
-    src/third_party/lua-5.2.2/src/lobject.c \
-    src/third_party/lua-5.2.2/src/loadlib.c \
-    src/third_party/lua-5.2.2/src/lmem.c \
-    src/third_party/lua-5.2.2/src/lmathlib.c \
-    src/third_party/lua-5.2.2/src/llex.c \
-    src/third_party/lua-5.2.2/src/liolib.c \
-    src/third_party/lua-5.2.2/src/linit.c \
-    src/third_party/lua-5.2.2/src/lgc.c \
-    src/third_party/lua-5.2.2/src/lfunc.c \
-    src/third_party/lua-5.2.2/src/ldump.c \
-    src/third_party/lua-5.2.2/src/ldo.c \
-    src/third_party/lua-5.2.2/src/ldebug.c \
-    src/third_party/lua-5.2.2/src/ldblib.c \
-    src/third_party/lua-5.2.2/src/lctype.c \
-    src/third_party/lua-5.2.2/src/lcorolib.c \
-    src/third_party/lua-5.2.2/src/lcode.c \
-    src/third_party/lua-5.2.2/src/lbitlib.c \
-    src/third_party/lua-5.2.2/src/lbaselib.c \
-    src/third_party/lua-5.2.2/src/lauxlib.c \
-    src/third_party/lua-5.2.2/src/lapi.c \
-    src/third_party/minilzo-2.06/minilzo.c
+    src/third_party/lua-5.2.3/src/lzio.c \
+    src/third_party/lua-5.2.3/src/lvm.c \
+    src/third_party/lua-5.2.3/src/lundump.c \
+    src/third_party/lua-5.2.3/src/ltm.c \
+    src/third_party/lua-5.2.3/src/ltablib.c \
+    src/third_party/lua-5.2.3/src/ltable.c \
+    src/third_party/lua-5.2.3/src/lstrlib.c \
+    src/third_party/lua-5.2.3/src/lstring.c \
+    src/third_party/lua-5.2.3/src/lstate.c \
+    src/third_party/lua-5.2.3/src/lparser.c \
+    src/third_party/lua-5.2.3/src/loslib.c \
+    src/third_party/lua-5.2.3/src/lopcodes.c \
+    src/third_party/lua-5.2.3/src/lobject.c \
+    src/third_party/lua-5.2.3/src/loadlib.c \
+    src/third_party/lua-5.2.3/src/lmem.c \
+    src/third_party/lua-5.2.3/src/lmathlib.c \
+    src/third_party/lua-5.2.3/src/llex.c \
+    src/third_party/lua-5.2.3/src/liolib.c \
+    src/third_party/lua-5.2.3/src/linit.c \
+    src/third_party/lua-5.2.3/src/lgc.c \
+    src/third_party/lua-5.2.3/src/lfunc.c \
+    src/third_party/lua-5.2.3/src/ldump.c \
+    src/third_party/lua-5.2.3/src/ldo.c \
+    src/third_party/lua-5.2.3/src/ldebug.c \
+    src/third_party/lua-5.2.3/src/ldblib.c \
+    src/third_party/lua-5.2.3/src/lctype.c \
+    src/third_party/lua-5.2.3/src/lcorolib.c \
+    src/third_party/lua-5.2.3/src/lcode.c \
+    src/third_party/lua-5.2.3/src/lbitlib.c \
+    src/third_party/lua-5.2.3/src/lbaselib.c \
+    src/third_party/lua-5.2.3/src/lauxlib.c \
+    src/third_party/lua-5.2.3/src/lapi.c \
+    src/third_party/minilzo-2.08/minilzo.c
 
 HEADERS += \
     src/basefunc.h \
@@ -193,34 +193,34 @@ HEADERS += \
     src/Security/Cryptography/rc5.h \
     src/Security/Cryptography/tqcipher.h \
     src/third_party/bigint/bigint.h \
-    src/third_party/lua-5.2.2/src/lzio.h \
-    src/third_party/lua-5.2.2/src/lvm.h \
-    src/third_party/lua-5.2.2/src/lundump.h \
-    src/third_party/lua-5.2.2/src/lualib.h \
-    src/third_party/lua-5.2.2/src/luaconf.h \
-    src/third_party/lua-5.2.2/src/lua.hpp \
-    src/third_party/lua-5.2.2/src/lua.h \
-    src/third_party/lua-5.2.2/src/ltm.h \
-    src/third_party/lua-5.2.2/src/ltable.h \
-    src/third_party/lua-5.2.2/src/lstring.h \
-    src/third_party/lua-5.2.2/src/lstate.h \
-    src/third_party/lua-5.2.2/src/lparser.h \
-    src/third_party/lua-5.2.2/src/lopcodes.h \
-    src/third_party/lua-5.2.2/src/lobject.h \
-    src/third_party/lua-5.2.2/src/lmem.h \
-    src/third_party/lua-5.2.2/src/llimits.h \
-    src/third_party/lua-5.2.2/src/llex.h \
-    src/third_party/lua-5.2.2/src/lgc.h \
-    src/third_party/lua-5.2.2/src/lfunc.h \
-    src/third_party/lua-5.2.2/src/ldo.h \
-    src/third_party/lua-5.2.2/src/ldebug.h \
-    src/third_party/lua-5.2.2/src/lctype.h \
-    src/third_party/lua-5.2.2/src/lcode.h \
-    src/third_party/lua-5.2.2/src/lauxlib.h \
-    src/third_party/lua-5.2.2/src/lapi.h \
-    src/third_party/minilzo-2.06/minilzo.h \
-    src/third_party/minilzo-2.06/lzodefs.h \
-    src/third_party/minilzo-2.06/lzoconf.h
+    src/third_party/lua-5.2.3/src/lzio.h \
+    src/third_party/lua-5.2.3/src/lvm.h \
+    src/third_party/lua-5.2.3/src/lundump.h \
+    src/third_party/lua-5.2.3/src/lualib.h \
+    src/third_party/lua-5.2.3/src/luaconf.h \
+    src/third_party/lua-5.2.3/src/lua.hpp \
+    src/third_party/lua-5.2.3/src/lua.h \
+    src/third_party/lua-5.2.3/src/ltm.h \
+    src/third_party/lua-5.2.3/src/ltable.h \
+    src/third_party/lua-5.2.3/src/lstring.h \
+    src/third_party/lua-5.2.3/src/lstate.h \
+    src/third_party/lua-5.2.3/src/lparser.h \
+    src/third_party/lua-5.2.3/src/lopcodes.h \
+    src/third_party/lua-5.2.3/src/lobject.h \
+    src/third_party/lua-5.2.3/src/lmem.h \
+    src/third_party/lua-5.2.3/src/llimits.h \
+    src/third_party/lua-5.2.3/src/llex.h \
+    src/third_party/lua-5.2.3/src/lgc.h \
+    src/third_party/lua-5.2.3/src/lfunc.h \
+    src/third_party/lua-5.2.3/src/ldo.h \
+    src/third_party/lua-5.2.3/src/ldebug.h \
+    src/third_party/lua-5.2.3/src/lctype.h \
+    src/third_party/lua-5.2.3/src/lcode.h \
+    src/third_party/lua-5.2.3/src/lauxlib.h \
+    src/third_party/lua-5.2.3/src/lapi.h \
+    src/third_party/minilzo-2.08/minilzo.h \
+    src/third_party/minilzo-2.08/lzodefs.h \
+    src/third_party/minilzo-2.08/lzoconf.h
 
 INCLUDEPATH += \
     src \
@@ -234,8 +234,8 @@ INCLUDEPATH += \
     src/Script \
     src/Security/Cryptography \
     src/third_party/bigint \
-    src/third_party/lua-5.2.2/src \
-    src/third_party/minilzo-2.06
+    src/third_party/lua-5.2.3/src \
+    src/third_party/minilzo-2.08
 
 OTHER_FILES += \
     data/settings.cfg \

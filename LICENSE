@@ -11,13 +11,13 @@ modification, are permitted provided that the following conditions are met:
 3. All advertising materials mentioning features or use of this software
    must display the following acknowledgement:
    This product includes software developed by Jean-Philippe Boivin.
-4. Neither the name of the organization nor the names of its contributors 
-   may be used to endorse or promote products derived from this software 
+4. Neither the name of the organization nor the names of its contributors
+   may be used to endorse or promote products derived from this software
    without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY JEAN-PHILIPPE BOIVIN ''AS IS'' AND ANY EXPRESS 
-OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+THIS SOFTWARE IS PROVIDED BY JEAN-PHILIPPE BOIVIN ''AS IS'' AND ANY EXPRESS
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
 SHALL JEAN-PHILIPPE BOIVIN BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
@@ -29,8 +29,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *** This project includes software developed by Lua.org ***
 
 Copyright (C) 1994–2013 Lua.org, PUC-Rio.
-Permission is hereby granted, free of charge, to any person obtaining a 
-copy of this software and associated documentation files (the "Software"), 
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation the
 rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 sell copies of the Software, and to permit persons to whom the Software is
@@ -78,9 +79,8 @@ SUCH DAMAGE.
 
 *** This project includes software developed by Markus Franz Xaver Oberhumer ***
 
- LZO and miniLZO are Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001,
- 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
- Markus Franz Xaver Oberhumer <markus@oberhumer.com>.
+ LZO and miniLZO are Copyright (C) 1996-2014 Markus Franz Xaver Oberhumer
+ All Rights Reserved.
 
  LZO and miniLZO are distributed under the terms of the GNU General
  Public License (GPL).  See the file COPYING.
