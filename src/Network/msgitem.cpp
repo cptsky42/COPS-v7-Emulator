@@ -114,7 +114,7 @@ MsgItem :: process(Client* aClient)
                             }
                         case 1: // CPs
                             {
-                                uint32_t price = 0;// TODO info->CPs;
+                                uint32_t price = info->CPs;
                                 if (player.getCPs() < price)
                                 {
                                     player.sendSysMsg(STR_NOT_SO_MUCH_MONEY);

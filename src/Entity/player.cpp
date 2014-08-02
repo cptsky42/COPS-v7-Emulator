@@ -68,7 +68,7 @@ Player :: getMinAtk() const
     {
         Item* equip = mEquipment[pos];
         if (equip != nullptr)
-            atk += equip->getMinAtk();
+            atk += pos != Item::POS_LWEAPON ? equip->getMinAtk() : equip->getMinAtk() / 2;
     }
 
     return max(0.0, atk);
@@ -83,7 +83,7 @@ Player :: getMaxAtk() const
     {
         Item* equip = mEquipment[pos];
         if (equip != nullptr)
-            atk += equip->getMaxAtk();
+            atk += pos != Item::POS_LWEAPON ? equip->getMaxAtk() : equip->getMaxAtk() / 2;
     }
 
     return max(0.0, atk);
@@ -732,9 +732,8 @@ Player :: gainCPs(uint32_t aCPs, bool aSend)
 
     if (aSend)
     {
-        // TODO
-        //    MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
-        //    send(&msg);
+        MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
+        send(&msg);
     }
 
     return cps <= UINT32_MAX;
@@ -763,9 +762,8 @@ Player :: spendCPs(uint32_t aCPs, bool aSend)
 
     if (aSend)
     {
-        // TODO
-        //    MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
-        //    send(&msg);
+        MsgUserAttrib msg(this, mCPs, MsgUserAttrib::USER_ATTRIB_CPS);
+        send(&msg);
     }
 
     return cps > 0;

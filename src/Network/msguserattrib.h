@@ -27,7 +27,7 @@ public:
         USER_ATTRIB_EXP = 5,
         USER_ATTRIB_PK = 6,
         USER_ATTRIB_PROFESSION = 7,
-        USER_ATTRIB_SIZE_ADD = 8,
+        USER_ATTRIB_SIZE_ADD = 8, //0 -> None / 1 -> Cursed / 2 -> Blessed / 3 -> Cursed & Blessed (Important for these effect!)
         USER_ATTRIB_ENERGY = 9,
         USER_ATTRIB_MONEY_SAVED = 10,
         USER_ATTRIB_ADD_POINT = 11,
@@ -37,9 +37,18 @@ public:
         USER_ATTRIB_HEALTH = 15,
         USER_ATTRIB_FORCE = 16,
         USER_ATTRIB_DEXTERITY = 17,
-
+        USER_ATTRIB_BLESS_TIME = 18,
+        USER_ATTRIB_DBL_EXP_TIME = 19,
+        // 20 = GuildDonation (when you attack the GW pole for example, this is sent with your new donation)
+        USER_ATTRIB_CURSE_TIME = 21,
+        USER_ATTRIB_TIME_ADD = 22, //Cyclone & Superman (0 = 0sec / 1 = 1sec / 2 = 2 sec / 3 = 3sec)
+        USER_ATTRIB_METEMPSYCHOSIS = 23,
+        USER_ATTRIB_STATUS = 26,
         USER_ATTRIB_HAIR = 27,
-        USER_ATTRIB_XP = 28
+        USER_ATTRIB_XP = 28,
+        USER_ATTRIB_LUCKY_TIME = 29,
+        USER_ATTRIB_CPS = 30,
+        USER_ATTRIB_TRAINING_POINTS = 32 //0 -> Show / 1 -> In Offline TG (No Points) / 2 -> Out Offline TG (Points) / 3 -> Add 10 pts / 4 -> 100%
     };
 
 public:
