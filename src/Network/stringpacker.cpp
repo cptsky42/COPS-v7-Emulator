@@ -30,7 +30,8 @@ StringPacker :: addString(const char* aStr)
     char* ptr = (char*)(mBuf + 1);
     for (uint8_t i = 0; i < mStrCount; ++i)
     {
-        ptr += (uint8_t)*(ptr++); //the length...
+        uint8_t len = (uint8_t)*(ptr++);
+        ptr += len;
     }
 
     *((uint8_t*)ptr++) = (uint8_t)strlen(aStr);
@@ -52,7 +53,8 @@ StringPacker :: getString(char* aOutBuf, size_t aLen, uint8_t aIndex) const
         char* ptr = (char*)(mBuf + 1);
         for (uint8_t i = 0; i < aIndex; ++i)
         {
-            ptr += (uint8_t)*(ptr++); //the length...
+            uint8_t len = (uint8_t)*(ptr++);
+            ptr += len;
         }
 
         uint8_t len = *((uint8_t*)ptr++);

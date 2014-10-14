@@ -931,7 +931,7 @@ Player :: canEquipItem(const Item& aItem, Item::Position aPosition) const
     if (aItem.isNeedIdent())
         return false;
 
-    if (aItem.getReqSex() != 0 && aItem.getReqSex() & (1 << getSex()) == 0)
+    if (aItem.getReqSex() != 0 && (aItem.getReqSex() & (1 << getSex())) == 0)
         return false;
 
     // rebirth

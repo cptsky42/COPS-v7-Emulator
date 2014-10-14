@@ -362,9 +362,9 @@ public:
     bool isOther() const { return getItemSort() == SORT_OTHER; }
     bool isSpell() const { return isExpend() && getItemType() == TYPE_SCROLL; }
     bool isExpend() const { return isArrow() || (getItemSort() == SORT_EXPEND && getItemType() < TYPE_SPECIAL_USE); }
-    bool isEquipment() const { return !isArrow() && (getItemSort() >= SORT_FINERY && getItemSort() <= SORT_TWO_HANDS_WEAPON) || isShield(); }
+    bool isEquipment() const { return (!isArrow() && (getItemSort() >= SORT_FINERY && getItemSort() <= SORT_TWO_HANDS_WEAPON)) || isShield(); }
     bool isBow() const { return getItemSort() == SORT_TWO_HANDS_WEAPON && getItemType() == 500; /* TODO TYPE==BOW */ }
-    bool isActionItem() const { return isOther() && getItemType() == TYPE_ACTIONITEM || isSpell(); }
+    bool isActionItem() const { return (isOther() && getItemType() == TYPE_ACTIONITEM) || isSpell(); }
     bool isTaskItem() const { return isOther() && getItemType() == TYPE_TASKITEM; }
     bool isGem() const { return isOther() && getItemType() == TYPE_GEM; }
     bool isGameCard() const { return mInfo.Id == CARD_FEE_POINT_1 || mInfo.Id == CARD_FEE_POINT_2; }

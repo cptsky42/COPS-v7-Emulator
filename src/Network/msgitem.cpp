@@ -70,7 +70,7 @@ MsgItem :: process(Client* aClient)
     static const World& world = World::getInstance(); // singleton
     static const Database& db = Database::getInstance(); // singleton
 
-    Client& client = *aClient;
+    // Client& client = *aClient;
     Player& player = *aClient->getPlayer();
 
     switch (mInfo->Action)

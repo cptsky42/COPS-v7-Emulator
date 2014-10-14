@@ -517,6 +517,11 @@ inline uint32_t CAST_op(uint32_t a, uint32_t b, uint8_t op)
         return a - b;
     else if (op == 2)
         return a ^ b;
+    else
+    {
+        assert(false);
+        return -1;
+    }
 }
 
 inline uint32_t rotl(uint32_t value, uint32_t n)

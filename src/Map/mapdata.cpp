@@ -458,7 +458,10 @@ MapData :: unpack(void* aCaller)
             {
                 Cell& cell = mCells[pos2idx(x, y)];
                 cell.Accessible = *(ptr++) != false;
-                cell.Altitude = (int16_t)((*(ptr++) << 8) | *(ptr++));
+
+                uint8_t low = *(ptr++);
+                uint8_t high = *(ptr++);
+                cell.Altitude = (int16_t)((high << 8) | low);
             }
         }
 
