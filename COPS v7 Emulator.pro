@@ -83,6 +83,7 @@ SOURCES += \
     src/Script/npctask.cpp \
     src/Script/script.cpp \
     src/Security/Cryptography/blowfish.cpp \
+    src/Security/Cryptography/cast5.cpp \
     src/Security/Cryptography/diffiehellman.cpp \
     src/Security/Cryptography/rc5.cpp \
     src/Security/Cryptography/tqcipher.cpp \
@@ -188,6 +189,7 @@ HEADERS += \
     src/Script/npctask.h \
     src/Script/script.h \
     src/Security/Cryptography/blowfish.h \
+    src/Security/Cryptography/cast5.h \
     src/Security/Cryptography/diffiehellman.h \
     src/Security/Cryptography/icipher.h \
     src/Security/Cryptography/rc5.h \

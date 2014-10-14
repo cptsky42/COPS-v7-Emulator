@@ -24,16 +24,18 @@ public:
         TQ_CIPHER,
         /** Blowfish (CFB64) algorithm. */
         BLOWFISH,
+        /** CAST-5 (CFB64) algorithm. */
+        CAST5,
         /** RC5 algorithm. */
         RC5
     };
 
 public:
     /* constructor */
-    ICipher() { };
+    ICipher() { }
 
     /* destrctor */
-    virtual ~ICipher() { };
+    virtual ~ICipher() { }
 
 public:
     /**
