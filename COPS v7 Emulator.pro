@@ -243,6 +243,7 @@ INCLUDEPATH += \
 
 OTHER_FILES += \
     data/settings.cfg \
+    CHANGES \
     LICENSE \
     README
 

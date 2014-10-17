@@ -1,3 +1,34 @@
+[0.2.1]
+Project :
+Fixed severals warning when compiling with Clang 6.0.
+ * NOTE: It might fix an issue with dynamic length packets.
+
+Database :
+Added the loadAllMagics() method in the database.
+Added the getPlayerMagicSkills() method in the database.
+Added the getPlayerWeaponSkills() method in the database.
+Updated the SQL dump to include indexes.
+Updated the SQL dump to include the magictype table.
+
+Player :
+Added a Magic and a WeaponSkill class for players skills.
+Fixed the calculation of the physical attack.
+
+Cryptography :
+Added a CAST-5 implementation for people wanting to upgrade the source to an higher patch.
+ * WARNING: The implementation is not tested on Big-Endian processors.
+
+Msg / Networking :
+Added few USER_ATTRIB_ constants (including CPs).
+Updated the MsgMagicInfo class to take a Magic object instead of integers.
+Updated the MsgWeaponSkill class to take a WeaponSkill object instead of integers.
+Updated the login sequence to load and send the magic / weapon skills.
+Fixed the buying of items in CPs.
+
+Dependencies :
+Updated Lua to the version 5.2.3.
+Changed miniLZO for LZ4 due to a license incompatibility. LZ4 offers similar performances.
+
 [0.2.0]
 Project :
 Simplified the Qt version detection.
