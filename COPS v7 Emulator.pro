@@ -123,7 +123,7 @@ SOURCES += \
     src/third_party/lua-5.2.3/src/lbaselib.c \
     src/third_party/lua-5.2.3/src/lauxlib.c \
     src/third_party/lua-5.2.3/src/lapi.c \
-    src/third_party/minilzo-2.08/minilzo.c
+    src/third_party/lz4-r123/lz4.c
 
 HEADERS += \
     src/basefunc.h \
@@ -224,9 +224,7 @@ HEADERS += \
     src/third_party/lua-5.2.3/src/lcode.h \
     src/third_party/lua-5.2.3/src/lauxlib.h \
     src/third_party/lua-5.2.3/src/lapi.h \
-    src/third_party/minilzo-2.08/minilzo.h \
-    src/third_party/minilzo-2.08/lzodefs.h \
-    src/third_party/minilzo-2.08/lzoconf.h
+    src/third_party/lz4-r123/lz4.h
 
 INCLUDEPATH += \
     src \
@@ -241,7 +239,7 @@ INCLUDEPATH += \
     src/Security/Cryptography \
     src/third_party/bigint \
     src/third_party/lua-5.2.3/src \
-    src/third_party/minilzo-2.08
+    src/third_party/lz4-r123
 
 OTHER_FILES += \
     data/settings.cfg \

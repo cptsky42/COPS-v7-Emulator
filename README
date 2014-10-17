@@ -42,7 +42,7 @@ interesting implementation.
            it will takes less than 30s to load all DMap of a 5065 client.
   - Compressed data when unused
     * Each GameMap will detect when no player will be on the map, and than pack
-      the data using the LZOX-1 algorithm and unpack the data when required.
+      the data using the LZ4 algorithm and unpack the data when required.
       e.g. With a PowerPC (64 bit), at idle, the emulator will require less than
            10 MB of RAM to keep all DMap of a 5065 client in memory.
   - Shared data among all GameMaps

@@ -10,7 +10,7 @@
 #include "mapdata.h"
 #include "finder.h"
 #include "binaryreader.h"
-#include "minilzo.h"
+#include "lz4.h"
 #include <stdlib.h>
 
 using namespace std;
@@ -402,13 +402,10 @@ MapData :: pack(void* aCaller)
             }
         }
 
-        mPckData = (uint8_t*)malloc(len * 1.06f); // LZO might expand to 106%...
+        // LZ4 might not be able to compress... alloc worst case...
+        mPckData = (uint8_t*)malloc(LZ4_compressBound(len));
 
-        void* wrkmem = malloc(LZO1X_1_MEM_COMPRESS);
-        lzo_uint newlen = 0;
-
-        lzo1x_1_compress(buf, len, mPckData, &newlen, wrkmem);
-        free(wrkmem);
+        int newlen = LZ4_compress((char*)buf, (char*)mPckData, len);
 
         mPckData = (uint8_t*)realloc(mPckData, newlen);
         mPckLen = newlen;
@@ -449,8 +446,7 @@ MapData :: unpack(void* aCaller)
         uint8_t* buf = new uint8_t[len];
         uint8_t* ptr = buf;
 
-        lzo_uint newlen = 0;
-        lzo1x_decompress(mPckData, mPckLen, buf, &newlen, nullptr);
+        LZ4_decompress_fast((char*)mPckData, (char*)buf, len);
 
         for (uint16_t y = 0; ERROR_SUCCESS == err && y < mHeight; ++y)
         {
