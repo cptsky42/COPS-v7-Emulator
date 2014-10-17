@@ -12,6 +12,8 @@
 #include "common.h"
 #include "msg.h"
 
+class WeaponSkill;
+
 /**
  * Msg sent to the client to add a new weapon skill.
  */
@@ -36,18 +38,16 @@ public:
     /**
      * Create a new MsgWeaponSkill packet for the specified skill.
      *
-     * @param[in]   aType    type of the skill
-     * @param[in]   aLevel   level of the skill
-     * @param[in]   aExp     exp of the skill
+     * @param[in]   aSkill  the weapon skill
      */
-   MsgWeaponSkill(uint16_t aType, uint8_t aLevel, uint32_t aExp);
+   MsgWeaponSkill(const WeaponSkill& aSkill);
 
     /* destructor */
     virtual ~MsgWeaponSkill();
 
 private:
     /* internal filling of the packet */
-    void create(uint16_t aType, uint8_t aLevel, uint32_t aExp);
+    void create(const WeaponSkill& aSkill);
 
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;

@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -7,11 +7,12 @@
  */
 
 #include "msgmagicinfo.h"
+#include "magic.h"
 
-MsgMagicInfo :: MsgMagicInfo(uint16_t aType, uint8_t aLevel, uint32_t aExp)
+MsgMagicInfo :: MsgMagicInfo(const Magic& aMagic)
     : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
 {
-    create(aType, aLevel, aExp);
+    create(aMagic);
 }
 
 MsgMagicInfo :: ~MsgMagicInfo()
@@ -20,14 +21,14 @@ MsgMagicInfo :: ~MsgMagicInfo()
 }
 
 void
-MsgMagicInfo :: create(uint16_t aType, uint8_t aLevel, uint32_t aExp)
+MsgMagicInfo :: create(const Magic& aMagic)
 {
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_MAGICINFO;
 
-    mInfo->Type = aType;
-    mInfo->Level = aLevel;
-    mInfo->Exp = aExp;
+    mInfo->Type = aMagic.getType();
+    mInfo->Level = aMagic.getLevel();
+    mInfo->Exp = aMagic.getExp();
 }
 
 void

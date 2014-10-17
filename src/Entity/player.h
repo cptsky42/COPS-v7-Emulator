@@ -21,6 +21,9 @@
 #include <deque>
 #include <map>
 
+class Magic;
+class WeaponSkill;
+
 /**
  * Base class of all players.
  */
@@ -182,6 +185,16 @@ public:
      * Send the items information.
      */
     void sendItemSet() const;
+
+    /**
+     * Send the weapon skills information.
+     */
+    void sendWeaponSkillSet() const;
+
+    /**
+     * Send the magic skills information.
+     */
+    void sendMagicSkillSet() const;
 
     /**
      * Save all the items.
@@ -456,6 +469,12 @@ private:
     /** Delete all the items of the player. */
     void deleteAllItem();
 
+    /** Delete all the weapon skills of the player. */
+    void deleteAllWeaponSkill();
+
+    /** Delete all the magic skills of the player. */
+    void deleteAllMagicSkill();
+
 private:
     Client& mClient; //!< the client
 
@@ -492,6 +511,12 @@ private:
     Item* mEquipment[Item::MAX_EQUIPMENT]; //!< the equipment of the player
     std::map<uint32_t, Item*> mInventory; //!< the inventory of the player
     mutable QMutex mInventoryMutex; //!< the mutex to access the inventory
+
+    std::map<uint16_t, WeaponSkill*> mWeaponSkills; //!< the weapon skills of the player
+    mutable QMutex mWeaponSkillsMutex; //!< the mutex to access the weapon skills
+
+    std::map<uint16_t, Magic*> mMagics; //!< the magic skills of the player
+    mutable QMutex mMagicsMutex; //!< the mutex to access the magic skills
 
     // MsgTick protection
     uint32_t mMsgCount; //!< the last msg count

@@ -12,6 +12,8 @@
 #include "world.h"
 #include "mapmanager.h"
 #include "player.h"
+#include "weaponskill.h"
+#include "magic.h"
 #include "npc.h"
 #include "npctask.h"
 #include "itemtask.h"
@@ -72,6 +74,15 @@ Database :: ~Database()
         SAFE_DELETE(info);
     }
     mAllItems.clear();
+
+    for (map<uint32_t, Magic::Info*>::iterator
+            it = mAllMagics.begin(), end = mAllMagics.end();
+         it != end; ++it)
+    {
+        Magic::Info* info = it->second;
+        SAFE_DELETE(info);
+    }
+    mAllMagics.clear();
 
     for (map<uint32_t, Monster::Info*>::iterator
             it = mAllMonsters.begin(), end = mAllMonsters.end();
@@ -360,6 +371,108 @@ Database :: getPlayerItems(Player& aPlayer) const
             {
                 LOG(WARN, "Failed to create item %u for player %u. Ignoring.",
                     (uint32_t)query.value(Item::SQLDATA_ID).toUInt(), aPlayer.getUID());
+                err = ERROR_SUCCESS;
+            }
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: getPlayerWeaponSkills(Player& aPlayer) const
+{
+    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "SELECT * FROM `weaponskill` WHERE `owner_id` = :owner_id";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":owner_id", aPlayer.getUID());
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        while (ERROR_SUCCESS == err && query.next())
+        {
+            WeaponSkill* skill = nullptr;
+            err = WeaponSkill::createSkill(&skill, query);
+
+            if (IS_SUCCESS(err))
+            {
+                if (skill->getPlayer().getUID() == aPlayer.getUID())
+                {
+                    aPlayer.mWeaponSkillsMutex.lock();
+                    aPlayer.mWeaponSkills.insert(aPlayer.mWeaponSkills.end(),
+                                                 pair<uint16_t, WeaponSkill*>(skill->getType(), skill));
+                    aPlayer.mWeaponSkillsMutex.unlock();
+                }
+            }
+            else
+            {
+                LOG(WARN, "Failed to create weapon skill %u for player %u. Ignoring.",
+                    (uint32_t)query.value(WeaponSkill::SQLDATA_ID).toUInt(), aPlayer.getUID());
+                err = ERROR_SUCCESS;
+            }
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: getPlayerMagicSkills(Player& aPlayer) const
+{
+    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
+
+    static const char cmd[] =
+            "SELECT * FROM `magic` WHERE `owner_id` = :owner_id";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+    query.bindValue(":owner_id", aPlayer.getUID());
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        while (ERROR_SUCCESS == err && query.next())
+        {
+            Magic* magic = nullptr;
+            err = Magic::createMagic(&magic, query);
+
+            if (IS_SUCCESS(err))
+            {
+                if (magic->getPlayer().getUID() == aPlayer.getUID())
+                {
+                    aPlayer.mMagicsMutex.lock();
+                    aPlayer.mMagics.insert(aPlayer.mMagics.end(),
+                                           pair<uint16_t, Magic*>(magic->getType(), magic));
+                    aPlayer.mMagicsMutex.unlock();
+                }
+            }
+            else
+            {
+                LOG(WARN, "Failed to create magic skill %u for player %u. Ignoring.",
+                    (uint32_t)query.value(Magic::SQLDATA_ID).toUInt(), aPlayer.getUID());
                 err = ERROR_SUCCESS;
             }
         }
@@ -957,6 +1070,106 @@ Database :: getItemFromShop(const Item::Info** aOutInfo, uint8_t& aOutMoneyType,
         LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
             cmd, qPrintable(query.lastError().text()));
         err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: loadAllMagics()
+{
+    static const char cmd[] = "SELECT * FROM `magictype`";
+
+    err_t err = ERROR_SUCCESS;
+
+    QSqlQuery query(mConnection);
+    query.prepare(cmd);
+
+    LOG(DBG, "Executing SQL: %s", qPrintable(getSqlCommand(query)));
+
+    if (query.exec())
+    {
+        while (ERROR_SUCCESS == err && query.next())
+        {
+            Magic::Info* info = new Magic::Info();
+            ASSERT(info != nullptr);
+
+            info->Id = (uint32_t)query.value(Magic::SQLDATA_INFO_ID).toUInt();
+            info->Type = (uint16_t)query.value(Magic::SQLDATA_INFO_TYPE).toUInt();
+            info->Sort = (uint8_t)query.value(Magic::SQLDATA_INFO_SORT).toUInt();
+            info->Crime = query.value(Magic::SQLDATA_INFO_CRIME).toBool();
+            info->Ground = query.value(Magic::SQLDATA_INFO_GROUND).toBool();
+            info->Multi = query.value(Magic::SQLDATA_INFO_MULTI).toBool();
+            info->Target = (uint32_t)query.value(Magic::SQLDATA_INFO_TARGET).toUInt();
+            info->Level = (uint16_t)query.value(Magic::SQLDATA_INFO_LEVEL).toUInt();
+            info->UseMP = (uint16_t)query.value(Magic::SQLDATA_INFO_USE_MP).toUInt();
+            info->Power = (int32_t)query.value(Magic::SQLDATA_INFO_POWER).toInt();
+            info->IntoneDuration = (uint32_t)query.value(Magic::SQLDATA_INFO_INTONE_DURATION).toUInt();
+            info->Success = (uint8_t)query.value(Magic::SQLDATA_INFO_SUCCESS).toUInt();
+            info->StepSecs = (uint32_t)query.value(Magic::SQLDATA_INFO_STEP_SECS).toUInt();
+            info->Range = (uint8_t)query.value(Magic::SQLDATA_INFO_RANGE).toUInt();
+            info->Distance = (uint8_t)query.value(Magic::SQLDATA_INFO_DISTANCE).toUInt();
+            info->Status = (uint32_t)query.value(Magic::SQLDATA_INFO_STATUS).toUInt();
+            info->ReqProf = (uint16_t)query.value(Magic::SQLDATA_INFO_REQ_PROF).toUInt();
+            info->ReqExp = (uint32_t)query.value(Magic::SQLDATA_INFO_REQ_EXP).toUInt();
+            info->ReqLevel = (uint8_t)query.value(Magic::SQLDATA_INFO_REQ_LEVEL).toUInt();
+            info->UseXP = (uint8_t)query.value(Magic::SQLDATA_INFO_USE_XP).toUInt();
+            info->WeaponSubtype = (uint16_t)query.value(Magic::SQLDATA_INFO_WEAPON_SUBTYPE).toUInt();
+            info->ActiveTimes = (uint32_t)query.value(Magic::SQLDATA_INFO_ACTIVE_TIMES).toUInt();
+            info->AutoActive = query.value(Magic::SQLDATA_INFO_AUTO_ACTIVE).toBool();
+            info->FloorAttr = (uint32_t)query.value(Magic::SQLDATA_INFO_FLOOR_ATTR).toUInt();
+            info->AutoLearn = query.value(Magic::SQLDATA_INFO_AUTO_LEARN).toBool();
+            info->LearnLevel = (uint8_t)query.value(Magic::SQLDATA_INFO_LEARN_LEVEL).toUInt();
+            info->DropWeapon = query.value(Magic::SQLDATA_INFO_DROP_WEAPON).toBool();
+            info->UseEP = (uint8_t)query.value(Magic::SQLDATA_INFO_USE_EP).toUInt();
+            info->WeaponHit = query.value(Magic::SQLDATA_INFO_WEAPON_HIT).toBool();
+            info->UseItem = (uint32_t)query.value(Magic::SQLDATA_INFO_USE_ITEM).toUInt();
+            // TODO: SQLDATA_INFO_NEXT_MAGIC,
+            info->NextMagicDelay = (uint16_t)query.value(Magic::SQLDATA_INFO_NEXT_MAGIC_DELAY).toUInt();
+            info->UseItemNum = (uint8_t)query.value(Magic::SQLDATA_INFO_USE_ITEM_NUM).toUInt();
+            info->UsableInMarket = query.value(Magic::SQLDATA_INFO_USABLE_IN_MARKET).toBool();
+
+            ASSERT(info != nullptr);
+            ASSERT(mAllMagics.find(info->Id) == mAllMagics.end());
+
+            mAllMagics[info->Id] = info;
+            info = nullptr;
+
+            SAFE_DELETE(info);
+        }
+
+        if (IS_SUCCESS(err))
+        {
+            fprintf(stdout, "Loaded all magics.\n");
+            LOG(INFO, "Loaded all magics.");
+        }
+    }
+    else
+    {
+        LOG(ERROR, "Failed to execute the following cmd : \"%s\"\nError: %s",
+            cmd, qPrintable(query.lastError().text()));
+        err = ERROR_EXEC_FAILED;
+    }
+
+    return err;
+}
+
+err_t
+Database :: getMagicInfo(const Magic::Info** aOutInfo, uint16_t aType, uint16_t aLevel) const
+{
+    ASSERT_ERR(aOutInfo != nullptr && *aOutInfo == nullptr, ERROR_INVALID_POINTER);
+
+    err_t err = ERROR_SUCCESS;
+
+    map<uint32_t, Magic::Info*>::const_iterator it = mAllMagics.find((aType * 10) + aLevel);
+    if (it != mAllMagics.end())
+    {
+        *aOutInfo = it->second;
+    }
+    else
+    {
+        LOG(WARN, "Could not find the info of the magic skill %u (level %u).", aType, aLevel);
+        err = ERROR_NOT_FOUND;
     }
 
     return err;

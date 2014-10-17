@@ -7,6 +7,9 @@
  */
 
 #include "player.h"
+#include "magic.h"
+#include "weaponskill.h"
+#include "itemtask.h"
 #include "world.h"
 #include "mapmanager.h"
 #include "allmsg.h"
@@ -14,10 +17,6 @@
 #include <math.h>
 #include <map>
 #include <algorithm>
-
-#include "npc.h"
-#include "npctask.h"
-#include "itemtask.h"
 
 using namespace std;
 
@@ -57,6 +56,8 @@ Player :: ~Player()
         map->leaveRoom(*this);
 
     deleteAllItem();
+    deleteAllWeaponSkill();
+    deleteAllMagicSkill();
 }
 
 int32_t
@@ -690,21 +691,6 @@ Player :: timerElapsed()
 
     //			if (nMaxLifePercent >= 1000)
     //				m_tAutoHealMaxLife.Clear();
-    //		}
-    //	}
-
-    //	if (m_tAutoReborn.IsActive() && m_tAutoReborn.IsTimeOut())
-    //	{
-    //		m_tAutoReborn.Clear();
-    //		if (!IsAlive())
-    //		{
-    //			CItem* pItem = this->GetItemByType(GHOST_GEM_REBORN);
-    //			if (pItem)
-    //			{
-    //				this->SendSysMsg(STR_AUTO_USE_REBORN, pItem->GetStr(ITEMDATA_NAME));
-    //				this->EraseItem(pItem->GetID(), true);
-    //				this->Reborn(false);	// Ô­µØ¸´»î
-    //			}
     //		}
     //	}
 }
@@ -1350,7 +1336,7 @@ Player :: sendItemSet() const
 
     mInventoryMutex.lock();
     for (map<uint32_t, Item*>::const_iterator
-         it = mInventory.begin(), end = mInventory.end();
+            it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
         const Item* item = it->second;
@@ -1375,7 +1361,7 @@ Player :: saveAllItem() const
 
     mInventoryMutex.lock();
     for (map<uint32_t, Item*>::const_iterator
-         it = mInventory.begin(), end = mInventory.end();
+            it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
         const Item* item = it->second;
@@ -1393,7 +1379,7 @@ Player :: deleteAllItem()
 
     mInventoryMutex.lock();
     for (map<uint32_t, Item*>::iterator
-         it = mInventory.begin(), end = mInventory.end();
+            it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
         Item* item = it->second;
@@ -1401,6 +1387,72 @@ Player :: deleteAllItem()
     }
     mInventory.clear();
     mInventoryMutex.unlock();
+}
+
+void
+Player :: sendWeaponSkillSet() const
+{
+    mWeaponSkillsMutex.lock();
+    for (map<uint16_t, WeaponSkill*>::const_iterator
+            it = mWeaponSkills.begin(), end = mWeaponSkills.end();
+         it != end; ++it)
+    {
+        const WeaponSkill* skill = it->second;
+        if (skill != nullptr)
+        {
+            MsgWeaponSkill msg(*skill);
+            send(&msg);
+        }
+    }
+    mWeaponSkillsMutex.unlock();
+}
+
+void
+Player :: deleteAllWeaponSkill()
+{
+    mWeaponSkillsMutex.lock();
+    for (map<uint16_t, WeaponSkill*>::iterator
+            it = mWeaponSkills.begin(), end = mWeaponSkills.end();
+         it != end; ++it)
+    {
+        WeaponSkill* skill = it->second;
+        SAFE_DELETE(skill);
+    }
+    mWeaponSkills.clear();
+    mWeaponSkillsMutex.unlock();
+}
+
+void
+Player :: sendMagicSkillSet() const
+{
+    mMagicsMutex.lock();
+    for (map<uint16_t, Magic*>::const_iterator
+            it = mMagics.begin(), end = mMagics.end();
+         it != end; ++it)
+    {
+        const Magic* magic = it->second;
+        if (magic != nullptr)
+        {
+            MsgMagicInfo msg(*magic);
+            send(&msg);
+        }
+    }
+    mMagicsMutex.unlock();
+}
+
+void
+Player :: deleteAllMagicSkill()
+{
+    mMagicsMutex.lock();
+    for (map<uint16_t, Magic*>::iterator
+            it = mMagics.begin(), end = mMagics.end();
+         it != end; ++it)
+    {
+        Magic* magic = it->second;
+        SAFE_DELETE(magic);
+    }
+    mMagics.clear();
+    mMagicsMutex.unlock();
 }
 
 void

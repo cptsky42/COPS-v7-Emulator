@@ -12,6 +12,8 @@
 #include "common.h"
 #include "msg.h"
 
+class Magic;
+
 /**
  * Msg sent to the client to add a new magic skill.
  */
@@ -36,18 +38,16 @@ public:
     /**
      * Create a new MsgMagicInfo packet for the specified skill.
      *
-     * @param[in]   aType    type of the skill
-     * @param[in]   aLevel   level of the skill
-     * @param[in]   aExp     exp of the skill
+     * @param[in]   aMagic   the magic skill
      */
-   MsgMagicInfo(uint16_t aType, uint8_t aLevel, uint32_t aExp);
+   MsgMagicInfo(const Magic& aMagic);
 
     /* destructor */
     virtual ~MsgMagicInfo();
 
 private:
     /* internal filling of the packet */
-    void create(uint16_t aType, uint8_t aLevel, uint32_t aExp);
+    void create(const Magic& aMagic);
 
     /* internal swapping of the integers for neutral-endian support */
     virtual void swap(uint8_t* aBuf) const;

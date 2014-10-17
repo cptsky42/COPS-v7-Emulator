@@ -12,6 +12,7 @@
 #include "common.h"
 #include "env.h"
 #include "item.h"
+#include "magic.h"
 #include "monster.h"
 #include <map>
 #include <QtSql/QSqlDatabase>
@@ -107,6 +108,28 @@ public:
      * @returns Error code otherwise
      */
     err_t getPlayerItems(Player& aPlayer) const;
+
+    /**
+     * Try to retreive the player's weapon skills.
+     *
+     * @param[in]   aPlayer     the player
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t getPlayerWeaponSkills(Player& aPlayer) const;
+
+    /**
+     * Try to retreive the player's magic skills.
+     *
+     * @param[in]   aPlayer     the player
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t getPlayerMagicSkills(Player& aPlayer) const;
 
     /**
      * Try to save the player information for the specified client.
@@ -264,6 +287,28 @@ public:
                           uint32_t aShopId, uint32_t aItemId) const;
 
     /**
+     * Load all magics in memory from the database.
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_EXEC_FAILED if the SQL cmd failed
+     * @returns Error code otherwise
+     */
+    err_t loadAllMagics();
+
+    /**
+     * Get the magic information based on the type and the lvel.
+     *
+     * @param[out]   aOutInfo      the object that will receive the info
+     * @param[in]    aType         the type of the magic
+     * @param[in]    aLevel        the level of the magic
+     *
+     * @retval ERROR_SUCCESS on success
+     * @retval ERROR_NOT_FOUND if the info is not found
+     * @returns Error code otherwise
+     */
+    err_t getMagicInfo(const Magic::Info** aOutInfo, uint16_t aType, uint16_t aLevel) const;
+
+    /**
      * Load all NPCs in memory from the database.
      *
      * @retval ERROR_SUCCESS on success
@@ -324,6 +369,7 @@ private:
     QSqlDatabase mConnection; //!< SQL connection for the queries
 
     std::map<uint32_t, Item::Info*> mAllItems; //!< all items info
+    std::map<uint32_t, Magic::Info*> mAllMagics; //!< all magics info
     std::map<uint32_t, Monster::Info*> mAllMonsters; //!< all monsters info
 };
 

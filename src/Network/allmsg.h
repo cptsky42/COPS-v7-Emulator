@@ -20,6 +20,7 @@
 #include "msgiteminfo.h"
 #include "msgloginchallenges.h"
 #include "msgloginproofa.h"
+#include "msgmagicinfo.h"
 #include "msgmapinfo.h"
 #include "msgnpc.h"
 #include "msgnpcinfo.h"
@@ -30,5 +31,7 @@
 #include "msguserattrib.h"
 #include "msguserinfo.h"
 #include "msgwalk.h"
+#include "msgweaponskill.h"
+#include "msgweather.h"
 
 #endif // _COPS_V7_EMULATOR_ALL_MSG_H_

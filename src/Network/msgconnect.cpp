@@ -115,6 +115,18 @@ MsgConnect :: process(Client* aClient)
                         client.disconnect();
                         break;
                     }
+
+                    if (!IS_SUCCESS(db.getPlayerWeaponSkills(player)))
+                    {
+                        client.disconnect();
+                        break;
+                    }
+
+                    if (!IS_SUCCESS(db.getPlayerMagicSkills(player)))
+                    {
+                        client.disconnect();
+                        break;
+                    }
                 }
 
                 break;

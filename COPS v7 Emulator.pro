@@ -33,8 +33,10 @@ SOURCES += \
     src/generator.cpp \
     src/inifile.cpp \
     src/item.cpp \
+    src/magic.cpp \
     src/program.cpp \
     src/server.cpp \
+    src/weaponskill.cpp \
     src/world.cpp \
     src/Common/env.cpp \
     src/Common/log.cpp \
@@ -129,10 +131,12 @@ HEADERS += \
     src/generator.h \
     src/inifile.h \
     src/item.h \
+    src/magic.h \
     src/mstimer.h \
     src/server.h \
     src/strres.h \
     src/timer.h \
+    src/weaponskill.h \
     src/world.h \
     src/Common/arch.h \
     src/Common/common.h \

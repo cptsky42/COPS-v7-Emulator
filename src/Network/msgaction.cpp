@@ -202,15 +202,25 @@ MsgAction :: process(Client* aClient)
             }
         case ACTION_GET_WEAPON_SKILL_SET:
             {
-                // TODO send weapon skills
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
 
+                player.sendWeaponSkillSet();
                 client.send(this);
                 break;
             }
         case ACTION_GET_MAGIC_SET:
             {
-                // TODO send skills
+                if (player.getUID() != mInfo->UniqId)
+                {
+                    client.disconnect();
+                    return;
+                }
 
+                player.sendMagicSkillSet();
                 client.send(this);
                 break;
             }

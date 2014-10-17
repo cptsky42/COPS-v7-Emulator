@@ -207,6 +207,7 @@ Server :: exec()
     DOIF(err, db.loadAllNPCs());
     DOIF(err, db.loadAllMonsters());
     DOIF(err, db.loadAllGenerators());
+    DOIF(err, db.loadAllMagics());
 
     fprintf(stdout, "\n");
 

@@ -1,4 +1,4 @@
-/**
+/*
  * ****** COPS v7 Emulator - Open Source ******
  * Copyright (C) 2012 - 2014 Jean-Philippe Boivin
  *
@@ -7,11 +7,12 @@
  */
 
 #include "msgweaponskill.h"
+#include "weaponskill.h"
 
-MsgWeaponSkill :: MsgWeaponSkill(uint16_t aType, uint8_t aLevel, uint32_t aExp)
+MsgWeaponSkill :: MsgWeaponSkill(const WeaponSkill& aSkill)
     : Msg(sizeof(MsgInfo)), mInfo((MsgInfo*)mBuf)
 {
-    create(aType, aLevel, aExp);
+    create(aSkill);
 }
 
 MsgWeaponSkill :: ~MsgWeaponSkill()
@@ -20,14 +21,14 @@ MsgWeaponSkill :: ~MsgWeaponSkill()
 }
 
 void
-MsgWeaponSkill :: create(uint16_t aType, uint8_t aLevel, uint32_t aExp)
+MsgWeaponSkill :: create(const WeaponSkill& aSkill)
 {
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_WEAPONSKILL;
 
-    mInfo->Type = aType;
-    mInfo->Level = aLevel;
-    mInfo->Exp = aExp;
+    mInfo->Type = aSkill.getType();
+    mInfo->Level = aSkill.getLevel();
+    mInfo->Exp = aSkill.getExp();
 }
 
 void
