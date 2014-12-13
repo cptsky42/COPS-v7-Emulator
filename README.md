@@ -1,8 +1,6 @@
-                               COPS v7 Emulator
-                               ----------------
-
-                   Copyright (C) 2012 - 2014 Jean-Philippe Boivin
-              https://bitbucket.org/jpboivin/cops-v7-emulator/overview
+# COPS v7 Emulator
+Copyright (C) 2012 - 2014 Jean-Philippe Boivin
+https://bitbucket.org/jpboivin/cops-v7-emulator/overview
 
 Overview
 --------
