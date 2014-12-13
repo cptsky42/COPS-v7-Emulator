@@ -245,7 +245,8 @@ OTHER_FILES += \
     data/settings.cfg \
     CHANGES \
     LICENSE \
-    README
+    README \
+    README.md
 
 # WIN32 stuff
 win32 {
