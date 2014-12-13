@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "log.h"
 #include "database.h"
 #include "client.h"
@@ -36,7 +37,7 @@ Database* Database::sInstance = nullptr;
 const Database&
 Database :: getInstance()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sInstance == nullptr)
     {

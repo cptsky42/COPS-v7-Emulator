@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "script.h"
 #include "client.h"
 #include "player.h"
@@ -19,7 +20,7 @@ Script::State* Script::State::sState = nullptr;
 lua_State&
 Script::State :: getState()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sState == nullptr)
     {

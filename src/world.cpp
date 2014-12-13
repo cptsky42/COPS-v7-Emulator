@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "world.h"
 #include "database.h"
 #include "mapmanager.h"
@@ -29,7 +30,7 @@ World* World::sInstance = nullptr;
 World&
 World :: getInstance()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sInstance == nullptr)
     {

@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "log.h"
 #include "mapmanager.h"
 #include "gamemap.h"
@@ -25,7 +26,7 @@ MapManager* MapManager::sInstance = nullptr;
 MapManager&
 MapManager :: getInstance()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sInstance == nullptr)
     {
@@ -74,7 +75,7 @@ MapManager :: ~MapManager()
 err_t
 MapManager :: loadData()
 {
-    ASSERT_ERR(mGameMaps.empty() && mMaps.empty() && mData.empty(), ERROR_INVALID_STATE);
+    ASSERT_ERR(mGameMaps.empty() && mMaps.empty() && mData.empty(), ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 

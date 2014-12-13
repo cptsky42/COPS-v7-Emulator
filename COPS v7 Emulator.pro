@@ -140,6 +140,7 @@ HEADERS += \
     src/world.h \
     src/Common/arch.h \
     src/Common/common.h \
+    src/Common/def.h \
     src/Common/endianness.h \
     src/Common/env.h \
     src/Common/err.h \
@@ -224,7 +225,8 @@ HEADERS += \
     src/third_party/lua-5.2.3/src/lcode.h \
     src/third_party/lua-5.2.3/src/lauxlib.h \
     src/third_party/lua-5.2.3/src/lapi.h \
-    src/third_party/lz4-r123/lz4.h
+    src/third_party/lz4-r123/lz4.h \
+    src/Common/atomic.h
 
 INCLUDEPATH += \
     src \

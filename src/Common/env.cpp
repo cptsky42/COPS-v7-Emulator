@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "env.h"
 #include "common.h"
 #include <stdlib.h>
@@ -21,7 +22,7 @@ Environment* Environment::sInstance = nullptr;
 Environment&
 Environment :: getInstance()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sInstance == nullptr)
     {

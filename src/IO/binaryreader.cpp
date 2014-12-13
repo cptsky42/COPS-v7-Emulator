@@ -16,6 +16,7 @@
 #include "finder.h"
 #include <stdio.h>
 #include <string.h> // strerror
+#include <errno.h>
 
 using namespace std;
 
@@ -125,8 +126,8 @@ BinaryReader :: read(void* aBuf, size_t aLen)
 {
     ASSERT_ERR(aBuf != nullptr, ERROR_INVALID_PARAMETER);
     ASSERT_ERR(aLen > 0, ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -142,8 +143,8 @@ err_t
 BinaryReader :: readInt8(int8_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -156,8 +157,8 @@ err_t
 BinaryReader :: readInt16(int16_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -173,8 +174,8 @@ err_t
 BinaryReader :: readInt32(int32_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -190,8 +191,8 @@ err_t
 BinaryReader :: readInt64(int64_t& aOutVal)
 {
     ASSERT_ERR(&aOutVal != nullptr, ERROR_INVALID_REFERENCE);
-    ASSERT_ERR(mStream != nullptr, ERROR_INVALID_STATE);
-    ASSERT_ERR(feof(mStream) == 0, ERROR_INVALID_STATE);
+    ASSERT_ERR(mStream != nullptr, ERROR_BAD_STATE);
+    ASSERT_ERR(feof(mStream) == 0, ERROR_BAD_STATE);
 
     err_t err = ERROR_SUCCESS;
 

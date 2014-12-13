@@ -73,7 +73,7 @@
     defined(__amd64) || defined(_M_X64) || defined(_M_AMD64)
 #define TARGET_INSTR "x86_64"
 #define TARGET_ARCH "Intel 64-bit"
-#define TARGET_INSTR_X86_64
+#define TARGET_INSTR_X86_64 1
 
 #elif defined(__ppc__) || defined(__powerpc__) || \
     defined(_M_MPPC) || defined(_M_PPC)
@@ -92,10 +92,21 @@
 #define TARGET_ARCH "Itanium 64-bit"
 #define TARGET_INSTR_IA64 1
 
-#elif defined(__arm__) || defined(_ARM)
+#elif defined(__arm__) || defined(_ARM) || defined(__TARGET_ARCH_ARM) || \
+    defined(_M_ARM)
 #define TARGET_INSTR "arm"
 #define TARGET_ARCH "ARM"
 #define TARGET_INSTR_ARM 1
+
+#elif defined(__thumb__) || defined(__TARGET_ARCH_THUMB) || defined(_M_ARMT)
+#define TARGET_INSTR "arm"
+#define TARGET_ARCH "ARM (Thumb)"
+#define TARGET_INSTR_ARM 1
+
+#elif defined(__aarch64__)
+#define TARGET_INSTR "arm64"
+#define TARGET_ARCH "ARM 64-bit"
+#define TARGET_INSTR_ARM64 1
 
 #elif defined(__mips__) || defined(__MIPS__) || defined(__mips)
 #define TARGET_INSTR "mips"

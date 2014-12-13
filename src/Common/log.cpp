@@ -6,6 +6,7 @@
  * sections in the LICENSE file.
  */
 
+#include "atomic.h"
 #include "log.h"
 #include "finder.h"
 
@@ -21,7 +22,7 @@ Logger* Logger::sInstance = nullptr;
 Logger&
 Logger :: getInstance()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
 
     if (sInstance == nullptr)
     {
@@ -60,7 +61,7 @@ Logger :: init(const char* aDestFolder, const char* aFile)
     {
         logger.log(LOG_LEVEL_ERROR, __FILE__, __FUNCTION__, __LINE__,
                    "Logger already initialized.");
-        err = ERROR_INVALID_STATE;
+        err = ERROR_BAD_STATE;
     }
 
     return err;

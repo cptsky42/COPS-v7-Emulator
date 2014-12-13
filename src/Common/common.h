@@ -9,6 +9,7 @@
 #ifndef _COPS_V7_EMULATOR_COMMON_H_
 #define _COPS_V7_EMULATOR_COMMON_H_
 
+#include "def.h"
 #include "arch.h"
 #include "types.h"
 #include "endianness.h"
@@ -17,7 +18,6 @@
 #include "strres.h"
 
 #ifdef _WIN32
-#define NOMINMAX // want std::min() & std::max() defined...
 #include <windows.h>
 
 #ifdef _MSC_VER // Visual Studio will complain for linking...
@@ -28,15 +28,6 @@
 #include <unistd.h> // sysctl, sysconf
 #include <sys/time.h> // for timeGetTime()
 #endif
-
-#ifdef __APPLE__
-#include <libkern/OSAtomic.h>
-#endif // atomics
-
-// Clang defines __has_feature
-#ifndef __has_feature
-#define __has_feature(x) 0
-#endif // __has_feature
 
 /*
  *****************************************************
@@ -142,16 +133,37 @@ inline int getNumCPU()
 #define __FUNCTION__ __func__
 #endif // _MSC_VER
 
+// __FILENAME__ is a suggested macro, until it exists, using __FILE__
+#ifndef __FILENAME__
+#ifdef _WIN32
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif // _WIN32
+#endif // __FILENAME__
+
 // If using Visual Studio, and C++11 is not implemented
 // POSIX-compliant platforms define those functions, so C++11 is not required
 #if defined(_MSC_VER) && __cplusplus < 201103L
 #define snprintf _snprintf
 #endif
 
+// va_copy is not defined in Visual Studio (previous to 2013)
+// Although it is unsafe to simply copy the va_list, the behavior
+// is correct with Visual Studio.
+#if defined(_MSC_VER) && _MSC_VER < 1800
+#define va_copy(x, y) (x = y)
+#endif
+
 // If __TIMESTAMP__ is not defined, create it by merging __DATE__ and __TIME__
 #ifndef __TIMESTAMP__
 #define __TIMESTAMP__ __DATE__" "__TIME__
 #endif
+
+// If using Clang or GCC, __attribute__((always_inline)) must be mapped to __forceinline
+#ifdef __GNUC__
+#define __forceinline __attribute__((always_inline))
+#endif // __GNUC__
 
 // If not on Windows, we must implement a kind-of timeGetTime()
 #ifndef _WIN32
@@ -161,20 +173,6 @@ inline unsigned int timeGetTime()
     gettimeofday(&now, nullptr);
     return (now.tv_sec * 1000) + (now.tv_usec / 1000);
 }
-#endif
-
-#if defined(__APPLE__)
-#   if defined(TARGET_INSTR_X86_64) || defined(TARGET_INSTR_PPC64)
-#       define atomic_inc(ptr) OSAtomicIncrement64Barrier(((volatile int64_t*)ptr))
-#   else
-#       define atomic_inc(ptr) OSAtomicIncrement32Barrier(((volatile int32_t*)ptr))
-#   endif
-#elif defined (_WIN32)
-#   define atomic_inc(ptr) InterlockedIncrement((ptr))
-#elif defined(__GNUC__)
-#   define atomic_inc(ptr) (__sync_fetch_and_add((ptr), 1) + 1)
-#else
-#   error "Need some more porting work for atomic_inc."
 #endif
 
 #ifndef _WIN32

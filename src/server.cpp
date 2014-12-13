@@ -7,6 +7,7 @@
  */
 
 #include "log.h"
+#include "atomic.h"
 #include "server.h"
 
 #include "client.h"
@@ -61,7 +62,7 @@ Server :: getInstance()
 const char*
 Server :: getServerInfo()
 {
-    static volatile long protect = 0;
+    static volatile atomic_t protect = 0;
     static char* SERVER_INFO = nullptr;
 
     if (SERVER_INFO == nullptr)
