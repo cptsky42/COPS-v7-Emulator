@@ -174,7 +174,8 @@ const err_t ERROR_UNKNOWN = 0x7FFFFFFF;
 #else
 
 // Assert an expression and return if false
-#define ASSERT(exp)
+#define ASSERT(exp)                          \
+    if (!(exp)) { }
 
 // Assert an expression and return the error if false
 #define ASSERT_ERR(exp, err)                 \

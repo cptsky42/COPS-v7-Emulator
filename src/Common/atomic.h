@@ -50,7 +50,7 @@ static __forceinline atomic_t atomic_inc(volatile atomic_t* ptr)
     #elif defined(TARGET_SYSTEM_WINDOWS)
             return InterlockedIncrement(ptr);
     #elif defined(__GNUC__)
-            return (__sync_fetch_and_add(ptr, 1) + 1);
+            return __sync_add_and_fetch(ptr, 1);
     #else
     #   error "Need more porting work for atomic_inc."
     #endif
