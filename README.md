@@ -25,29 +25,29 @@ interesting implementation.
 + Self destructed environment (useful for singletons)
 + MySQL5 database based on the official one
 + Security module
-  - Custom implementations for:
-    * TQ's custom cipher
-    * Blowfish (CFB64)
-    * RC5 (32/12/16)
-    * Diffie-Hellman exchange
+    - Custom implementations for:
+        * TQ's custom cipher
+        * Blowfish (CFB64)
+        * RC5 (32/12/16)
+        * Diffie-Hellman exchange
 + Map module
-  - Parallel loading of Data Map (DMap) files
-    * MapManager will detect the number of physical cores and spawn an appropriate
-      amount of worker to load DMaps in parallel. For example, on two PowerPC 970MP
-      (dual core) @ 2.5 GHz, 4 workers will be spawn and it will takes few seconds
-      to load all DMap of a 5065 client.
-  - Compressed data when unused
-    * Each GameMap will detect when no player will be on the map, and than pack
-      the data using the LZ4 algorithm and unpack the data when required.
-      At idle, the emulator will require less than 10 MB of RAM to keep all
-      DMaps of a 5065 client in memory.
-  - Shared data among all GameMaps
+    - Parallel loading of Data Map (DMap) files
+        * MapManager will detect the number of physical cores and spawn an appropriate
+          amount of worker to load DMaps in parallel. For example, on two PowerPC 970MP
+          (dual core) @ 2.5 GHz, 4 workers will be spawn and it will takes few seconds
+          to load all DMap of a 5065 client.
+    - Compressed data when unused
+        * Each GameMap will detect when no player will be on the map, and than pack
+          the data using the LZ4 algorithm and unpack the data when required.
+          At idle, the emulator will require less than 10 MB of RAM to keep all
+          DMaps of a 5065 client in memory.
+    - Shared data among all GameMaps
 + Script module
-  - Shared Lua VM for executing scripts
-  - Exposed accessors for the player informations
-  - Exposed specialized functions (e.g. text(), link())
+    - Shared Lua VM for executing scripts
+    - Exposed accessors for the player informations
+    - Exposed specialized functions (e.g. text(), link())
 + Generator module
-  - Based on TQ's one, using the official spawns will result in the same in-game spawns
+    - Based on TQ's one, using the official spawns will result in the same in-game spawns
 + Character creation
 + Character loading / saving
 + Direction / Emotion / Pk Mode
@@ -57,12 +57,12 @@ interesting implementation.
 + Talking to NPCs [Incomplete]
 + Screen system [Incomplete]
 + Item features
-  - Buying items from NPCs
-  - Selling items to NPCs
-  - Repairing items
-  - Using / eating items
-  - Equiping items
-  - Real item ID generation for monsters [Incomplete]
+    - Buying items from NPCs
+    - Selling items to NPCs
+    - Repairing items
+    - Using / eating items
+    - Equiping items
+    - Real item ID generation for monsters [Incomplete]
 
 Documentation about the emulator can be generated with dOxygen.
 
@@ -75,13 +75,13 @@ Supported systems
 The emulator has been tested on the following platforms:
 
 - Windows XP Professional (SP2)
-  + x86_64 [Will compile, untested otherwise]
+    + x86_64 [Will compile, untested otherwise]
 - Mac OS X Leopard (10.5.8)
-  + ppc, ppc64
+    + ppc, ppc64
 - Mac OS X Mavericks (10.9.2)
-  + (x86), x86_x64
+    + (x86), x86_x64
 - Debian Lenny (5.0)
-  + ARM (armel)
+    + ARM (armel)
 
 The emulator has been tested with Qt 4.6.3, 4.8.4 & 5.2.1.
 
