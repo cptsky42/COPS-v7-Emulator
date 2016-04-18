@@ -17,7 +17,7 @@ MsgLoginProofA :: MsgLoginProofA(const uint8_t* aEncryptIV, const uint8_t* aDecr
     : Msg(sizeof(MsgInfo) + aP.length() + aG.length() + aA.length() - 3)
 {
     MsgInfo* info = (MsgInfo*)mBuf;
-    srand(time(NULL));
+    srand(time(nullptr));
 
     for (size_t i = 0; i < MsgLoginProofA::PADDING_LEN; ++i)
     {

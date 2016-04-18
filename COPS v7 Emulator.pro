@@ -265,7 +265,6 @@ QMAKE_CXXFLAGS += -D_CRT_SECURE_NO_WARNINGS
 # Mac OS X stuff
 macx {
 # Clang supports C++14 but is not enabled by default...
-QMAKE_CFLAGS += -std=c++14 -stdlib=libc++
 QMAKE_CXXFLAGS += -std=c++14 -stdlib=libc++
 }
 

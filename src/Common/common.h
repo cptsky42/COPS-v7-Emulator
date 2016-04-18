@@ -72,14 +72,6 @@ inline void SAFE_DELETE_ARRAY(T*& ptr)
 // Quote strings in macro */
 #define STRINGIFY_(str) #str
 #define STRINGIFY(str) STRINGIFY_(str)
-
-// GCC 4.3+, MSVC 2010+ or Clang feature-detection
-#if !(defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) && \
-    !(defined(__clang__) && __has_feature(cxx_rvalue_references)) && \
-    !(defined(_MSC_VER) && (_MSC_VER >= 1600))
-#define HAS_CXX_RVALUE_REF
-#endif
-
 /*
  *****************************************************
  * « TaskManager » functions
@@ -111,12 +103,12 @@ inline int getNumCPU()
     mib[1] = HW_AVAILCPU;  // alternatively, try HW_NCPU;
 
     /* get the number of CPUs from the system */
-    sysctl(mib, 2, &numCPU, &len, NULL, 0);
+    sysctl(mib, 2, &numCPU, &len, nullptr, 0);
 
     if (numCPU < 1) // HW_AVAILCPU might be incorrect
     {
          mib[1] = HW_NCPU;
-         sysctl(mib, 2, &numCPU, &len, NULL, 0);
+         sysctl(mib, 2, &numCPU, &len, nullptr, 0);
     }
     #endif
 

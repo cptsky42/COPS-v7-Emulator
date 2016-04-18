@@ -101,7 +101,7 @@ Logger :: log(LogLevel aLevel,
 }
 
 Logger :: Logger()
-    : mStream(NULL), mHasToShutdown(false)
+    : mStream(nullptr), mHasToShutdown(false)
 {
 
 }
@@ -169,7 +169,7 @@ Logger :: run()
     if ((mStream = fopen(path.c_str(), "at")) == nullptr)
     {
         fprintf(stderr, "Failed to open the log file %s.", path.c_str());
-        perror(NULL);
+        perror(nullptr);
         return;
     }
 

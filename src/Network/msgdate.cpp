@@ -26,7 +26,7 @@ MsgDate :: create()
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_DATE;
 
-    time_t timestamp = time(NULL);
+    time_t timestamp = time(nullptr);
     struct tm* tm = localtime(&timestamp);
 
     mInfo->Padding = 0;

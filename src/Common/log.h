@@ -76,7 +76,7 @@ private:
 private:
     static inline tm getCurrentTime()
     {
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         return *gmtime(&now);
     }
 

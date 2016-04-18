@@ -116,7 +116,7 @@ Server :: getServerInfo()
             snprintf(version, sizeof(version), "NT Kernel Version %s",
                      release);
 
-            bool is64bit = GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process") != NULL;
+            bool is64bit = GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process") != nullptr;
             char machine[16] = { '\0' };
             snprintf(machine, sizeof(machine), "%s",
                      is64bit ? "x86_64" : "x86");
@@ -163,7 +163,7 @@ Server :: Server(int argc, char* argv[])
     // Initialize the BigInt package
     LOG(INFO, "Initializing the BigInt package...");
     bi_initialize();
-    srand(time(NULL)); // for generatePrime() call
+    srand(time(nullptr)); // for generatePrime() call
 
     // connect signals & slots
     connect(this, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));

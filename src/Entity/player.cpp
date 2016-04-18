@@ -1207,7 +1207,7 @@ Player :: awardItem(const Item::Info& aInfo, bool aSend)
                         this->SendSysMsg(STR_GEMBAG_FULL);
                     else
                         this->SendSysMsg(STR_ITEMBAG_FULL);
-                    return NULL;
+                    return nullptr;
                 }
 
                 return CombineNewItem(pItem, pInfo, bSynchro);

@@ -10,7 +10,7 @@
 #define _COPS_V7_EMULATOR_TYPES_H_
 
 #include "def.h"
-#include <stddef.h> // Define NULL, size_t
+#include <stddef.h> // Define nullptr, size_t
 #include <limits.h> // Define UCHAR_MAX, etc
 
 #define __STDC_LIMIT_MACROS

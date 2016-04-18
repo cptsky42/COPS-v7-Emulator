@@ -9,15 +9,12 @@
 #include "env.h"
 #include "common.h"
 
+#include <cassert>
 #include <cstdlib>
 
 #include <algorithm>
 #include <atomic>
 #include <thread>
-
-#include <QThread>
-
-using namespace std;
 
 /* static */
 Environment* Environment::sInstance = nullptr;
@@ -34,7 +31,7 @@ Environment :: getInstance()
         {
             // create the instance
             sInstance = new Environment();
-            ASSERT(sInstance != nullptr);
+            assert(sInstance != nullptr);
         }
         else
         {
@@ -62,16 +59,11 @@ Environment :: Environment()
 
 Environment :: ~Environment()
 {
-    ASSERT(this == sInstance);
+    assert(this == sInstance);
     mIsDestroying = true;
 
-    for (vector<Global*>::iterator
-            it = mObjects.begin(), end = mObjects.end();
-         it != end; ++it)
-    {
-        Global* obj = *it;
+    for (auto obj : mObjects)
         SAFE_DELETE(obj);
-    }
     mObjects.clear();
 
     sInstance = nullptr;
@@ -80,23 +72,21 @@ Environment :: ~Environment()
 void
 Environment :: registerObj(Global* aObj)
 {
-    ASSERT(aObj != nullptr);
+    assert(aObj != nullptr);
     mObjects.push_back(aObj);
 }
 
 void
 Environment :: unregisterObj(Global* aObj)
 {
-    ASSERT(aObj != nullptr);
+    assert(aObj != nullptr);
+
     if (!mIsDestroying)
     {
-        vector<Global*>::iterator it =
-                find(mObjects.begin(), mObjects.end(), aObj);
+        auto it = std::find(mObjects.begin(), mObjects.end(), aObj);
 
         if (mObjects.end() != it)
-        {
             mObjects.erase(it);
-        }
     }
 }
 
