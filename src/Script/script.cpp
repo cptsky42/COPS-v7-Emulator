@@ -12,6 +12,8 @@
 #include "allmsg.h"
 #include "lua.hpp"
 
+#include <cassert>
+
 #include <atomic>
 #include <thread>
 
@@ -124,13 +126,13 @@ Script :: ~Script()
 int
 Script :: getName(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushstring(aState, player.getName());
+    lua_pushstring(aState, player->getName());
     return 1;
 }
 
@@ -138,13 +140,13 @@ Script :: getName(lua_State* aState)
 int
 Script :: getMate(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushstring(aState, player.getMate());
+    lua_pushstring(aState, player->getMate());
     return 1;
 }
 
@@ -152,13 +154,13 @@ Script :: getMate(lua_State* aState)
 int
 Script :: getLook(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getLook());
+    lua_pushinteger(aState, player->getLook());
     return 1;
 }
 
@@ -166,13 +168,13 @@ Script :: getLook(lua_State* aState)
 int
 Script :: getHair(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getHair());
+    lua_pushinteger(aState, player->getHair());
     return 1;
 }
 
@@ -180,13 +182,13 @@ Script :: getHair(lua_State* aState)
 int
 Script :: getMoney(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getMoney());
+    lua_pushinteger(aState, player->getMoney());
     return 1;
 }
 
@@ -194,13 +196,13 @@ Script :: getMoney(lua_State* aState)
 int
 Script :: getCPs(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getCPs());
+    lua_pushinteger(aState, player->getCPs());
     return 1;
 }
 
@@ -208,13 +210,13 @@ Script :: getCPs(lua_State* aState)
 int
 Script :: getExp(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getExp());
+    lua_pushinteger(aState, player->getExp());
     return 1;
 }
 
@@ -222,13 +224,13 @@ Script :: getExp(lua_State* aState)
 int
 Script :: getForce(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getForce());
+    lua_pushinteger(aState, player->getForce());
     return 1;
 }
 
@@ -236,13 +238,13 @@ Script :: getForce(lua_State* aState)
 int
 Script :: getHealth(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getHealth());
+    lua_pushinteger(aState, player->getHealth());
     return 1;
 }
 
@@ -250,13 +252,13 @@ Script :: getHealth(lua_State* aState)
 int
 Script :: getDexterity(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getDexterity());
+    lua_pushinteger(aState, player->getDexterity());
     return 1;
 }
 
@@ -264,13 +266,13 @@ Script :: getDexterity(lua_State* aState)
 int
 Script :: getSoul(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getSoul());
+    lua_pushinteger(aState, player->getSoul());
     return 1;
 }
 
@@ -278,13 +280,13 @@ Script :: getSoul(lua_State* aState)
 int
 Script :: getAddPoints(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getAddPoints());
+    lua_pushinteger(aState, player->getAddPoints());
     return 1;
 }
 
@@ -292,13 +294,13 @@ Script :: getAddPoints(lua_State* aState)
 int
 Script :: getCurHP(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getCurHP());
+    lua_pushinteger(aState, player->getCurHP());
     return 1;
 }
 
@@ -306,13 +308,13 @@ Script :: getCurHP(lua_State* aState)
 int
 Script :: getMaxHP(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getMaxHP());
+    lua_pushinteger(aState, player->getMaxHP());
     return 1;
 }
 
@@ -320,13 +322,13 @@ Script :: getMaxHP(lua_State* aState)
 int
 Script :: getCurMP(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getCurMP());
+    lua_pushinteger(aState, player->getCurMP());
     return 1;
 }
 
@@ -334,13 +336,13 @@ Script :: getCurMP(lua_State* aState)
 int
 Script :: getMaxMP(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getMaxMP());
+    lua_pushinteger(aState, player->getMaxMP());
     return 1;
 }
 
@@ -348,13 +350,13 @@ Script :: getMaxMP(lua_State* aState)
 int
 Script :: getPkPoints(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getPkPoints());
+    lua_pushinteger(aState, player->getPkPoints());
     return 1;
 }
 
@@ -362,13 +364,13 @@ Script :: getPkPoints(lua_State* aState)
 int
 Script :: getLevel(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getLevel());
+    lua_pushinteger(aState, player->getLevel());
     return 1;
 }
 
@@ -376,13 +378,13 @@ Script :: getLevel(lua_State* aState)
 int
 Script :: getProfession(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
-    lua_pushinteger(aState, player.getProfession());
+    lua_pushinteger(aState, player->getProfession());
     return 1;
 }
 
@@ -392,15 +394,15 @@ Script :: getProfession(lua_State* aState)
 int
 Script :: gainMoney(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
     int money = lua_tointeger(aState, 2);
 
-    bool success = player.gainMoney((uint32_t)money, true);
+    bool success = player->gainMoney((uint32_t)money, true);
 
     lua_pushboolean(aState, success);
     return 1;
@@ -410,15 +412,15 @@ Script :: gainMoney(lua_State* aState)
 int
 Script :: gainCPs(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
     int cps = lua_tointeger(aState, 2);
 
-    bool success = player.gainCPs((uint32_t)cps, true);
+    bool success = player->gainCPs((uint32_t)cps, true);
 
     lua_pushboolean(aState, success);
     return 1;
@@ -428,15 +430,15 @@ Script :: gainCPs(lua_State* aState)
 int
 Script :: spendMoney(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
     int money = lua_tointeger(aState, 2);
 
-    bool success = player.spendMoney((uint32_t)money, true);
+    bool success = player->spendMoney((uint32_t)money, true);
 
     lua_pushboolean(aState, success);
     return 1;
@@ -446,15 +448,15 @@ Script :: spendMoney(lua_State* aState)
 int
 Script :: spendCPs(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
     int cps = lua_tointeger(aState, 2);
 
-    bool success = player.spendCPs((uint32_t)cps, true);
+    bool success = player->spendCPs((uint32_t)cps, true);
 
     lua_pushboolean(aState, success);
     return 1;
@@ -464,17 +466,17 @@ Script :: spendCPs(lua_State* aState)
 int
 Script :: move(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
-    Player& player = *client.getPlayer();
-    ASSERT(&player != nullptr);
+    Player* player = client->getPlayer();
+    assert(player != nullptr);
 
     uint32_t mapId = (uint32_t)lua_tointeger(aState, 2);
     uint16_t x = (uint16_t)lua_tointeger(aState, 3);
     uint16_t y = (uint16_t)lua_tointeger(aState, 4);
 
-    bool success = player.move(mapId, x, y);
+    bool success = player->move(mapId, x, y);
 
     lua_pushboolean(aState, success);
     return 1;
@@ -486,13 +488,13 @@ Script :: move(lua_State* aState)
 int
 Script :: text(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
     const char* text = lua_tolstring(aState, 2, nullptr);
 
     MsgDialog msg(text, 0, 0, MsgDialog::ACTION_TEXT);
-    client.send(&msg);
+    client->send(&msg);
 
     return 0;
 }
@@ -501,14 +503,14 @@ Script :: text(lua_State* aState)
 int
 Script :: link(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
     const char* text = lua_tolstring(aState, 2, nullptr);
     int idx = lua_tointeger(aState, 3);
 
     MsgDialog msg(text, 0, idx, MsgDialog::ACTION_LINK);
-    client.send(&msg);
+    client->send(&msg);
 
     return 0;
 }
@@ -517,13 +519,13 @@ Script :: link(lua_State* aState)
 int
 Script :: pic(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
     int pic = lua_tointeger(aState, 2);
 
     MsgDialog msg(0, 0, pic, 0, MsgDialog::ACTION_PIC);
-    client.send(&msg);
+    client->send(&msg);
 
     return 0;
 }
@@ -532,11 +534,11 @@ Script :: pic(lua_State* aState)
 int
 Script :: create(lua_State* aState)
 {
-    Client& client = *((Client*)lua_tointeger(aState, 1));
-    ASSERT(&client != nullptr);
+    Client* client = (Client*)lua_tointeger(aState, 1);
+    assert(client != nullptr);
 
     MsgDialog msg(0xFF, MsgDialog::ACTION_CREATE);
-    client.send(&msg);
+    client->send(&msg);
 
     return 0;
 }
