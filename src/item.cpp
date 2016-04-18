@@ -248,7 +248,6 @@ err_t
 Item :: createItem(Item** aOutItem, const QSqlQuery& aQuery)
 {
     ASSERT_ERR(aOutItem != nullptr && *aOutItem == nullptr, ERROR_INVALID_POINTER);
-    ASSERT_ERR(&aQuery != nullptr, ERROR_INVALID_REFERENCE);
 
     static const World& world = World::getInstance(); // singleton
     static const Database& db = Database::getInstance(); // singleton

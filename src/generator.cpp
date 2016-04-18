@@ -21,7 +21,6 @@ err_t
 Generator :: makeGenerator(Generator** aOutGenerator, const QSqlQuery& aQuery)
 {
     ASSERT_ERR(aOutGenerator != nullptr && *aOutGenerator == nullptr, ERROR_INVALID_POINTER);
-    ASSERT_ERR(&aQuery != nullptr, ERROR_INVALID_REFERENCE);
 
     static MapManager& mgr = MapManager::getInstance(); // singleton...
 
@@ -85,8 +84,6 @@ Generator :: Generator(uint32_t aId,
 void
 Generator :: findGenPos(uint16_t& aOutPosX, uint16_t& aOutPosY)
 {
-    ASSERT(&aOutPosX != nullptr && &aOutPosY != nullptr);
-
     aOutPosX = mBoundX;
     aOutPosY = mBoundY;
     if (mMaxNPC <= 1)

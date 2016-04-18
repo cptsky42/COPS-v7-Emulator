@@ -46,8 +46,6 @@ Npc :: ~Npc()
 bool
 Npc :: activateNpc(Client& aClient, int32_t aAction)
 {
-    ASSERT_ERR(&aClient != nullptr, false);
-
     bool result = false;
 
     if (isTaskNpc() /*&& isAlive()*/ && mTask != nullptr)

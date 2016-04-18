@@ -15,7 +15,6 @@ err_t
 WeaponSkill :: createSkill(WeaponSkill** aOutSkill, const QSqlQuery& aQuery)
 {
     ASSERT_ERR(aOutSkill != nullptr && *aOutSkill == nullptr, ERROR_INVALID_POINTER);
-    ASSERT_ERR(&aQuery != nullptr, ERROR_INVALID_REFERENCE);
 
     static const World& world = World::getInstance(); // singleton
 

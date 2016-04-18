@@ -80,7 +80,6 @@ Entity :: clearBroadcastSet() const
 void
 Entity :: addEntityToBCSet(const Entity& aEntity) const
 {
-    ASSERT(&aEntity != nullptr);
     ASSERT(&aEntity != this);
 
     mViewSetMutex.lock();
@@ -102,7 +101,6 @@ Entity :: addEntityToBCSet(const Entity& aEntity) const
 void
 Entity :: removeEntityFromBCSet(const Entity& aEntity) const
 {
-    ASSERT(&aEntity != nullptr);
     ASSERT(&aEntity != this);
 
     mViewSetMutex.lock();

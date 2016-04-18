@@ -16,7 +16,6 @@ err_t
 Magic :: createMagic(Magic** aOutMagic, const QSqlQuery& aQuery)
 {
     ASSERT_ERR(aOutMagic != nullptr && *aOutMagic == nullptr, ERROR_INVALID_POINTER);
-    ASSERT_ERR(&aQuery != nullptr, ERROR_INVALID_REFERENCE);
 
     static const Database& db = Database::getInstance(); // singleton
     static const World& world = World::getInstance(); // singleton

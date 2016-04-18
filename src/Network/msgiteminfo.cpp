@@ -23,8 +23,6 @@ MsgItemInfo :: ~MsgItemInfo()
 void
 MsgItemInfo :: create(const Item& aItem, Action aAction)
 {
-    ASSERT(&aItem != nullptr);
-
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_ITEMINFO;
 

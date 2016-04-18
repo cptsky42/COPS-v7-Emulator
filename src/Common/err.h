@@ -36,8 +36,8 @@ const err_t ERROR_INVALID_HANDLE = 3;
 /** Pointer is invalid */
 const err_t ERROR_INVALID_POINTER = 4;
 
-/** Reference is invalid */
-const err_t ERROR_INVALID_REFERENCE = 5;
+///** Reference is invalid */
+//const err_t ERROR_INVALID_REFERENCE = 5;
 
 /** Data error */
 const err_t ERROR_BAD_CHECKSUM = 6;

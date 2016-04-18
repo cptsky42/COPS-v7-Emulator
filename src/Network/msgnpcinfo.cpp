@@ -26,8 +26,6 @@ MsgNpcInfo :: ~MsgNpcInfo()
 void
 MsgNpcInfo :: create(const Npc& aNpc)
 {
-    ASSERT(&aNpc != nullptr);
-
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_NPCINFO;
 

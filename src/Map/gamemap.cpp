@@ -43,8 +43,6 @@ GameMap :: getFloorAlt(uint16_t aPosX, uint16_t aPosY) const
 void
 GameMap :: sendMapInfo(const Player& aPlayer) const
 {
-    ASSERT(&aPlayer != nullptr);
-
     mEntitiesMutex.lock();
 
     // the player must be on the map...
@@ -60,8 +58,6 @@ GameMap :: sendMapInfo(const Player& aPlayer) const
 void
 GameMap :: sendBlockInfo(const Player& aPlayer) const
 {
-    ASSERT(&aPlayer != nullptr);
-
     mEntitiesMutex.lock();
 
     // the player must be on the map...
@@ -91,8 +87,6 @@ GameMap :: sendBlockInfo(const Player& aPlayer) const
 void
 GameMap :: updateBroadcastSet(const Entity& aEntity) const
 {
-    ASSERT(&aEntity != nullptr);
-
     mEntitiesMutex.lock();
 
     // the entity must be on the map...

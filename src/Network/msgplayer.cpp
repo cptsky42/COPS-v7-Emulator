@@ -36,7 +36,6 @@ MsgPlayer :: ~MsgPlayer()
 void
 MsgPlayer :: create(const Player& aPlayer)
 {
-    ASSERT(&aPlayer != nullptr);
     ASSERT(aPlayer.getName() != nullptr && aPlayer.getName()[0] != '\0');
 
     if (strlen(aPlayer.getName()) < MAX_NAMESIZE)
@@ -99,7 +98,6 @@ MsgPlayer :: create(const Player& aPlayer)
 void
 MsgPlayer :: create(const Monster& aMonster)
 {
-    ASSERT(&aMonster != nullptr);
     ASSERT(aMonster.getName() != nullptr && aMonster.getName()[0] != '\0');
 
     if (strlen(aMonster.getName()) < MAX_NAMESIZE)

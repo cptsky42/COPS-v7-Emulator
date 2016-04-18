@@ -35,9 +35,6 @@ MsgAllot :: process(Client* aClient)
     Client& client = *aClient;
     Player& player = *aClient->getPlayer();
 
-    if (&player == nullptr)
-        return;
-
     uint16_t sum = mInfo->Force + mInfo->Health + mInfo->Soul + mInfo->Dexterity;
     if (player.getAddPoints() < sum)
     {

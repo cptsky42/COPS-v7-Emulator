@@ -199,7 +199,6 @@ err_t
 Database :: createPlayer(Client& aClient, const char* aName,
                          uint16_t aLook, uint16_t aProfession) const
 {
-    ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
     ASSERT_ERR(aName != nullptr && aName[0] != '\0', ERROR_INVALID_PARAMETER);
 
     static const char cmd[] =
@@ -247,8 +246,6 @@ Database :: createPlayer(Client& aClient, const char* aName,
 err_t
 Database :: getPlayerInfo(Client& aClient) const
 {
-    ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "SELECT * FROM `user` WHERE `account_id` = :account_id";
 
@@ -331,8 +328,6 @@ Database :: getPlayerInfo(Client& aClient) const
 err_t
 Database :: getPlayerItems(Player& aPlayer) const
 {
-    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "SELECT * FROM `item` WHERE `player_id` = :player_id";
 
@@ -392,8 +387,6 @@ Database :: getPlayerItems(Player& aPlayer) const
 err_t
 Database :: getPlayerWeaponSkills(Player& aPlayer) const
 {
-    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "SELECT * FROM `weaponskill` WHERE `owner_id` = :owner_id";
 
@@ -443,8 +436,6 @@ Database :: getPlayerWeaponSkills(Player& aPlayer) const
 err_t
 Database :: getPlayerMagicSkills(Player& aPlayer) const
 {
-    ASSERT_ERR(&aPlayer != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "SELECT * FROM `magic` WHERE `owner_id` = :owner_id";
 
@@ -494,7 +485,6 @@ Database :: getPlayerMagicSkills(Player& aPlayer) const
 err_t
 Database :: savePlayer(Client& aClient) const
 {
-    ASSERT_ERR(&aClient != nullptr, ERROR_INVALID_REFERENCE);
     ASSERT_ERR(aClient.getPlayer() != nullptr, ERROR_INVALID_POINTER);
 
     static const char cmd[] =
@@ -558,8 +548,6 @@ Database :: savePlayer(Client& aClient) const
 err_t
 Database :: saveItem(const Item& aItem) const
 {
-    ASSERT_ERR(&aItem != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "UPDATE `item` SET `type` = :type, `owner_id` = :owner_id, `player_id` = :player_id, "
             "`amount` = :amount__, `amount_limit` = :amount_limit, "
@@ -618,7 +606,6 @@ Database :: createItem(Item** aOutItem, const Item::Info& aInfo,
                        uint8_t aIdent, Item::Position aPosition) const
 {
     ASSERT_ERR(aOutItem != nullptr && *aOutItem == nullptr, ERROR_INVALID_POINTER);
-    ASSERT_ERR(&aInfo != nullptr, ERROR_INVALID_REFERENCE);
 
     static const char cmd[] =
             "INSERT INTO `item` (`type`, `owner_id`, `player_id`, "
@@ -658,8 +645,6 @@ Database :: createItem(Item** aOutItem, const Item::Info& aInfo,
 err_t
 Database :: eraseItem(const Item& aItem) const
 {
-    ASSERT_ERR(&aItem != nullptr, ERROR_INVALID_REFERENCE);
-
     static const char cmd[] =
             "DELETE FROM `item` WHERE `id` = :id";
 

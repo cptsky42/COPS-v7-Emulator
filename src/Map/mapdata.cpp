@@ -80,8 +80,6 @@ MapData :: ~MapData()
 err_t
 MapData :: loadMapData(BinaryReader& aReader)
 {
-    ASSERT_ERR(&aReader != nullptr, ERROR_INVALID_REFERENCE);
-
     err_t err = ERROR_SUCCESS;
 
     uint32_t version = 0, data = 0, width = 0, height = 0;
@@ -154,8 +152,6 @@ MapData :: loadMapData(BinaryReader& aReader)
 err_t
 MapData :: loadPassageData(BinaryReader& aReader)
 {
-    ASSERT_ERR(&aReader != nullptr, ERROR_INVALID_REFERENCE);
-
     err_t err = ERROR_SUCCESS;
 
     int32_t count = 0;
@@ -204,8 +200,6 @@ MapData :: loadPassageData(BinaryReader& aReader)
 err_t
 MapData :: loadRegionData(BinaryReader& aReader)
 {
-    ASSERT_ERR(&aReader != nullptr, ERROR_INVALID_REFERENCE);
-
     err_t err = ERROR_SUCCESS;
 
     int32_t count = 0;
@@ -224,8 +218,6 @@ MapData :: loadRegionData(BinaryReader& aReader)
 err_t
 MapData :: loadLayerData(BinaryReader& aReader)
 {
-    ASSERT_ERR(&aReader != nullptr, ERROR_INVALID_REFERENCE);
-
     err_t err = ERROR_SUCCESS;
 
     int32_t count = 0;

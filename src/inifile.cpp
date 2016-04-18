@@ -224,7 +224,6 @@ err_t
 IniFile :: readInteger(int& aOutValue, const char* aKey)
 {
     ASSERT_ERR(aKey != nullptr && aKey[0] != '\0', ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(&aOutValue != nullptr, ERROR_INVALID_REFERENCE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -244,7 +243,6 @@ err_t
 IniFile :: readUInteger(unsigned int& aOutValue, const char* aKey)
 {
     ASSERT_ERR(aKey != nullptr && aKey[0] != '\0', ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(&aOutValue != nullptr, ERROR_INVALID_REFERENCE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -264,7 +262,6 @@ err_t
 IniFile :: readDouble(double& aOutValue, const char* aKey)
 {
     ASSERT_ERR(aKey != nullptr && aKey[0] != '\0', ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(&aOutValue != nullptr, ERROR_INVALID_REFERENCE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -284,7 +281,6 @@ err_t
 IniFile :: readBoolean(bool& aOutValue, const char* aKey)
 {
     ASSERT_ERR(aKey != nullptr && aKey[0] != '\0', ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(&aOutValue != nullptr, ERROR_INVALID_REFERENCE);
 
     err_t err = ERROR_SUCCESS;
 
@@ -304,7 +300,6 @@ err_t
 IniFile :: readString(string& aOutValue, const char* aKey)
 {
     ASSERT_ERR(aKey != nullptr && aKey[0] != '\0', ERROR_INVALID_PARAMETER);
-    ASSERT_ERR(&aOutValue != nullptr, ERROR_INVALID_REFERENCE);
 
     err_t err = ERROR_SUCCESS;
 

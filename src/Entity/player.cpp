@@ -966,8 +966,6 @@ Player :: canEquipItem(const Item& aItem, Item::Position aPosition) const
 bool
 Player :: useItem(Item& aItem, Item::Position aPosition, bool aSend)
 {
-    ASSERT_ERR(&aItem != nullptr, false);
-
     bool success = false;
 
     if (aItem.isActionItem())
@@ -1004,8 +1002,6 @@ Player :: useItem(Item& aItem, Item::Position aPosition, bool aSend)
 bool
 Player :: equipItem(Item& aItem, Item::Position aPosition, bool aSend)
 {
-    ASSERT_ERR(&aItem != nullptr, false);
-
     bool success = false;
 
     // TODO AbortMagic().
@@ -1185,8 +1181,6 @@ Player :: unequipOnly(Item::Position aPosition)
 bool
 Player :: awardItem(const Item::Info& aInfo, bool aSend)
 {
-    ASSERT_ERR(&aInfo != nullptr, false);
-
     bool success = true;
 
     /* TODO ? auto combine ?

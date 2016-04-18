@@ -107,8 +107,6 @@ World :: ~World()
 bool
 World :: addPlayer(Player& aPlayer)
 {
-    ASSERT_ERR(&aPlayer != nullptr, false);
-
     bool success = false;
 
     string name = aPlayer.getName();
@@ -130,8 +128,6 @@ World :: addPlayer(Player& aPlayer)
 bool
 World :: removePlayer(Player& aPlayer)
 {
-    ASSERT_ERR(&aPlayer != nullptr, false);
-
     bool success = false;
 
     string name = aPlayer.getName();

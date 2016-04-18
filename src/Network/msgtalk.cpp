@@ -95,7 +95,6 @@ void
 MsgTalk :: create(const Player& aSpeaker, const Player& aHearer, const char* aEmotion,
                   const char* aWords, Channel aChannel, uint32_t aColor)
 {
-    ASSERT(&aSpeaker != nullptr && &aHearer != nullptr);
     ASSERT(aSpeaker.getName() != nullptr && aSpeaker.getName()[0] != '\0');
     ASSERT(aHearer.getName() != nullptr && aHearer.getName()[0] != '\0');
     ASSERT(aEmotion != nullptr);

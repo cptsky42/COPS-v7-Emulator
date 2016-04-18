@@ -23,8 +23,6 @@ MsgMapInfo :: ~MsgMapInfo()
 void
 MsgMapInfo :: create(const GameMap& aMap)
 {
-    ASSERT(&aMap != nullptr);
-
     mInfo->Header.Length = mLen;
     mInfo->Header.Type = MSG_MAPINFO;
 

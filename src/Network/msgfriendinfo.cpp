@@ -23,7 +23,6 @@ MsgFriendInfo :: ~MsgFriendInfo()
 void
 MsgFriendInfo :: create(const Player& aPlayer)
 {
-    ASSERT(&aPlayer != nullptr);
     ASSERT(aPlayer.getMate() != nullptr && aPlayer.getMate()[0] != '\0');
 
     if (strlen(aPlayer.getMate()) < MAX_NAMESIZE)

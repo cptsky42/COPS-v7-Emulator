@@ -28,7 +28,6 @@ MsgUserInfo :: ~MsgUserInfo()
 void
 MsgUserInfo :: create(const Player& aPlayer)
 {
-    ASSERT(&aPlayer != nullptr);
     ASSERT(aPlayer.getName() != nullptr && aPlayer.getName()[0] != '\0');
     ASSERT(aPlayer.getMate() != nullptr && aPlayer.getMate()[0] != '\0');
 
