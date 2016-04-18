@@ -6,14 +6,18 @@
  * sections in the LICENSE file.
  */
 
-#include "atomic.h"
 #include "log.h"
 #include "mapmanager.h"
 #include "gamemap.h"
 #include "mapdata.h"
 #include "finder.h"
 #include "inifile.h"
-#include <stdio.h>
+
+#include <cstdio>
+
+#include <atomic>
+#include <thread>
+
 #include <QtConcurrentRun>
 #include <QThread>
 
@@ -26,11 +30,11 @@ MapManager* MapManager::sInstance = nullptr;
 MapManager&
 MapManager :: getInstance()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
 
     if (sInstance == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             // create the instance
             sInstance = new MapManager();
@@ -38,7 +42,7 @@ MapManager :: getInstance()
         else
         {
             while (sInstance == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
     return *sInstance;
@@ -240,7 +244,7 @@ MapManager :: loadData(map< string, vector<uint16_t> >* aWork)
         }
         SAFE_DELETE(data);
 
-        QThread::yieldCurrentThread();
+        std::this_thread::yield();
     }
 
     LOG(INFO, "Worker %u done. (err=%d)", QThread::currentThreadId(), err);

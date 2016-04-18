@@ -6,9 +6,11 @@
  * sections in the LICENSE file.
  */
 
-#include "atomic.h"
 #include "log.h"
 #include "finder.h"
+
+#include <atomic>
+#include <thread>
 
 using namespace std;
 
@@ -22,11 +24,11 @@ Logger* Logger::sInstance = nullptr;
 Logger&
 Logger :: getInstance()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
 
     if (sInstance == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             // create the instance
             sInstance = new Logger();
@@ -34,7 +36,7 @@ Logger :: getInstance()
         else
         {
             while (sInstance == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
     return *sInstance;

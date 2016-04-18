@@ -6,7 +6,6 @@
  * sections in the LICENSE file.
  */
 
-#include "atomic.h"
 #include "world.h"
 #include "database.h"
 #include "mapmanager.h"
@@ -14,6 +13,10 @@
 #include "npc.h"
 #include "script.h"
 #include "generator.h"
+
+#include <atomic>
+#include <thread>
+
 #include <QThread>
 #include <QtConcurrentRun>
 
@@ -30,11 +33,11 @@ World* World::sInstance = nullptr;
 World&
 World :: getInstance()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
 
     if (sInstance == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             // create the instance
             sInstance = new World();
@@ -42,7 +45,7 @@ World :: getInstance()
         else
         {
             while (sInstance == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
 
@@ -367,7 +370,7 @@ World :: regenerateMonsters()
             if (maxNpc <= 0)
                 break;
 
-            QThread::yieldCurrentThread();
+            std::this_thread::yield();
         }
 
         if (index >= world.mAllGenerators.size())
@@ -385,7 +388,7 @@ World :: regenerateMonsters()
             fprintf(stdout, "Initial spawning of monsters completed...\n");
         }
 
-        mssleep(20);
+        std::this_thread::sleep_for(20ms);
     }
 }
 
@@ -409,10 +412,10 @@ World :: processPlayers()
             Player* player = it->second;
             player->timerElapsed();
 
-            QThread::yieldCurrentThread();
+            std::this_thread::yield();
         }
         world.mPlayerMutex.unlock();
 
-        mssleep(20);
+        std::this_thread::sleep_for(20ms);
     }
 }

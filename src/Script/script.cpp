@@ -6,12 +6,14 @@
  * sections in the LICENSE file.
  */
 
-#include "atomic.h"
 #include "script.h"
 #include "client.h"
 #include "player.h"
 #include "allmsg.h"
 #include "lua.hpp"
+
+#include <atomic>
+#include <thread>
 
 /* static */
 Script::State* Script::State::sState = nullptr;
@@ -20,11 +22,11 @@ Script::State* Script::State::sState = nullptr;
 lua_State&
 Script::State :: getState()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
 
     if (sState == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             // create the instance
             sState = new State();
@@ -32,7 +34,7 @@ Script::State :: getState()
         else
         {
             while (sState == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
     return *(sState->mState);

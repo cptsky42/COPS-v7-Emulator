@@ -184,23 +184,4 @@ const err_t ERROR_UNKNOWN = 0x7FFFFFFF;
 
 #endif // DEBUG
 
-
-/*
- *****************************************************
- * Static assertion macros
- *****************************************************
- */
-
-#ifndef HAVE_CXX_STATIC_ASSERT
-template<bool>
-class __static_assert; // define an empty class __static_assert
-
-template<>
-class __static_assert<true> { }; // define only the prototype for "true"...
-
-// msg is a string literal to comply to the C++11 standard...
-#define static_assert(exp, msg) __static_assert<(exp)>()
-
-#endif // HAVE_CXX_STATIC_ASSERT
-
 #endif // _COPS_V7_EMULATOR_ERROR_H_

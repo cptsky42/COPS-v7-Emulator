@@ -6,11 +6,15 @@
  * sections in the LICENSE file.
  */
 
-#include "atomic.h"
 #include "env.h"
 #include "common.h"
-#include <stdlib.h>
+
+#include <cstdlib>
+
 #include <algorithm>
+#include <atomic>
+#include <thread>
+
 #include <QThread>
 
 using namespace std;
@@ -22,11 +26,11 @@ Environment* Environment::sInstance = nullptr;
 Environment&
 Environment :: getInstance()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
 
     if (sInstance == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             // create the instance
             sInstance = new Environment();
@@ -35,7 +39,7 @@ Environment :: getInstance()
         else
         {
             while (sInstance == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
     return *sInstance;

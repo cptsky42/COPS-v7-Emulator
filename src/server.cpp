@@ -7,7 +7,6 @@
  */
 
 #include "log.h"
-#include "atomic.h"
 #include "server.h"
 
 #include "client.h"
@@ -31,8 +30,11 @@ extern "C" {
 #include "bigint.h"
 }
 
-#include <stdlib.h> // srandom()
-#include <time.h>
+#include <cstdlib> // srandom()
+#include <ctime>
+
+#include <atomic>
+#include <thread>
 
 #ifdef _WIN32
 #define NOMINMAX // want std::min() & std::max() defined...
@@ -62,12 +64,12 @@ Server :: getInstance()
 const char*
 Server :: getServerInfo()
 {
-    static volatile atomic_t protect = 0;
+    static volatile std::atomic<int> protect(0);
     static char* SERVER_INFO = nullptr;
 
     if (SERVER_INFO == nullptr)
     {
-        if (1 == atomic_inc(&protect))
+        if (1 == ++protect)
         {
             #ifndef _WIN32
             struct utsname info;
@@ -136,7 +138,7 @@ Server :: getServerInfo()
         else
         {
             while (SERVER_INFO == nullptr)
-                QThread::yieldCurrentThread();
+                std::this_thread::yield();
         }
     }
 

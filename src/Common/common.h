@@ -36,14 +36,20 @@
  */
 
 // Delete a pointer and set the pointer to NULL.
-#define SAFE_DELETE(ptr)                          \
-    delete ptr,                                   \
+template<typename T>
+inline void SAFE_DELETE(T*& ptr)
+{
+    delete ptr;
     ptr = nullptr;
+}
 
 // Delete an array and set the pointer to NULL.
-#define SAFE_DELETE_ARRAY(ptr)                    \
-    delete[] ptr,                                 \
+template<typename T>
+inline void SAFE_DELETE_ARRAY(T*& ptr)
+{
+    delete[] ptr;
     ptr = nullptr;
+}
 
 /*
  *****************************************************
@@ -157,7 +163,7 @@ inline int getNumCPU()
 
 // If __TIMESTAMP__ is not defined, create it by merging __DATE__ and __TIME__
 #ifndef __TIMESTAMP__
-#define __TIMESTAMP__ __DATE__" "__TIME__
+#define __TIMESTAMP__ __DATE__ " " __TIME__
 #endif
 
 // If using Clang or GCC, __attribute__((always_inline)) must be mapped to __forceinline
@@ -174,11 +180,5 @@ inline unsigned int timeGetTime()
     return (now.tv_sec * 1000) + (now.tv_usec / 1000);
 }
 #endif
-
-#ifndef _WIN32
-#define mssleep(ms) usleep(ms * 1000)
-#else
-#define mssleep(ms) Sleep(ms)
-#endif // _WIN32
 
 #endif // _COPS_V7_EMULATOR_COMMON_H_

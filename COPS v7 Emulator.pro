@@ -6,18 +6,19 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += concurrent
 
 TARGET = "COPS v7 Emulator"
 TEMPLATE = app
-CONFIG   += console
+CONFIG += console
 
 macx {
 CONFIG -= app_bundle
+CONFIG -= c++11
 }
 
-lessThan(QT_MAJOR_VERSION, 4): \
-    error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
+lessThan(QT_MAJOR_VERSION, 5): \
+    error(COPS v7 Emulator requires Qt 5.6 or newer but Qt $$[QT_VERSION] was detected.)
 
-equals(QT_MAJOR_VERSION, 4): \
-    lessThan(QT_MINOR_VERSION, 5): \
-        error(COPS v7 Emulator requires Qt 4.5 or newer but Qt $$[QT_VERSION] was detected.)
+equals(QT_MAJOR_VERSION, 5): \
+    lessThan(QT_MINOR_VERSION, 6): \
+        error(COPS v7 Emulator requires Qt 5.6 or newer but Qt $$[QT_VERSION] was detected.)
 
 QMAKE_CFLAGS_RELEASE += -DNDEBUG
 QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
@@ -225,8 +226,7 @@ HEADERS += \
     src/third_party/lua-5.2.3/src/lcode.h \
     src/third_party/lua-5.2.3/src/lauxlib.h \
     src/third_party/lua-5.2.3/src/lapi.h \
-    src/third_party/lz4-r123/lz4.h \
-    src/Common/atomic.h
+    src/third_party/lz4-r123/lz4.h
 
 INCLUDEPATH += \
     src \
@@ -264,18 +264,26 @@ QMAKE_CXXFLAGS += -D_CRT_SECURE_NO_WARNINGS
 
 # Mac OS X stuff
 macx {
-
+# Clang supports C++14 but is not enabled by default...
+QMAKE_CFLAGS += -std=c++14 -stdlib=libc++
+QMAKE_CXXFLAGS += -std=c++14 -stdlib=libc++
 }
 
 # UNIX stuff...
 unix:!macx {
-
+QMAKE_CXXFLAGS += -std=c++14
 }
 
 # UNIX-like stuff...
 unix {
 QMAKE_CFLAGS += -Wextra
 QMAKE_CXXFLAGS += -Wextra
+
+QMAKE_CFLAGS_DEBUG += -O0
+QMAKE_CXXFLAGS_DEBUG += -O0
+
+QMAKE_CFLAGS_RELEASE += -DNDEBUG -O3
+QMAKE_CXXFLAGS_RELEASE += -DNDEBUG -O3
 }
 
 

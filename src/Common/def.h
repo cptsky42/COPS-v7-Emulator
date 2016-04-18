@@ -24,11 +24,6 @@
 #define WIN32_LEAN_AND_MEAN // want minimal WinAPI...
 #endif // _WIN32
 
-// For common compilers, only MSVC 2008- doesn't have <stdint.h>
-#if !defined(_MSC_VER) || (defined(_MSC_VER) && _MSC_VER >= 1600)
-#define HAVE_STDINT_H
-#endif
-
 //#cmakedefine HAVE_UNISTD_H
 //#cmakedefine HAVE_ENDIAN_H
 //#cmakedefine HAVE_PTHREAD_H
@@ -38,35 +33,6 @@
 //#cmakedefine HAVE_USLEEP_FN
 //#cmakedefine HAVE_SCHED_YIELD_FN
 //#cmakedefine HAVE_GETTIMEOFDAY_FN
-
-// GCC 4.3+, MSVC 2010+ or Clang feature-detection
-#if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) || \
-    (defined(__clang__) && __has_feature(cxx_rvalue_references)) || \
-    (defined(_MSC_VER) && (_MSC_VER >= 1600))
-#define HAVE_CXX_RVALUE_REF 1
-#endif
-
-// GCC 4.6+, MSVC 2010+ or Clang feature-detection
-#if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 460)) || \
-    (defined(__clang__) && __has_feature(cxx_nullptr)) || \
-    (defined(_MSC_VER) && (_MSC_VER >= 1600))
-#define HAVE_CXX_NULLPTR 1
-#endif
-
-// GCC 4.6+ or Clang feature-detection
-// MSVC 2012+ does not support constexpr, but blocks its macroization.
-#if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 460)) || \
-    (defined(__clang__) && __has_feature(cxx_constexpr)) || \
-    (defined(_MSC_VER) && (_MSC_VER >= 1700))
-#define HAVE_CXX_CONSTEXPR 1
-#endif
-
-// GCC 4.3+, MSVC 2010+ or Clang feature-detection
-#if (defined(__GNUC__) && (((__GNUC__ * 100) + __GNUC_MINOR__) >= 430)) || \
-    (defined(__clang__) && __has_feature(cxx_static_assert)) || \
-    (defined(_MSC_VER) && (_MSC_VER >= 1600))
-#define HAVE_CXX_STATIC_ASSERT 1
-#endif
 
 
 // GCC 4.8+ or Clang

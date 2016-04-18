@@ -15,7 +15,7 @@
 static const char STR_PROGRAM_TITLE[] =     "COPS v7 Emulator for " TARGET_SYSTEM " (" TARGET_ARCH ") by Jean-Philippe Boivin (alias CptSky)";
 
 static const char STR_CREATOR_INFO[] =      "COPS v7 Emulator by Jean-Philippe Boivin (alias CptSky)...";
-static const char STR_BUILD_INFO[] =        "Build for " TARGET_SYSTEM " (" TARGET_ARCH "), using Qt " QT_VERSION_STR ", the " __DATE__" "__TIME__;
+static const char STR_BUILD_INFO[] =        "Build for " TARGET_SYSTEM " (" TARGET_ARCH "), using Qt " QT_VERSION_STR ", the " __DATE__ " " __TIME__;
 
 static const char STR_SYSTEM_NAME[] =       "SYSTEM";
 static const char STR_ALLUSERS_NAME[] =     "ALLUSERS";
