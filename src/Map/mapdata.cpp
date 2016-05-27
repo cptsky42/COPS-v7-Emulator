@@ -13,8 +13,6 @@
 #include "lz4.h"
 #include <stdlib.h>
 
-using namespace std;
-
 struct Cell;
 
 /* static */
@@ -64,7 +62,7 @@ MapData :: ~MapData()
 {
     SAFE_DELETE_ARRAY(mCells);
 
-    for (vector<Passage*>::iterator
+    for (std::vector<Passage*>::iterator
             it = mPassages.begin(), end = mPassages.end();
          it != end; ++it)
     {
@@ -474,7 +472,7 @@ MapData :: getPassage(uint16_t aPosX, uint16_t aPosY) const
 {
     int passageId = -1;
 
-    for (vector<Passage*>::const_iterator
+    for (std::vector<Passage*>::const_iterator
             it = mPassages.begin(), end = mPassages.end();
          it != end; ++it)
     {

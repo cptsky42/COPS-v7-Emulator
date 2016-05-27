@@ -10,9 +10,11 @@
 #define _COPS_V7_EMULATOR_ENTITY_H
 
 #include "common.h"
-#include <time.h>
+
+#include <ctime>
+
 #include <map>
-#include <QMutex>
+#include <mutex>
 
 class Player;
 class Msg;
@@ -194,7 +196,7 @@ protected:
     uint8_t mDirection; //!< Entity cardinal direction
 
     mutable std::map<uint32_t, const Entity*> mViewSet; //!< set including all entities on screen
-    mutable QMutex mViewSetMutex; //!< mutex for accessing the view set
+    mutable std::mutex mViewSetMutex; //!< mutex for accessing the view set
 };
 
 #endif // _COPS_V7_EMULATOR_ENTITY_H

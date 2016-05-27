@@ -12,10 +12,12 @@
 #include "common.h"
 #include "mapbase.h"
 #include "mapdata.h"
-#include <math.h>
-#include <map>
+
+#include <cmath>
+
 #include <algorithm>
-#include <QMutex>
+#include <map>
+#include <mutex>
 
 class Client;
 class Entity;
@@ -37,40 +39,40 @@ public:
     /**
      * List of all flag for the map's type.
      */
-    enum Flags
+    enum class Flags : uint32_t
     {
         /** The map is normal. */
-        TYPE_NORMAL             = 0x0000,
+        Normal             = 0x0000,
         /** The map is a Pk field. Players won't get Pk points and their name won't flash. */
-        TYPE_PK_FIELD           = 0x0001,
+        PkField           = 0x0001,
         /** The map disable changing map with magic call (team member) ??? */
-        TYPE_CHGMAP_DISABLE     = 0x0002, // magic call team member
+        ChgMapDisable     = 0x0002, // magic call team member
         /** The map doesn't save the position. It saves the previous map. */
-        TYPE_RECORD_DISABLE     = 0x0004,
+        RecordDisable     = 0x0004,
         /** The map doesn't allow Pk. */
-        TYPE_PK_DISABLE         = 0x0008,
+        PkDisable         = 0x0008,
         /** The map allows booth creation. */
-        TYPE_BOOTH_ENABLE       = 0x0010,
+        BoothEnable       = 0x0010,
         /** The map doesn't allow teams. */
-        TYPE_TEAM_DISABLE       = 0x0020,
+        TeamDisable       = 0x0020,
         /** The map doesn't allow changing map by action. (Scrolls, etc) */
-        TYPE_TELEPORT_DISABLE	= 0x0040, // chgmap by action
+        TeleportDisable	= 0x0040, // chgmap by action
         /** The map is a syndicate map. */
-        TYPE_SYN_MAP            = 0x0080,
+        SynMap            = 0x0080,
         /** The map is a prison map. */
-        TYPE_PRISON_MAP         = 0x0100,
+        PrisonMap         = 0x0100,
         /** The map doesn't allow flying. */
-        TYPE_WING_DISABLE       = 0x0200, // bowman fly disable
+        WingDisable       = 0x0200, // bowman fly disable
         /** The map is a family map. */
-        TYPE_FAMILY             = 0x0400,
+        Family             = 0x0400,
         /** The map is a mine field. */
-        TYPE_MINE_FIELD         = 0x0800,
+        MineField         = 0x0800,
         /** */
-        TYPE_CALLNEWBIE_DISABLE = 0x1000,
+        CallNewbieDisable = 0x1000,
         /** Reborn here is enabled. */
-        TYPE_REBORN_NOW_ENABLE  = 0x2000,
+        RebornNowEnable  = 0x2000,
         /** Newbie protection (e.g. TC). */
-        TYPE_NEWBIE_PROTECT     = 0x4000
+        NewbieProtect     = 0x4000
     };
 
 public:
@@ -166,29 +168,29 @@ public:
     /** Determine whether or not it is a training map. */
     bool isTrainMap() const { return 1039 == mUID; }
     /** Determine whether or not it is a Pk field. */
-    bool isPkField() const { return (mInfo->Type & TYPE_PK_FIELD) != 0; }
+    bool isPkField() const { return (mInfo->Type & static_cast<uint32_t>(Flags::PkField)) != 0; }
     /** Determine whether or not changing map by maigc is disabled. */
-    bool isChgMapDisabled() const { return (mInfo->Type & TYPE_CHGMAP_DISABLE) != 0; }
+    bool isChgMapDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::ChgMapDisable)) != 0; }
     /** Determine whether or not the current map can be saved. */
-    bool isRecordDisabled() const { return (mInfo->Type & TYPE_RECORD_DISABLE) != 0; }
+    bool isRecordDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::RecordDisable)) != 0; }
     /** Determine whether or not the Pk is disabled. */
-    bool isPkDisabled() const { return (mInfo->Type & TYPE_PK_DISABLE) != 0; }
+    bool isPkDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::PkDisable)) != 0; }
     /** Determine whether or not the teams are disabled. */
-    bool isTeamDisabled() const { return (mInfo->Type & TYPE_TEAM_DISABLE) != 0; }
+    bool isTeamDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::TeamDisable)) != 0; }
     /** Determine whether or not changing map by action is disabled. */
-    bool isTeleportDisabled() const { return (mInfo->Type & TYPE_TELEPORT_DISABLE) != 0; }
+    bool isTeleportDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::TeleportDisable)) != 0; }
     /** Determine whether or not the map is a syndicate map. */
-    bool isSynMap() const { return (mInfo->Type & TYPE_SYN_MAP) != 0; }
+    bool isSynMap() const { return (mInfo->Type & static_cast<uint32_t>(Flags::SynMap)) != 0; }
     /** Determine whether or not the map is a prison map. */
-    bool isPrisonMap() const { return (mInfo->Type & TYPE_PRISON_MAP) != 0; }
+    bool isPrisonMap() const { return (mInfo->Type & static_cast<uint32_t>(Flags::PrisonMap)) != 0; }
     /** Determine whether or not flying is disabled. */
-    bool isWingDisabled() const { return (mInfo->Type & TYPE_WING_DISABLE) != 0; }
+    bool isWingDisabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::WingDisable)) != 0; }
     /** Determine whether or not the map is a mine map. */
-    bool isMineField() const { return (mInfo->Type & TYPE_MINE_FIELD) != 0; }
+    bool isMineField() const { return (mInfo->Type & static_cast<uint32_t>(Flags::MineField)) != 0; }
     /** Determine whether or not the map is a family map. */
-    bool isFamilyMap() const { return (mInfo->Type & TYPE_FAMILY) != 0; }
+    bool isFamilyMap() const { return (mInfo->Type & static_cast<uint32_t>(Flags::Family)) != 0; }
     /** Determine whether or not booths are enabled. */
-    bool isBoothEnabled() const { return (mInfo->Type & TYPE_BOOTH_ENABLE) != 0; }
+    bool isBoothEnabled() const { return (mInfo->Type & static_cast<uint32_t>(Flags::BoothEnable)) != 0; }
     /** Determine whether or not the a war is active on the map. */
     bool isWarTime() const { return false; /* TODO (getStatus() & STATUS_WAR) != 0 */ }
 
@@ -243,7 +245,7 @@ private:
 
     std::map<uint32_t, Entity*> mEntities; //!< the entities on the map
     uint64_t mPlayerCount; //!< the number of players on the map
-    mutable QMutex mEntitiesMutex; //!< mutex to access the entities map
+    mutable std::mutex mEntitiesMutex; //!< mutex to access the entities map
 };
 
 #endif // _COPS_V7_EMULATOR_GAMEMAP_H_

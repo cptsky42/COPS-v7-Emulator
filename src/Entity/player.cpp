@@ -18,8 +18,6 @@
 #include <map>
 #include <algorithm>
 
-using namespace std;
-
 Player :: Player(Client& aClient, uint32_t aUID)
     : AdvancedEntity(aUID), mClient(aClient),
       mMate("None"),
@@ -72,7 +70,7 @@ Player :: getMinAtk() const
             atk += pos != Item::POS_LWEAPON ? equip->getMinAtk() : equip->getMinAtk() / 2;
     }
 
-    return max(0.0, atk);
+    return std::max(0.0, atk);
 }
 
 int32_t
@@ -87,7 +85,7 @@ Player :: getMaxAtk() const
             atk += pos != Item::POS_LWEAPON ? equip->getMaxAtk() : equip->getMaxAtk() / 2;
     }
 
-    return max(0.0, atk);
+    return std::max(0.0, atk);
 }
 
 int32_t
@@ -117,7 +115,7 @@ Player :: getMAtk() const
             atk += equip->getMagicAtk();
     }
 
-    return max(0.0, atk);
+    return std::max(0.0, atk);
 }
 
 int32_t
@@ -286,7 +284,7 @@ Player :: getMaxHP()  const
         }
     }
 
-    return max(0, life);
+    return std::max(0, life);
 }
 
 uint16_t
@@ -304,7 +302,7 @@ Player :: getMaxMP() const
             mana += equip->getMana();
     }
 
-    return max(0, mana);
+    return std::max(0, mana);
 }
 
 uint8_t
@@ -699,7 +697,7 @@ bool
 Player :: gainMoney(uint32_t aMoney, bool aSend)
 {
     uint64_t money = aMoney + mMoney;
-    mMoney = (uint32_t)min(money, (uint64_t)UINT32_MAX);
+    mMoney = (uint32_t)std::min(money, (uint64_t)UINT32_MAX);
 
     if (aSend)
     {
@@ -714,7 +712,7 @@ bool
 Player :: gainCPs(uint32_t aCPs, bool aSend)
 {
     uint64_t cps = aCPs + mCPs;
-    mCPs = (uint32_t)min(cps, (uint64_t)UINT32_MAX);
+    mCPs = (uint32_t)std::min(cps, (uint64_t)UINT32_MAX);
 
     if (aSend)
     {
@@ -729,7 +727,7 @@ bool
 Player :: spendMoney(uint32_t aMoney, bool aSend)
 {
     int64_t money = mMoney - aMoney;
-    mMoney = (uint32_t)max((int64_t)0, money);
+    mMoney = (uint32_t)std::max((int64_t)0, money);
 
     if (aSend)
     {
@@ -744,7 +742,7 @@ bool
 Player :: spendCPs(uint32_t aCPs, bool aSend)
 {
     int64_t cps = mCPs - aCPs;
-    mCPs = (uint32_t)max((int64_t)0, cps);
+    mCPs = (uint32_t)std::max((int64_t)0, cps);
 
     if (aSend)
     {
@@ -769,7 +767,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
         case MsgUserAttrib::USER_ATTRIB_LEV:
             {
                 // TODO MAX_LEVEL
-                int64_t lvl = max((int64_t)0, min((int64_t)135, getLevel() + aData));
+                int64_t lvl = std::max((int64_t)0, std::min((int64_t)135, getLevel() + aData));
                 mLevel = (uint8_t)lvl;
 
                 msg = new MsgUserAttrib(this, getLevel(), MsgUserAttrib::USER_ATTRIB_LEV);
@@ -777,7 +775,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_LIFE:
             {
-                int64_t life = max((int64_t)0, min((int64_t)getMaxHP(), getCurHP() + aData));
+                int64_t life = std::max((int64_t)0, std::min((int64_t)getMaxHP(), getCurHP() + aData));
                 mCurHP = (uint16_t)life;
 
                 msg = new MsgUserAttrib(this, getCurHP(), MsgUserAttrib::USER_ATTRIB_LIFE);
@@ -785,7 +783,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_MANA:
             {
-                int64_t mana = max((int64_t)0, min((int64_t)getMaxMP(), getCurMP() + aData));
+                int64_t mana = std::max((int64_t)0, std::min((int64_t)getMaxMP(), getCurMP() + aData));
                 mCurMP = (uint16_t)mana;
 
                 msg = new MsgUserAttrib(this, getCurMP(), MsgUserAttrib::USER_ATTRIB_MANA);
@@ -799,7 +797,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_PK:
             {
-                int64_t pkpoints = max((int64_t)0, min((int64_t)INT16_MAX, mPkPoints + aData));
+                int64_t pkpoints = std::max((int64_t)0, std::min((int64_t)INT16_MAX, mPkPoints + aData));
                 mPkPoints = (int16_t)pkpoints;
 
                 msg = new MsgUserAttrib(this, getPkPoints(), MsgUserAttrib::USER_ATTRIB_PK);
@@ -816,7 +814,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_SOUL:
             {
-                int64_t soul = max((int64_t)0, getSoul() + aData);
+                int64_t soul = std::max((int64_t)0, getSoul() + aData);
                 mSoul = (uint16_t)soul;
 
                 msg = new MsgUserAttrib(this, getSoul(), MsgUserAttrib::USER_ATTRIB_SOUL);
@@ -824,7 +822,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_HEALTH:
             {
-                int64_t health = max((int64_t)0, getHealth() + aData);
+                int64_t health = std::max((int64_t)0, getHealth() + aData);
                 mHealth = (uint16_t)health;
 
                 msg = new MsgUserAttrib(this, getHealth(), MsgUserAttrib::USER_ATTRIB_HEALTH);
@@ -832,7 +830,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_FORCE:
             {
-                int64_t force = max((int64_t)0, getForce() + aData);
+                int64_t force = std::max((int64_t)0, getForce() + aData);
                 mForce = (uint16_t)force;
 
                 msg = new MsgUserAttrib(this, getForce(), MsgUserAttrib::USER_ATTRIB_FORCE);
@@ -840,7 +838,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_DEXTERITY:
             {
-                int64_t dexterity = max((int64_t)0, getDexterity() + aData);
+                int64_t dexterity = std::max((int64_t)0, getDexterity() + aData);
                 mDexterity = (uint16_t)dexterity;
 
                 msg = new MsgUserAttrib(this, getDexterity(), MsgUserAttrib::USER_ATTRIB_DEXTERITY);
@@ -848,7 +846,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_XP:
             {
-                int64_t xp = max((int64_t)0, min((int64_t)getMaxXP(), getXP() + aData));
+                int64_t xp = std::max((int64_t)0, std::min((int64_t)getMaxXP(), getXP() + aData));
                 mXP = (uint8_t)xp;
 
                 msg = new MsgUserAttrib(this, getXP(), MsgUserAttrib::USER_ATTRIB_XP);
@@ -856,7 +854,7 @@ Player :: addAttrib(MsgUserAttrib::UserAttrType aType, int64_t aData,
             }
         case MsgUserAttrib::USER_ATTRIB_ENERGY:
             {
-                int64_t energy = max((int64_t)0, min((int64_t)getMaxEnergy(), getEnergy() + aData));
+                int64_t energy = std::max((int64_t)0, std::min((int64_t)getMaxEnergy(), getEnergy() + aData));
                 mEnergy = (uint8_t)energy;
 
                 msg = new MsgUserAttrib(this, getEnergy(), MsgUserAttrib::USER_ATTRIB_ENERGY);
@@ -895,7 +893,7 @@ Player :: getItem(uint32_t aUID) const
     Item* item = nullptr;
 
     mInventoryMutex.lock();
-    map<uint32_t, Item*>::const_iterator it;
+    std::map<uint32_t, Item*>::const_iterator it;
     if ((it = mInventory.find(aUID)) != mInventory.end())
     {
         item = it->second;
@@ -1257,10 +1255,10 @@ Player :: addItem(Item* aItem, bool aSend)
         if (aItem->getPlayer() == nullptr || aItem->getPlayer()->getUID() != getUID())
             aItem->setPlayer(this);
 
-        map<uint32_t, Item*>::iterator it;
+        std::map<uint32_t, Item*>::iterator it;
         if ((it = mInventory.find(aItem->getUID())) == mInventory.end())
         {
-            mInventory.insert(it, pair<uint32_t, Item*>(aItem->getUID(), aItem));
+            mInventory.insert(it, std::pair<uint32_t, Item*>(aItem->getUID(), aItem));
         }
         else
         {
@@ -1290,7 +1288,7 @@ Player :: eraseItem(uint32_t aUID, bool aSend)
     bool success = true;
 
     mInventoryMutex.lock();
-    map<uint32_t, Item*>::iterator it;
+    std::map<uint32_t, Item*>::iterator it;
     if ((it = mInventory.find(aUID)) != mInventory.end())
     {
         Item* item = it->second;
@@ -1329,7 +1327,7 @@ Player :: sendItemSet() const
     }
 
     mInventoryMutex.lock();
-    for (map<uint32_t, Item*>::const_iterator
+    for (std::map<uint32_t, Item*>::const_iterator
             it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
@@ -1354,7 +1352,7 @@ Player :: saveAllItem() const
     }
 
     mInventoryMutex.lock();
-    for (map<uint32_t, Item*>::const_iterator
+    for (std::map<uint32_t, Item*>::const_iterator
             it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
@@ -1372,7 +1370,7 @@ Player :: deleteAllItem()
         SAFE_DELETE(mEquipment[pos]);
 
     mInventoryMutex.lock();
-    for (map<uint32_t, Item*>::iterator
+    for (std::map<uint32_t, Item*>::iterator
             it = mInventory.begin(), end = mInventory.end();
          it != end; ++it)
     {
@@ -1387,7 +1385,7 @@ void
 Player :: sendWeaponSkillSet() const
 {
     mWeaponSkillsMutex.lock();
-    for (map<uint16_t, WeaponSkill*>::const_iterator
+    for (std::map<uint16_t, WeaponSkill*>::const_iterator
             it = mWeaponSkills.begin(), end = mWeaponSkills.end();
          it != end; ++it)
     {
@@ -1405,7 +1403,7 @@ void
 Player :: deleteAllWeaponSkill()
 {
     mWeaponSkillsMutex.lock();
-    for (map<uint16_t, WeaponSkill*>::iterator
+    for (std::map<uint16_t, WeaponSkill*>::iterator
             it = mWeaponSkills.begin(), end = mWeaponSkills.end();
          it != end; ++it)
     {
@@ -1420,7 +1418,7 @@ void
 Player :: sendMagicSkillSet() const
 {
     mMagicsMutex.lock();
-    for (map<uint16_t, Magic*>::const_iterator
+    for (std::map<uint16_t, Magic*>::const_iterator
             it = mMagics.begin(), end = mMagics.end();
          it != end; ++it)
     {
@@ -1438,7 +1436,7 @@ void
 Player :: deleteAllMagicSkill()
 {
     mMagicsMutex.lock();
-    for (map<uint16_t, Magic*>::iterator
+    for (std::map<uint16_t, Magic*>::iterator
             it = mMagics.begin(), end = mMagics.end();
          it != end; ++it)
     {

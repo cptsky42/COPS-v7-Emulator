@@ -12,9 +12,10 @@
 #include "common.h"
 #include "env.h"
 #include "gamemap.h"
+
 #include <map>
+#include <mutex>
 #include <vector>
-#include <QMutex>
 
 class MapData;
 
@@ -111,8 +112,8 @@ private:
     std::map<uint16_t, MapData*> mMaps; //!< all map data based on the UID
     std::map<std::string, MapData*> mData; //!< all map data based on the file
 
-    QMutex mWorkMutex; //!< mutex for the work map
-    QMutex mDataMutex; //!< mutex for the data (others maps)
+    std::mutex mWorkMutex; //!< mutex for the work map
+    std::mutex mDataMutex; //!< mutex for the data (others maps)
 };
 
 #endif // _COPS_V7_EMULATOR_MAPMANAGER_H_

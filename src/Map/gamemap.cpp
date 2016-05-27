@@ -12,8 +12,6 @@
 #include "msgmapinfo.h"
 #include <vector>
 
-using namespace std;
-
 GameMap :: GameMap(uint32_t aUID, Info** aInfo, MapData& aData)
     : mUID(aUID), mInfo(*aInfo), mData(aData), mPlayerCount(0)
 {
@@ -63,7 +61,7 @@ GameMap :: sendBlockInfo(const Player& aPlayer) const
     // the player must be on the map...
     if (mEntities.end() != mEntities.find(aPlayer.getUID()))
     {
-        for (map<uint32_t, Entity*>::const_iterator
+        for (std::map<uint32_t, Entity*>::const_iterator
                 it = mEntities.begin(), end = mEntities.end();
              it != end; ++it)
         {
@@ -93,7 +91,7 @@ GameMap :: updateBroadcastSet(const Entity& aEntity) const
     if (mEntities.end() != mEntities.find(aEntity.getUID()))
     {
         // TODO: items
-        for (map<uint32_t, Entity*>::const_iterator
+        for (std::map<uint32_t, Entity*>::const_iterator
                 it = mEntities.begin(), end = mEntities.end();
              it != end; ++it)
         {
@@ -126,7 +124,7 @@ GameMap :: enterRoom(Entity& aEntity)
 {
     mEntitiesMutex.lock();
 
-    map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
+    std::map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
     if (mEntities.end() == it)
     {
         // activate the map...
@@ -148,7 +146,7 @@ GameMap :: leaveRoom(Entity& aEntity)
 {
     mEntitiesMutex.lock();
 
-    map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
+    std::map<uint32_t, Entity*>::iterator it = mEntities.find(aEntity.getUID());
     if (mEntities.end() != it)
     {
         mEntities.erase(it);

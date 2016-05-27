@@ -18,8 +18,6 @@
 #include <string.h> // strerror
 #include <errno.h>
 
-using namespace std;
-
 BinaryReader :: BinaryReader(const char* aPath)
 {
     mStream = nullptr;
@@ -33,7 +31,7 @@ BinaryReader :: BinaryReader(const char* aPath)
     }
 }
 
-BinaryReader :: BinaryReader(const string& aPath)
+BinaryReader :: BinaryReader(const std::string& aPath)
 {
     mStream = nullptr;
     ASSERT(!aPath.empty());

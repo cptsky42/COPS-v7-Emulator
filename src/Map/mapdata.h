@@ -11,9 +11,10 @@
 
 #include "common.h"
 #include "mapbase.h"
-#include <vector>
+
+#include <mutex>
 #include <set>
-#include <QMutex>
+#include <vector>
 
 class BinaryReader;
 
@@ -136,7 +137,7 @@ private:
     std::set<void*> mRefs; //!< the pointers of active map using the data
     uint8_t* mPckData; //!< the packed data of the map (cells)
     size_t mPckLen; //!< the size of the packed data
-    QMutex mPckMutex; //!< the mutex to pack / unpack the data...
+    std::mutex mPckMutex; //!< the mutex to pack / unpack the data...
 };
 
 #endif // _COPS_V7_EMULATOR_MAP_DATA_H_

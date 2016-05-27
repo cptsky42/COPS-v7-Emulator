@@ -9,6 +9,7 @@
 #include "weaponskill.h"
 #include "world.h"
 #include <QSqlQuery>
+#include <QVariant>
 
 /* static */
 err_t

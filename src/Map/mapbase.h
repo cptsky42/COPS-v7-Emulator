@@ -9,6 +9,8 @@
 #ifndef _COPS_V7_EMULATOR_MAP_BASE_H_
 #define _COPS_V7_EMULATOR_MAP_BASE_H_
 
+#include <cstdint>
+
 /**
  * Represent a map's cell for a specific (X, Y) position.
  */

@@ -17,9 +17,6 @@
 #include <atomic>
 #include <thread>
 
-#include <QThread>
-#include <QtConcurrentRun>
-
 using namespace std;
 
 ///////////////////////////////////////////////////////////////
@@ -57,18 +54,18 @@ World :: World()
       mLastMonsterUID(Entity::MONSTERID_FIRST - 1),
       mStopping(false)
 {
-    mWorkers.push_back(QtConcurrent::run(&World::processPlayers));
+    mWorkers.push_back(std::async(std::launch::async, &World::processPlayers));
 }
 
 World :: ~World()
 {
     mStopping = true;
-    for (vector< QFuture<void> >::iterator
+    for (vector<std::future<void>>::iterator
             it = mWorkers.begin(), end = mWorkers.end();
          it != end; ++it)
     {
-        QFuture<void>& future = *it;
-        future.waitForFinished();
+        std::future<void>& future = *it;
+        future.wait();
     }
     mWorkers.clear();
 
@@ -326,7 +323,7 @@ World :: startMonstersRegeneration()
     ASSERT(!mGenWorkerRunning);
 
     mGenWorkerRunning = true;
-    mWorkers.push_back(QtConcurrent::run(&World::regenerateMonsters));
+    mWorkers.push_back(std::async(std::launch::async, &World::regenerateMonsters));
 }
 
 /* static */

@@ -16,12 +16,8 @@
 #include <cstdio>
 
 #include <atomic>
+#include <future>
 #include <thread>
-
-#include <QtConcurrentRun>
-#include <QThread>
-
-using namespace std;
 
 /* static */
 MapManager* MapManager::sInstance = nullptr;
@@ -55,7 +51,7 @@ MapManager :: MapManager()
 
 MapManager :: ~MapManager()
 {
-    for (map<uint32_t, GameMap*>::iterator
+    for (std::map<uint32_t, GameMap*>::iterator
             it = mGameMaps.begin(), end = mGameMaps.end();
          it != end; ++it)
     {
@@ -65,7 +61,7 @@ MapManager :: ~MapManager()
     mGameMaps.clear();
 
 
-    for (map<string, MapData*>::iterator
+    for (std::map<std::string, MapData*>::iterator
             it = mData.begin(), end = mData.end();
          it != end; ++it)
     {
@@ -89,33 +85,33 @@ MapManager :: loadData()
         IniFile gamemap;
         err = gamemap.open(path);
 
-        vector<string> sections;
+        std::vector<std::string> sections;
         gamemap.getSections(sections);
 
         int numCPU = getNumCPU();
         LOG(INFO, "Detected %d core(s). Spawning %d workers for loading maps...",
             numCPU, numCPU);
 
-        map< string, vector<uint16_t> > maps;
-        for (vector<string>::const_iterator
+        std::map<std::string, std::vector<uint16_t>> maps;
+        for (std::vector<std::string>::const_iterator
                 it = sections.begin(), end = sections.end();
              ERROR_SUCCESS == err && it != end; ++it)
         {
-            const string& section = *it;
+            const std::string& section = *it;
             unsigned int mapId = 0;
 
             if (sscanf(section.c_str(), "Map%u", &mapId) == 1)
             {
                 if (mMaps.find((uint16_t)mapId) == mMaps.end())
                 {
-                    string dataPath = gamemap.readString(section + "/File", "N/A");
+                    std::string dataPath = gamemap.readString(section + "/File", "N/A");
                     if (dataPath != "N/A")
                     {
-                        map< string, vector<uint16_t> >::iterator maps_it;
+                        std::map<std::string, std::vector<uint16_t>>::iterator maps_it;
                         if ((maps_it = maps.find(dataPath)) == maps.end())
                         {
-                            vector<uint16_t> mapIds; mapIds.push_back((uint16_t)mapId);
-                            maps.insert(maps_it, pair< string, vector<uint16_t> >(dataPath, mapIds));
+                            std::vector<uint16_t> mapIds; mapIds.push_back((uint16_t)mapId);
+                            maps.insert(maps_it, std::pair<std::string, std::vector<uint16_t>>(dataPath, mapIds));
                         }
                         else
                             maps_it->second.push_back((uint16_t)mapId);
@@ -139,18 +135,18 @@ MapManager :: loadData()
             }
         }
 
-        vector< QFuture<err_t> > errors;
+        std::vector<std::future<err_t>> errors;
         for (int i = 0; ERROR_SUCCESS == err && i < numCPU; ++i)
         {
-            QFuture<err_t> error = QtConcurrent::run(MapManager::loadData, &maps);
-            errors.push_back(error);
+            auto error = std::async(std::launch::async, [&maps]() { return MapManager::loadData(&maps);});
+            errors.push_back(std::move(error));
         }
 
-        for (vector< QFuture<err_t> >::const_iterator
+        for (std::vector<std::future<err_t>>::iterator
                 it = errors.begin(), end = errors.end();
              ERROR_SUCCESS == err && it != end; ++it)
         {
-            err = (*it).result();
+            err = (*it).get();
         }
     }
     else
@@ -164,7 +160,7 @@ MapManager :: loadData()
 
 /* static */
 err_t
-MapManager :: loadData(map< string, vector<uint16_t> >* aWork)
+MapManager :: loadData(std::map<std::string, std::vector<uint16_t>>* aWork)
 {
     ASSERT_ERR(aWork != nullptr, ERROR_INVALID_POINTER);
 
@@ -184,11 +180,11 @@ MapManager :: loadData(map< string, vector<uint16_t> >* aWork)
             break;
         }
 
-        map< string, vector<uint16_t> >::iterator work_it = aWork->begin();
+        std::map<std::string, std::vector<uint16_t>>::iterator work_it = aWork->begin();
         ASSERT(work_it != aWork->end());
 
-        string dataPath(work_it->first);
-        vector<uint16_t> mapIds; mapIds.swap(work_it->second); // swap O(1)
+        std::string dataPath(work_it->first);
+        std::vector<uint16_t> mapIds; mapIds.swap(work_it->second); // swap O(1)
         aWork->erase(work_it);
 
         mgr.mWorkMutex.unlock();
@@ -215,7 +211,7 @@ MapManager :: loadData(map< string, vector<uint16_t> >* aWork)
                 mgr.mDataMutex.lock();
 
                 mgr.mData[dataPath] = data;
-                for (vector<uint16_t>::const_iterator
+                for (std::vector<uint16_t>::const_iterator
                         it = mapIds.begin(), end = mapIds.end();
                      it != end; ++it)
                 {
@@ -261,7 +257,7 @@ MapManager :: createMap(uint32_t aUID, GameMap::Info** aInfo)
 
     if (mGameMaps.find(aUID) == mGameMaps.end())
     {
-        map<uint16_t, MapData*>::const_iterator it;
+        std::map<uint16_t, MapData*>::const_iterator it;
         if ((it = mMaps.find((*aInfo)->DocID)) != mMaps.end())
         {
             GameMap* gameMap = new GameMap(aUID, aInfo, *it->second);
@@ -293,7 +289,7 @@ MapManager :: getMap(uint32_t aUID) const
 {
     GameMap* gameMap = nullptr;
 
-    map<uint32_t, GameMap*>::const_iterator it;
+    std::map<uint32_t, GameMap*>::const_iterator it;
     if ((it = mGameMaps.find(aUID)) != mGameMaps.end())
     {
         gameMap = it->second;
@@ -307,7 +303,7 @@ MapManager :: packAll()
 {
     mDataMutex.lock();
 
-    for (map<string, MapData*>::iterator
+    for (std::map<std::string, MapData*>::iterator
             it = mData.begin(), end = mData.end();
          it != end; ++it)
     {
@@ -324,7 +320,7 @@ MapManager :: unpackAll()
 {
     mDataMutex.lock();
 
-    for (map<string, MapData*>::iterator
+    for (std::map<std::string, MapData*>::iterator
             it = mData.begin(), end = mData.end();
          it != end; ++it)
     {

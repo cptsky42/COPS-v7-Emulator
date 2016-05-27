@@ -12,8 +12,6 @@
 #include "mapmanager.h"
 #include "msgaction.h"
 
-using namespace std;
-
 Entity :: Entity(uint32_t aUID)
     : mUID(aUID),
       mName("Unknown"), mLook(0),
@@ -49,7 +47,7 @@ Entity :: clearBroadcastSet() const
 {
     mViewSetMutex.lock();
 
-    map<uint32_t, const Entity*>::iterator it;
+    std::map<uint32_t, const Entity*>::iterator it;
     while (!mViewSet.empty())
     {
         it = mViewSet.begin();
@@ -105,7 +103,7 @@ Entity :: removeEntityFromBCSet(const Entity& aEntity) const
 
     mViewSetMutex.lock();
 
-    map<uint32_t, const Entity*>::iterator it =
+    std::map<uint32_t, const Entity*>::iterator it =
             mViewSet.find(aEntity.getUID());
     if (mViewSet.end() != it)
     {
@@ -136,7 +134,7 @@ Entity :: broadcastRoomMsg(const Msg* aMsg, bool aIncludeSelf) const
 
     mViewSetMutex.lock();
 
-    for (map<uint32_t, const Entity*>::const_iterator
+    for (std::map<uint32_t, const Entity*>::const_iterator
             it = mViewSet.begin(), end = mViewSet.end();
          it != end; ++it)
     {

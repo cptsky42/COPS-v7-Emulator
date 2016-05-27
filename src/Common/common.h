@@ -140,19 +140,6 @@ inline int getNumCPU()
 #endif // _WIN32
 #endif // __FILENAME__
 
-// If using Visual Studio, and C++11 is not implemented
-// POSIX-compliant platforms define those functions, so C++11 is not required
-#if defined(_MSC_VER) && __cplusplus < 201103L
-#define snprintf _snprintf
-#endif
-
-// va_copy is not defined in Visual Studio (previous to 2013)
-// Although it is unsafe to simply copy the va_list, the behavior
-// is correct with Visual Studio.
-#if defined(_MSC_VER) && _MSC_VER < 1800
-#define va_copy(x, y) (x = y)
-#endif
-
 // If __TIMESTAMP__ is not defined, create it by merging __DATE__ and __TIME__
 #ifndef __TIMESTAMP__
 #define __TIMESTAMP__ __DATE__ " " __TIME__

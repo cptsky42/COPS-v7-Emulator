@@ -11,12 +11,13 @@
 
 #include "common.h"
 #include "env.h"
+
+#include <future>
 #include <map>
-#include <set>
+#include <mutex>
 #include <queue>
+#include <set>
 #include <vector>
-#include <QMutex>
-#include <QFuture>
 
 class Entity;
 class AdvancedEntity;
@@ -158,21 +159,21 @@ private:
 private:
     std::map<uint32_t, Player*> mAllPlayers; //!< internal map
     std::map<std::string, Player*> mAllPlayerNames; //!< internal map
-    mutable QMutex mPlayerMutex; //!< mutex to access the players
+    mutable std::mutex mPlayerMutex; //!< mutex to access the players
 
     std::map<uint32_t, Npc*> mAllNPCs; //!< internal map
     std::map<uint32_t, Script*> mAllTasks; //!< internal map
-    mutable QMutex mTaskMutex; //!< mutex to access the tasks
+    mutable std::mutex mTaskMutex; //!< mutex to access the tasks
 
     std::vector<Generator*> mAllGenerators; //!< interval vector
-    mutable QMutex mGeneratorMutex; //!< mutex to access the generators
+    mutable std::mutex mGeneratorMutex; //!< mutex to access the generators
     bool mGenWorkerRunning;
 
     uint32_t mLastMonsterUID; //!< latest used monster's UID
     std::queue<uint32_t> mRecycledMonsterUIDs; //!< queue with all monster's UIDs to recycle
-    mutable QMutex mUIDMutex; //!< mutex to access the recycled UIDs
+    mutable std::mutex mUIDMutex; //!< mutex to access the recycled UIDs
 
-    std::vector< QFuture<void> > mWorkers; //!< all workers
+    std::vector<std::future<void>> mWorkers; //!< all workers
     bool mStopping; //!< if the workers must stop
 };
 

@@ -11,12 +11,10 @@
  * sections in the LICENSE file.
  */
 
-
 #ifndef _COPS_V7_EMULATOR_FINDER_H_
 #define _COPS_V7_EMULATOR_FINDER_H_
 
 #include "common.h"
-#include <stdio.h>
 
 class Finder
 {
@@ -30,13 +28,6 @@ public:
      * @returns FALSE otherwise
      */
     static bool fileExists(const char* aPath);
-
-    /**
-     * Create a temp file that will be deleted on close.
-     *
-     * @returns A pointer to a FILE object that identifies the stream.
-     */
-    static FILE* getTempFile();
 };
 
 #endif /* _COPS_V7_EMULATOR_FINDER_H_ */

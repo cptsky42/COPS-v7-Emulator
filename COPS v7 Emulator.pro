@@ -2,8 +2,6 @@ QT += core
 QT += network sql
 QT -= gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += concurrent
-
 TARGET = "COPS v7 Emulator"
 TEMPLATE = app
 CONFIG += console
